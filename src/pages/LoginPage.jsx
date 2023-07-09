@@ -21,6 +21,7 @@ export const LoginPage = () => {
             <h1>Login Page</h1>
             <div>
                 <button onClick={signInWithGoogle}>Sign in with Google</button>
+                
             </div>
         </>
     )
