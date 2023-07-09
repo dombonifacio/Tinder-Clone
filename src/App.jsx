@@ -6,6 +6,8 @@ import { useRoutes } from 'react-router-dom'
 
 
 import './App.css'
+import { LoginPage } from './pages/loginPage'
+import { HomePage } from './pages/HomePage'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -13,9 +15,15 @@ function App() {
   let element = useRoutes([
     {
       path: '/',
-      element
+      element: <LoginPage />
+    },
+    {
+      path: '/home',
+      element: <HomePage />
     }
   ])
+
+  return element;
 
   
 }
