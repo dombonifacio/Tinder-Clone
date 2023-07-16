@@ -3,7 +3,12 @@ import { signOut } from 'firebase/auth'
 import { useNavigate } from "react-router-dom"
 
 export const HomePage = () => {
-    console.log(auth, 'auth object')
+
+    // 1. When user logs in, retrieve the data from the auth object, currentUser
+    // 2. Get the following data from the user once they log in: UID
+
+
+    console.log(auth, 'auth object from the home page')
     const navigate = useNavigate();
 
     const handleSignOut = () => {

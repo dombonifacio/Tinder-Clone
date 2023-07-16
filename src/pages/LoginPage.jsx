@@ -11,8 +11,10 @@ export const LoginPage = () => {
     const signInWithGoogle = () => {
         // signinWithPop method takes in two parameters: auth and the provider (the third party email login)
         signInWithPopup(auth, provider).then((response) => {
-            navigate('/home')
-            console.log(response)
+            navigate('/enterName')
+            console.log(response, 'auth response from the login page')
+        }).catch((error) => {
+            console.log(error)
         })
     }
 

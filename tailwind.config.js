@@ -4,7 +4,19 @@ export default {
    "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        electric: {
+          pink: "#FD2978"
+        },
+        fiery: {
+          rose: "#FF5864"
+        },
+        pastel: {
+          red: "#FF655B"
+        }
+      }
+    },
   },
   plugins: [],
 }
