@@ -51,9 +51,11 @@ export const EnterInterestsPage = () => {
 
     const handleCreateUser = async () => {
         try {
-            await handleUserInfoChange()
+           
             await addDoc(usersCollectionRef, {
-                userInfo
+                ...userInfo,
+                interests: userInterest
+                
             })
         } catch (error) {
             console.log(error, 'error message')
