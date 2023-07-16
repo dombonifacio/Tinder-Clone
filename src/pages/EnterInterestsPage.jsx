@@ -21,6 +21,7 @@ export const EnterInterestsPage = () => {
 
     const [interestAmount, setInterestAmount] = useState(0)
     const [userInterest, setUserInterestList] = useState([])
+
     const { userInfo, setUserInfo } = useContext(UserInfoContext)
     const handleCheckedInterest = (event) => {
         const selectedInterest = {
@@ -34,6 +35,11 @@ export const EnterInterestsPage = () => {
 
                 setInterestAmount((prevState) => prevState + 1)
                 setUserInterestList((prevList) => [...prevList, selectedInterest])
+
+            } else {
+                // If the user tries to select more than five interests, prevent further selection
+                event.preventDefault();
+     
             }
                 
             
@@ -41,22 +47,21 @@ export const EnterInterestsPage = () => {
             // only get the ones that does not match with the selected interest (current checked interest) to remove unchecked elements
             setUserInterestList((prevList) => prevList.filter((interest) => interest.id !== selectedInterest.id));
             setInterestAmount((prevState) => prevState - 1)
+
+
         }
+
     }
 
     console.log(interestAmount, 'interest amount')
+
+
     
   
 
     const [interestList] = useState(interestsData.interests)
     
-    const handleUserInfoChange = () => {
-      setUserInfo((prevState) => ({
-        ...prevState,
-        interests: userInterest
-      }))
-    }
-
+    
     const handleCreateUser = async () => {
         try {
            
@@ -70,6 +75,9 @@ export const EnterInterestsPage = () => {
         }
     }
 
+    const handleClick = () => {
+        console.log('label clicked')
+    }
 
    
     return (
@@ -79,11 +87,11 @@ export const EnterInterestsPage = () => {
                 <div className="">
 
                     <h1 className="font-bold text-4xl mb-4">Choose up to 5 interests</h1>
-                    <ul className="flex flex-wrap gap-y-6 gap-x-2 cbox">
+                    <ul className={`flex flex-wrap gap-y-6 gap-x-2`}>
                         {interestList.map((interest) => (
                         <li key={interest.id}>
                             <input type="checkbox" id={interest.id} name={interest.name}  onChange={handleCheckedInterest}/>
-                             <label for={interest.id} className="label-checkbox py-2.5 px-5  text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 ">{interest.name}
+                             <label for={interest.id} className={`py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700`} onClick={handleClick}>{interest.name}
                                 
                             </label>
                         </li>
