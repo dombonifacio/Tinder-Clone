@@ -16,3 +16,14 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+input[type=checkbox] {
+  display: none;
+}
+
+ul.cbox li input[type="checkbox"]:checked + label {
+
+  background-color: rgb(109, 99, 248);
+  color: #fff;
+  transition: all .2s;
+}

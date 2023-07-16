@@ -28,9 +28,9 @@ export const EnterAgePage = () => {
         <>
             
 
-            <div className='flex  h-screen items-center'>
+            <div className='flex  h-screen items-center px-4'>
 
-                <div className='flex min-h-[50%] flex-col justify-between w-full px-5'>
+                <div className='flex min-h-[50%] flex-col justify-between w-full'>
 
                     <div>
                         <h1 className="text-4xl font-bold">How old are you?</h1>

@@ -36,12 +36,12 @@ export const EnterNamePage = () => {
     return (
         <>
             {/* container */}
-            <div className="flex h-screen justify-center items-center">
+            <div className="flex h-screen justify-center items-center px-4">
                 {/* What's your first name section? */}
-                    <div className='min-h-[50%] flex flex-col justify-between'>
+                    <div className='min-h-[50%] flex flex-col justify-between w-full'>
 
                         <div>
-                            <h1 className="text-4xl font-bold text-wi ">What's your first name?</h1>
+                            <h1 className="text-4xl font-bold ">What's your first name?</h1>
                             <input type="text" placeholder="Enter first name" className="border-b-2 mt-2 text-white border-slate-600 p-1 w-full outline-none" required name='name' onChange={handleUserInfoChange}/>
                             <p className="mt-3 text-slate-500">This is how it'll appear on your profile.</p>
                             <p className="font-bold">Can't change it later.</p>
