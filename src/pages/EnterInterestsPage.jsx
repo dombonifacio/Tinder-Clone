@@ -27,16 +27,24 @@ export const EnterInterestsPage = () => {
             name: event.target.name,
             id: event.target.id
         }
-        console.log(selectedInterest, 'selected interetst')
+
+        // only allow user to check if interest amount is less than 5 or equal to 5
         if(event.target.checked && !userInterest.some((interest) => interest.id === selectedInterest.id)){
-           
-            setUserInterestList((prevList) => [...prevList, selectedInterest])
+            if (interestAmount < 5) {
+
+                setInterestAmount((prevState) => prevState + 1)
+                setUserInterestList((prevList) => [...prevList, selectedInterest])
+            }
+                
+            
         } else {
             // only get the ones that does not match with the selected interest (current checked interest) to remove unchecked elements
             setUserInterestList((prevList) => prevList.filter((interest) => interest.id !== selectedInterest.id));
-
+            setInterestAmount((prevState) => prevState - 1)
         }
     }
+
+    console.log(interestAmount, 'interest amount')
     
   
 
@@ -61,8 +69,7 @@ export const EnterInterestsPage = () => {
             console.log(error, 'error message')
         }
     }
- 
-    console.log(userInfo, 'user info')
+
 
    
     return (
