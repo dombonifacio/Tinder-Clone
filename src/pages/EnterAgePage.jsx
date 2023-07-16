@@ -26,17 +26,20 @@ export const EnterAgePage = () => {
         <>
             
 
-            <div className='flex flex-col h-screen justify-center px-5'>
+            <div className='flex  h-screen items-center'>
 
-                <div>
-                    <h1 className="text-4xl font-bold">How old are you?</h1>
-                    <input type="number" placeholder="Enter age" className="border-b-2 border-slate-600 p-1 w-full outline-none" required name='age' onChange={handleUserInfoChange}/>
-                    <p className="mt-3 text-slate-500">Your age will appear on your profile.</p>
-                    
-                </div>
-                    {/* Next Button */}
-                    <div className="mt-8">
-                    <NextButtonComponent onClick={nextPage}/>
+                <div className='flex min-h-[50%] flex-col justify-between w-full px-5'>
+
+                    <div>
+                        <h1 className="text-4xl font-bold">How old are you?</h1>
+                        <input type="number" placeholder="Enter age" className="border-b-2 border-slate-600 p-1 w-full outline-none" required name='age' onChange={handleUserInfoChange}/>
+                        <p className="mt-3 text-slate-500">Your age will appear on your profile.</p>
+                        
+                    </div>
+                        {/* Next Button */}
+                        <div className="mt-8">
+                        <NextButtonComponent onClick={nextPage}/>
+                    </div>
                 </div>
             </div>
                    
