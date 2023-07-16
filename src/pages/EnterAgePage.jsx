@@ -17,10 +17,12 @@ export const EnterAgePage = () => {
             [event.target.name]: event.target.value
         })
     }
+    
     const navigate = useNavigate()
     const nextPage = () => {
         navigate('/enterGender')
     }
+    console.log(userInfo, 'context userInfo')
     
     return (
         <>

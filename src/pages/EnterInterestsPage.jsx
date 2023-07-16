@@ -1,17 +1,27 @@
 // hooks
 import { useNavigate } from "react-router-dom"
-import { useState } from "react"
+import { useState, useContext, useEffect } from "react"
+
+// contexts
+import { UserInfoContext } from "../context/UserInfoContext"
 
 // components
 import { NextButtonComponent } from "../components/NextButtonComponent"
 // interest list
 import interestsData from '../interests.json'
 
+// firebase/firestore
+import { db } from "../config/firebase"
+import { collection, addDoc } from "firebase/firestore"
+
 export const EnterInterestsPage = () => {
+
+    // collection ref to users when creating a new user
+    const usersCollectionRef = collection(db, "users")
 
     const [interestAmount, setInterestAmount] = useState(0)
     const [userInterest, setUserInterestList] = useState([])
-  
+    const { userInfo, setUserInfo } = useContext(UserInfoContext)
     const handleCheckedInterest = (event) => {
         const selectedInterest = {
             name: event.target.name,
@@ -27,13 +37,32 @@ export const EnterInterestsPage = () => {
 
         }
     }
-    console.log(userInterest, 'array user interest')
-    const navigate = useNavigate()
-    const [interestList] = useState(interestsData.interests)
+    
+  
 
-    const nextPage = () => {
-        navigate('/')
+    const [interestList] = useState(interestsData.interests)
+    
+    const handleUserInfoChange = () => {
+      setUserInfo((prevState) => ({
+        ...prevState,
+        interests: userInterest
+      }))
     }
+
+    const handleCreateUser = async () => {
+        try {
+            await handleUserInfoChange()
+            await addDoc(usersCollectionRef, {
+                userInfo
+            })
+        } catch (error) {
+            console.log(error, 'error message')
+        }
+    }
+ 
+    console.log(userInfo, 'user info')
+
+   
     return (
         <>
        <div>
@@ -52,7 +81,9 @@ export const EnterInterestsPage = () => {
         </div>
         
 
-        <NextButtonComponent onClick={nextPage}/>
+        <button class="bg-gradient-to-t from-electric-pink  to-fiery-rose rounded-full hover:from-pink-700 hover:to-rose-500  text-white font-bold py-3 px-4  w-full" onClick={handleCreateUser}>
+                Create User
+        </button>
 
         </>
     )

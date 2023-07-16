@@ -8,6 +8,9 @@ import { NextButtonComponent } from "../components/NextButtonComponent"
 // contexts
 import { UserInfoContext } from '../context/UserInfoContext'
 
+// firestore
+import { auth } from "../config/firebase"
+
 
 
 export const EnterNamePage = () => {
@@ -15,10 +18,15 @@ export const EnterNamePage = () => {
     const navigate = useNavigate()
     const { userInfo, setUserInfo } = useContext(UserInfoContext)    
     
+
     const handleUserInfoChange = (event) => {
         setUserInfo({
             ...userInfo,
-            [event.target.name]: event.target.value
+            id: auth.currentUser?.uid,
+            bio: "",
+            location: "",
+            traits: [],
+            [event.target.name]: event.target.value,
         })
     }
     const nextPage = () => {
