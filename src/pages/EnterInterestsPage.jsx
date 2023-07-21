@@ -14,6 +14,7 @@ import interestsData from '../interests.json'
 // firebase/firestore
 import { db } from "../config/firebase"
 import { collection, addDoc } from "firebase/firestore"
+import { NavbarComponent } from "../components/NavbarComponent"
 
 
 export const EnterInterestsPage = () => {
@@ -36,10 +37,6 @@ export const EnterInterestsPage = () => {
             isChecked: event.target.checked
         }
         
-       
-        
-        
-
         // only allow user to check if interest amount is less than 5 or equal to 5
         if(event.target.checked && !userInterest.some((interest) => interest.id === selectedInterest.id)){
             if (interestAmount < 5) {
@@ -112,7 +109,6 @@ export const EnterInterestsPage = () => {
       setToggle((prevState) => !prevState);
     };
 
-
     const handleTest = () => {
       if (interestAmount >= 5) {
         setToggle(true);
@@ -120,17 +116,11 @@ export const EnterInterestsPage = () => {
         setTimeout(() => {
           setToggle(false);
         }, 3000);
-      } else {
-        setToggle(false);
+      } else if (interestAmount < 5){
+        setToggle(false)
       }
     };
 
-    
-
-    console.log(interestAmount, 'interest amount')
-  
-   
-   
     return (
         <>
         {/* alert */}
@@ -174,6 +164,7 @@ export const EnterInterestsPage = () => {
             
           
           </div>
+          <NavbarComponent />
 
 
          

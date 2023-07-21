@@ -19,7 +19,7 @@ export const EnterGenderPage = () => {
     // switching pages
     const navigate = useNavigate()
     const nextPage = () => {
-        navigate('/enterSexuality')
+        navigate('/enterInterests')
     }
     return (
         <>

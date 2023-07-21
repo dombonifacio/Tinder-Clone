@@ -1,13 +1,9 @@
+// hooks
 import { useState } from 'react'
-
 
 // react router dom
 import { useRoutes } from 'react-router-dom'
-
-
 import './App.css'
-
-
 
 // contexts
 import { UserInfoContext } from './context/UserInfoContext'
@@ -18,8 +14,8 @@ import { HomePage } from './pages/HomePage'
 import { EnterAgePage } from './pages/EnterAgePage'
 import { EnterNamePage } from './pages/EnterNamePage'
 import { EnterGenderPage } from './pages/EnterGenderPage'
-import { EnterSexualOrientationPage } from './pages/EnterSexualOrientationPage'
 import { EnterInterestsPage } from './pages/EnterInterestsPage'
+import { ProfilePage } from './pages/ProfilePage'
 
 function App() {
   
@@ -47,12 +43,12 @@ function App() {
       element: <EnterGenderPage />
     },
     {
-      path: '/enterSexuality',
-      element: <EnterSexualOrientationPage />
-    },
-    {
       path: '/enterInterests',
       element: <EnterInterestsPage />
+    },
+    {
+      path: '/profile',
+      element: <ProfilePage />
     }
   ])
 
