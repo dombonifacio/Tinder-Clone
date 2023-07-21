@@ -4,24 +4,20 @@
 
 }
 
-
-/* Chrome, Safari, Edge, Opera for input number hide arrow beside */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+input[type=checkbox] {
+  -webkit-appearance: none; /* remove default appearance on Webkit-based browsers */
+  -moz-appearance: none; /* remove default appearance on Mozilla-based browsers */
+  appearance: none; /* remove default appearance on all other browsers */
 }
 
-/* Firefox */
-input[type=number] {
-  -moz-appearancek: textfield;
-}
-
-
-
-input[type="checkbox"]:checked {
+input[type="checkbox"]:checked + label {
 
   background-color: rgb(109, 99, 248);
   color: #fff;
+  transition: all .2s;
+}
+
+input[type="checkbox"] + label {
+
   transition: all .2s;
 }

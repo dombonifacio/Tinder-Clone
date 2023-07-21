@@ -7,12 +7,14 @@ import { UserInfoContext } from "../context/UserInfoContext"
 
 // components
 import { NextButtonComponent } from "../components/NextButtonComponent"
+import { DangerButton } from "../components/DangerButton"
 // interest list
 import interestsData from '../interests.json'
 
 // firebase/firestore
 import { db } from "../config/firebase"
 import { collection, addDoc } from "firebase/firestore"
+
 
 export const EnterInterestsPage = () => {
 
@@ -23,6 +25,7 @@ export const EnterInterestsPage = () => {
 
     const [userInterest, setUserInterestList] = useState([])
     const [interestList, setInterestList] = useState(interestsData.interests)
+    const [toggle, setToggle] = useState(false)
     const { userInfo, setUserInfo } = useContext(UserInfoContext)
 
     
@@ -105,14 +108,38 @@ export const EnterInterestsPage = () => {
         }
     }
 
+    const handleToggleButton = () => {
+      setToggle((prevState) => !prevState);
+    };
 
 
-    console.log(userInterest, ' user interest list')
+    const handleTest = () => {
+      if (interestAmount >= 5) {
+        setToggle(true);
+        // Hide the div containing the DangerButton after 2 seconds
+        setTimeout(() => {
+          setToggle(false);
+        }, 3000);
+      } else {
+        setToggle(false);
+      }
+    };
+
+    
+
+    console.log(interestAmount, 'interest amount')
+  
    
    
     return (
         <>
-          <div className="flex h-screen px-4 items-center justify-center">
+        {/* alert */}
+        
+        <div className={toggle ? "px-4" : "hidden"}>
+
+         <DangerButton onClick={handleToggleButton}/>
+        </div>
+          <div className="flex items-center justify-center px-4 my-4">
             <div className="flex flex-col w-full gap-y-10">
               <div>
                 <h1 className="font-bold text-4xl mb-4">Choose up to 5 interests</h1>
@@ -125,23 +152,32 @@ export const EnterInterestsPage = () => {
                         name={interest.name}
                         onChange={handleCheckedInterest}
                         disabled={!interest.isChecked && interestAmount >= 5}
+                  
+                       
                        
                       />
-                      <label htmlFor={interest.id}>{interest.name}</label>
+                      <label htmlFor={interest.id} className={`py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 text-center`}  onClick={handleTest}>{interest.name}</label>
                     </li>
                   ))}
                 </ul>
               </div>
               <div>
                 <button
-                  className="bg-gradient-to-t from-electric-pink to-fiery-rose rounded-full hover:from-pink-700 hover:to-rose-500 text-white font-bold py-3 px-4 w-full"
+                  className="bg-gradient-to-t from-electric-pink to-fiery-rose rounded-full hover:from-pink-700 hover:to-rose-500 text-white text-center font-bold py-3 px-4 w-full"
                   onClick={handleCreateUser}
                 >
                   Create User
                 </button>
+                
               </div>
             </div>
+            
+          
           </div>
+
+
+         
+         
         </>
       );
 }
