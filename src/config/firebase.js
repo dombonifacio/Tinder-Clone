@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore"
 
 // getAuth allows you to implement authentication
-import { getAuth, GoogleAuthProvider } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth';
 const firebaseConfig = {
   apiKey: "AIzaSyCceudNyNAkPZBQPJD9thBRWOl4HJEiCuM",
   authDomain: "pawmance-f453a.firebaseapp.com",
@@ -17,6 +17,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
-const provider = new GoogleAuthProvider();
+const googleProvider = new GoogleAuthProvider();
+const facebookProvider = new FacebookAuthProvider();
 const db = getFirestore(app)
-export { auth, provider, db }
+export { auth, googleProvider, facebookProvider, db }
