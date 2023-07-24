@@ -24,7 +24,6 @@ export const EnterGenderPage = () => {
     return (
         <>
             <div className="flex items-center h-screen justify-center">
-
                 <div className="max-h-[50%] flex flex-col h-screen justify-between w-full px-5">
                     <div>
                         <h1 className="text-4xl font-bold mb-4">What's your gender?</h1>

@@ -17,6 +17,7 @@ import { collection, addDoc } from "firebase/firestore"
 import { NavbarComponent } from "../components/NavbarComponent"
 
 
+
 export const EnterInterestsPage = () => {
 
     // collection ref to users when creating a new user
@@ -29,6 +30,7 @@ export const EnterInterestsPage = () => {
     const [toggle, setToggle] = useState(false)
     const { userInfo, setUserInfo } = useContext(UserInfoContext)
 
+
     
     const handleCheckedInterest = (event) => {
         const selectedInterest = {
@@ -40,15 +42,11 @@ export const EnterInterestsPage = () => {
         // only allow user to check if interest amount is less than 5 or equal to 5
         if(event.target.checked && !userInterest.some((interest) => interest.id === selectedInterest.id)){
             if (interestAmount < 5) {
-
-                
                 // get the selected interest id from the interestList and see if it matches with the selectedInterest id
                 const afterChecking = interestList.map((interest) => {
                     if (interest.name === event.target.name){
                         interest.isChecked = !interest.isChecked
-                        // console.log(interestList, 'interest list after checking')
-                        // console.log('selected interst id ', event.target.id, 'interest list id', interest.id)
-                       
+                   
                     }
     
                     return interest
@@ -57,17 +55,8 @@ export const EnterInterestsPage = () => {
                
                 setInterestAmount((prevState) => prevState + 1)
                 setUserInterestList((prevList) => [...prevList, selectedInterest])
-                 // change the JSON array to checked when event is clicked to checked
+            } 
                 
-
-            } else {
-              
-              
-                // interest amount is 5 or higher, make the other interests that have isChecked set to false, be disabled
-                
-            }
-                
-            
         } else {
             // only get the ones that does not match with the selected interest (current checked interest) to remove unchecked elements
             setUserInterestList((prevList) => prevList.filter((interest) => interest.id !== selectedInterest.id));
@@ -78,27 +67,25 @@ export const EnterInterestsPage = () => {
             const afterChecking = interestList.map((interest) => {
                 if (interest.name === event.target.name){
                     interest.isChecked = !interest.isChecked
-                    // console.log(interestList, 'interest list after checking')
-                    // console.log('selected interst id ', event.target.id, 'interest list id', interest.id)
-                    console.log(interestList, ' interest list')
                 }
 
                 return interest
             })
             setInterestList(afterChecking)
 
-
-
         }
     }
     
     const handleCreateUser = async () => {
         try {
+            // only get the name
+            const destructuredInterestList = userInterest.map(({ name }) => name)
+            console.log('new user interest', destructuredInterestList)
            
+            setUserInfo({...userInfo, interests: destructuredInterestList})
             await addDoc(usersCollectionRef, {
                 ...userInfo,
-                interests: userInterest
-                
+                interests: destructuredInterestList
             })
         } catch (error) {
             console.log(error, 'error message')
