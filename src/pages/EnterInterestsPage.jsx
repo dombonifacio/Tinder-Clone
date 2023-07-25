@@ -15,6 +15,7 @@ import interestsData from '../interests.json'
 import { db } from "../config/firebase"
 import { collection, addDoc } from "firebase/firestore"
 import { NavbarComponent } from "../components/NavbarComponent"
+import { useLocalStorage } from "../hooks/useLocalStorage"
 
 
 
@@ -29,9 +30,7 @@ export const EnterInterestsPage = () => {
     const [interestList, setInterestList] = useState(interestsData.interests)
     const [toggle, setToggle] = useState(false)
     const { userInfo, setUserInfo } = useContext(UserInfoContext)
-
-
-    
+    const [ profile, setProfile ] = useLocalStorage('profile', null)
     const handleCheckedInterest = (event) => {
         const selectedInterest = {
             name: event.target.name,
@@ -80,9 +79,8 @@ export const EnterInterestsPage = () => {
         try {
             // only get the name
             const destructuredInterestList = userInterest.map(({ name }) => name)
-            console.log('new user interest', destructuredInterestList)
-           
             setUserInfo({...userInfo, interests: destructuredInterestList})
+            setProfile({...userInfo, interests: destructuredInterestList})
             await addDoc(usersCollectionRef, {
                 ...userInfo,
                 interests: destructuredInterestList

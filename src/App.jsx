@@ -1,5 +1,5 @@
 // hooks
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // react router dom
 import { useRoutes, useNavigate } from 'react-router-dom'
@@ -17,6 +17,7 @@ import { EnterGenderPage } from './pages/EnterGenderPage'
 import { EnterInterestsPage } from './pages/EnterInterestsPage'
 import { ProfilePage } from './pages/ProfilePage'
 import { useLocalStorage } from './hooks/useLocalStorage'
+import { LoadingComponent } from './components/LoadingComponent'
 
 
 function App() {
@@ -29,28 +30,37 @@ function App() {
     interests: null
   })
   const [ user ] = useLocalStorage('user', null)
-  // check if profile is created or not
+  const [ profile ] = useLocalStorage('profile', null)
+  const [loading, setLoading] = useState(true)
+  const hasUserAndProfile = user !== null && profile !== null
+  useEffect(() => {
+    
+    const checkUserAndProfile = () => {
+      if (user && profile) {
+        setLoading(false); 
+      } else {
+        setTimeout(() => setLoading(false), 1000);
+      }
+    };
 
-  const isProfileCreated = Object.values(userInfo).every(value => {
-    if (value === null){
-      return false
+    checkUserAndProfile();
+  }, [user, profile]);
+
+  useEffect(() => {
+    if (user && !profile){
+      navigate('/enterName')
+    } else {
+      navigate('/')
     }
-   
-    return true
-  })
-  console.log('user info', userInfo)
-  console.log(isProfileCreated ? 'profile is created' : 'profile is not created')
+  }, [user])
+ 
   // if user is logged in but no profile created yet, navigate them back to the enter name page
   // if user is logged in and profile is created, navigate them to the profile page
   let element = useRoutes([
     {
       path: '/',
-      element: user && isProfileCreated ? <ProfilePage /> : <LoginPage />
+      element: !hasUserAndProfile ? <LoginPage /> : <ProfilePage />
     },
-    // {
-    //   path: '/home',
-    //   element: <HomePage />
-    // },
     {
       path: '/login',
       element: <LoginPage />
@@ -76,6 +86,11 @@ function App() {
       element: <ProfilePage />
     }
   ])
+
+  if (loading) {
+    return <LoadingComponent />;
+  }
+
 
 
   return (
