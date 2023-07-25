@@ -1,14 +1,40 @@
 
 // logos
+import { useNavigate } from 'react-router-dom'
 import logo from '../assets/icons/logo.svg'
+
+//hooks 
+import { useLocalStorage } from "../hooks/useLocalStorage"
+import { useEffect, useState } from 'react'
 
 // icons
 import { BsFillPersonFill } from 'react-icons/bs'
-
+// firebase
+import { auth } from "../config/firebase"
+import { signOut } from 'firebase/auth'
 
 export const NavbarComponent = () =>{
+    const [ user, setUser ] = useLocalStorage('user', null)
+    const [ profile, setProfile ] = useLocalStorage('profile', null)
+    const navigate = useNavigate()
+    const handleSignOut = () => {
+        // if signout is successful, navigate them back to the login page
+        signOut(auth).then(() => {
+          
+            console.log('user signed out')
+                // setUser(null)
+                // setProfile(null)
+                // console.log('User and profile cleared from local storage.');
+                // navigate('/')
+   
+        }).catch((error) => console.log(error))
+    }
+
+
+    
     return (
         <div className='flex items-center justify-center gap-x-5 fixed bottom-0'>
+            <button onClick={handleSignOut}>Sign out</button>
             <button>
 
                 <img src={logo} className='w-[2rem] h-[2rem]'/>

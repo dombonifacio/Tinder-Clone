@@ -18,6 +18,8 @@ import { EnterInterestsPage } from './pages/EnterInterestsPage'
 import { ProfilePage } from './pages/ProfilePage'
 import { useLocalStorage } from './hooks/useLocalStorage'
 import { LoadingComponent } from './components/LoadingComponent'
+import { auth } from './config/firebase'
+import { onAuthStateChanged } from 'firebase/auth'
 
 
 function App() {
@@ -33,65 +35,26 @@ function App() {
   const [ profile, setProfile ] = useLocalStorage('profile', null)
   const [loading, setLoading] = useState(false)
 
-  
-  // if user is created but no profile is created yet, navigate them to the /enterName page
-  // else if user is created and profile are created, show them the <ProfilePage /> component
-  // else (if no user and profile created), show them the <LoginPage /> component
-
-  // only navigate user to the /enterName page if only user has been creaetd
-  
-  // only navigate to /profilePage if user is created and profile is created
-  
-
-  // if user is logged in but no profile created yet, navigate them back to the enter name page
-  // if user is logged in and profile is created, navigate them to the profile page
-  
-
-  // if there is user and profile, go to the homepage
-  // else if there is user but not profile, only show enterName page
-  // 
+  // tracks a user auth state
   useEffect(() => {
-    const handleStorageChange = (e) => {
-      if (e.key === 'user' || e.key === 'profile') {
-        setUser(JSON.parse(localStorage.getItem('user')));
-        setProfile(JSON.parse(localStorage.getItem('profile')));
+    onAuthStateChanged(auth, (user) => {
+      if (user){
+        console.log("user is logged in")
+        setUser(user)
+      } else {
+        setUser(null)
       }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, [setUser, setProfile]);
-  useEffect(() => {
-    if (!user) {
-      console.log('there is no user! app jsx here')
-      navigate('/');
-    } else {
-      console.log('there is user! on app')
-    }
-  }, [user]);
-
-  // const check = () => {
-  //   if (user && !profile){
-  //     return <EnterNamePage />
-  //   } else if (user && profile){
-  //     return <HomePage />
-  //   }
-  //   else {
-  //     <LoginPage />
-  //   }
-  // }
+    })
+  }, [])
   
   let element = useRoutes([
     {
       path: '/',
-      element: user && profile ? <HomePage /> : <LoginPage />
+      element: user && profile ? <HomePage /> : (user && !profile ? <EnterNamePage /> : <LoginPage />)
     },
     {
-      path: '/login',
-      element: <LoginPage />
+      path: '/home',
+      element: <HomePage />
     },
     {
       path: '/enterName',
@@ -123,6 +86,7 @@ function App() {
 
   return (
     <UserInfoContext.Provider value={{userInfo, setUserInfo}}>
+        
         {element}
     </UserInfoContext.Provider>
   )

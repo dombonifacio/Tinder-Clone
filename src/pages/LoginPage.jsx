@@ -1,6 +1,6 @@
 import { auth, googleProvider, facebookProvider } from "../config/firebase"
 // methods that allows you to sign in
-import { signInWithPopup, signInWithRedirect } from "firebase/auth"
+import { onAuthStateChanged, signInWithPopup, signInWithRedirect } from "firebase/auth"
 
 // react routes dom
 import { useNavigate } from "react-router-dom"
@@ -16,8 +16,8 @@ export const LoginPage = () => {
     const signInWithGoogle = () => {
         // signinWithPop method takes in two parameters: auth and the provider (the third party email login)
         signInWithPopup(auth, googleProvider).then((response) => {
+            console.log(response.user, 'user is here')
             setUser(response.user)
-
             setTimeout(() => {
                 navigate('/enterName')
             }, 2000)
@@ -26,6 +26,8 @@ export const LoginPage = () => {
             console.log(error, 'error')
         })
     }
+
+    
 
     const signInWithFacebook = () => {
         signInWithPopup(auth, facebookProvider).then((response) => {
