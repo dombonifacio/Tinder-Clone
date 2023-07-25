@@ -11,9 +11,9 @@ import { useNavigate } from "react-router-dom"
 import { signOut } from "firebase/auth"
 
 import { auth } from "../config/firebase"
-import { useLocalStorage } from "../hooks/useLocalStorage"
 
-export const ProfilePage = ({handleLogout}) => {
+
+export const ProfilePage = () => {
 
     const [settingsShown, setSettingsShown] = useState(false)
     const [ user, setUser ] = useLocalStorage('user', null)

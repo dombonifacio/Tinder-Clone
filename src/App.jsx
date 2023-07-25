@@ -29,51 +29,65 @@ function App() {
     gender: null,
     interests: null
   })
-  const [ user ] = useLocalStorage('user', null)
-  const [ profile ] = useLocalStorage('profile', null)
-  const [loading, setLoading] = useState(true)
-  const hasUserAndProfile = user !== null && profile !== null
-  useEffect(() => {
-    
-    const checkUserAndProfile = () => {
-      if (user && profile) {
-        setLoading(false); 
-        navigate('/')
-      } else {
-        navigate('/')
-        setTimeout(() => setLoading(false), 1000);
-        
-      }1
-    };
+  const [ user, setUser ] = useLocalStorage('user', null)
+  const [ profile, setProfile ] = useLocalStorage('profile', null)
+  const [loading, setLoading] = useState(false)
 
-    checkUserAndProfile();
-  }, [user, profile]);
+  
+  // if user is created but no profile is created yet, navigate them to the /enterName page
+  // else if user is created and profile are created, show them the <ProfilePage /> component
+  // else (if no user and profile created), show them the <LoginPage /> component
 
-  useEffect(() => {
-    if (user && !profile){
-      navigate('/enterName')
-    }
-  }, [user])
- 
-  const handleLogout = () => {
-    setUserInfo({
-      name: null,
-      age: null,
-      gender: null,
-      interests: null,
-    });
-    localStorage.removeItem('user');
-    localStorage.removeItem('profile');
-    navigate('/');
-  };
-
+  // only navigate user to the /enterName page if only user has been creaetd
+  
+  // only navigate to /profilePage if user is created and profile is created
+  
 
   // if user is logged in but no profile created yet, navigate them back to the enter name page
   // if user is logged in and profile is created, navigate them to the profile page
+  
+
+  // if there is user and profile, go to the homepage
+  // else if there is user but not profile, only show enterName page
+  // 
+  useEffect(() => {
+    const handleStorageChange = (e) => {
+      if (e.key === 'user' || e.key === 'profile') {
+        setUser(JSON.parse(localStorage.getItem('user')));
+        setProfile(JSON.parse(localStorage.getItem('profile')));
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [setUser, setProfile]);
+  useEffect(() => {
+    if (!user) {
+      console.log('there is no user! app jsx here')
+      navigate('/');
+    } else {
+      console.log('there is user! on app')
+    }
+  }, [user]);
+
+  // const check = () => {
+  //   if (user && !profile){
+  //     return <EnterNamePage />
+  //   } else if (user && profile){
+  //     return <HomePage />
+  //   }
+  //   else {
+  //     <LoginPage />
+  //   }
+  // }
+  
   let element = useRoutes([
     {
       path: '/',
-      element: user && profile ? <ProfilePage /> : <LoginPage />
+      element: user && profile ? <HomePage /> : <LoginPage />
     },
     {
       path: '/login',
@@ -99,7 +113,7 @@ function App() {
       path: '/profile',
       element: <ProfilePage />
     }
-  ])
+  ]);
 
   if (loading) {
     return <LoadingComponent />;

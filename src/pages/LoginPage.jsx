@@ -17,6 +17,10 @@ export const LoginPage = () => {
         // signinWithPop method takes in two parameters: auth and the provider (the third party email login)
         signInWithPopup(auth, googleProvider).then((response) => {
             setUser(response.user)
+
+            setTimeout(() => {
+                navigate('/enterName')
+            }, 2000)
         
         }).catch((error) => {
             console.log(error, 'error')
@@ -32,11 +36,6 @@ export const LoginPage = () => {
         })
     }
 
-    useEffect(() => {
-        if (user){
-            navigate('/enterName')
-        }
-    }, [user])
 
     return (
         <>
