@@ -38,9 +38,12 @@ function App() {
     const checkUserAndProfile = () => {
       if (user && profile) {
         setLoading(false); 
+        navigate('/')
       } else {
+        navigate('/')
         setTimeout(() => setLoading(false), 1000);
-      }
+        
+      }1
     };
 
     checkUserAndProfile();
@@ -49,17 +52,28 @@ function App() {
   useEffect(() => {
     if (user && !profile){
       navigate('/enterName')
-    } else {
-      navigate('/')
     }
   }, [user])
  
+  const handleLogout = () => {
+    setUserInfo({
+      name: null,
+      age: null,
+      gender: null,
+      interests: null,
+    });
+    localStorage.removeItem('user');
+    localStorage.removeItem('profile');
+    navigate('/');
+  };
+
+
   // if user is logged in but no profile created yet, navigate them back to the enter name page
   // if user is logged in and profile is created, navigate them to the profile page
   let element = useRoutes([
     {
       path: '/',
-      element: !hasUserAndProfile ? <LoginPage /> : <ProfilePage />
+      element: user && profile ? <ProfilePage /> : <LoginPage />
     },
     {
       path: '/login',
