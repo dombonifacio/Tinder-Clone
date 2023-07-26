@@ -2,12 +2,18 @@ import { createUserWithEmailAndPassword } from "firebase/auth"
 import { auth } from "../config/firebase"
 
 // hooks
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { useNavigate } from "react-router-dom"
+
+// contexts
+import { UserExistContext } from "../context/UserExistContext"
+
 
 export const SignupPage = () => {
 
     const [user, setUser] = useState({})
+    const { userExists, setUserExists } = useContext(UserExistContext)
+   
     const navigate = useNavigate()
     const handleUserInput = (event) => {
         setUser({
@@ -18,9 +24,10 @@ export const SignupPage = () => {
 
     const handleSignup = () => {
         createUserWithEmailAndPassword(auth, user.name, user.password).then((response) => {
+            
             console.log(response, 'response. user successfully signed up')
             setTimeout(() => {
-                navigate('/')
+                navigate('/enterName')
             }, 2000)
         }).catch((error) => {
             console.log(error.code, 'error occured')

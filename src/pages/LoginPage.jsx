@@ -6,14 +6,20 @@ import { onAuthStateChanged, signInWithPopup, signInWithEmailAndPassword } from 
 import { useNavigate } from "react-router-dom"
 //hooks
 import { useLocalStorage } from "../hooks/useLocalStorage"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useContext } from "react"
 import { collection, onSnapshot, doc, getDoc } from "firebase/firestore"
+
+// contexts
+import { UserExistContext } from "../context/UserExistContext"
+import { UserSignedUpContext } from "../context/UserSignedUpContext"
 
 export const LoginPage = () => {
 
     const [user, setUser] = useLocalStorage("user", null)
     const [userInfo, setUserInfo] = useState({})
     const usersCollectionRef = collection(db, "users")
+    const { userExists, setUserExists } = useContext(UserExistContext)
+    const { userSignedUp, setUserSignedUp } = useContext(UserSignedUpContext)
     const navigate = useNavigate()
 
     const handleUserInfo = (event) => {
@@ -63,19 +69,26 @@ export const LoginPage = () => {
     }
 
     // check to see if the current user exists in the users doc, if not, navigate them to the enter name page
-    const [users, setUsers] = useState([])
+
     useEffect(() => {
-     
         const checkIfUserExists = onAuthStateChanged(auth, (user) => {
+            
             if (user){
                 const userDocRef = doc(usersCollectionRef, user.uid)
                 getDoc(userDocRef).then((doc) => {
                     if (doc.exists()){
-                        console.log('doc exists')
-                        navigate('/')
+                        setUserSignedUp(false)
+                        setUserExists(true)
+                        console.log('from the login page. doc exists. user true')
+                        setTimeout(() => {
+                            navigate('/')
+                        }, 2000)
                     } else {
+                        setUserExists(false)
                         console.log('doc doesn\'t exists')
-                        navigate('/enterName')
+                        setTimeout(() => {
+                            navigate('/enterName')
+                        }, 2000)
                     }
                 }).catch((error) => {
                     console.log('error', error)

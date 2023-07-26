@@ -18,6 +18,8 @@ import { auth } from "../config/firebase"
 
 import { NavbarComponent } from "../components/NavbarComponent"
 import { useLocalStorage } from "../hooks/useLocalStorage"
+import { UserExistContext } from "../context/UserExistContext"
+import { UserSignedUpContext } from "../context/UserSignedUpContext"
 
 
 
@@ -33,7 +35,10 @@ export const EnterInterestsPage = () => {
     const [interestList, setInterestList] = useState(interestsData.interests)
     const [toggle, setToggle] = useState(false)
     const { userInfo, setUserInfo } = useContext(UserInfoContext)
+    const { userExists, setUserExists } = useContext(UserExistContext)
     const [ profile, setProfile ] = useLocalStorage('profile', null)
+    const { userSignedUp, setUserSignedUp } = useContext(UserSignedUpContext)
+    const navigate = useNavigate()
     const handleCheckedInterest = (event) => {
         const selectedInterest = {
             name: event.target.name,
@@ -84,10 +89,17 @@ export const EnterInterestsPage = () => {
             const destructuredInterestList = userInterest.map(({ name }) => name)
             setUserInfo({...userInfo, interests: destructuredInterestList})
             setProfile({...userInfo, interests: destructuredInterestList})
+            setUserSignedUp(true)
             await setDoc(usersDocRef, {
                 ...userInfo,
                 interests: destructuredInterestList
             })
+            
+            setTimeout(() => {
+              navigate('/')
+              setUserSignedUp(false)
+            }, 2000)
+            
         } catch (error) {
             console.log(error, 'error message')
         }
@@ -108,6 +120,11 @@ export const EnterInterestsPage = () => {
         setToggle(false)
       }
     };
+
+    useEffect(() => {
+      setUserExists(false)
+    }, [])
+    
 
     return (
         <>
@@ -131,8 +148,6 @@ export const EnterInterestsPage = () => {
                         onChange={handleCheckedInterest}
                         disabled={!interest.isChecked && interestAmount >= 5}
                   
-                       
-                       
                       />
                       <label htmlFor={interest.id} className={`py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 text-center`}  onClick={handleTest}>{interest.name}</label>
                     </li>

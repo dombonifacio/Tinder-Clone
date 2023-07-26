@@ -1,5 +1,5 @@
 // hooks
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 
 // react router dom
 import { useRoutes, useNavigate } from 'react-router-dom'
@@ -21,6 +21,8 @@ import { LoadingComponent } from './components/LoadingComponent'
 import { auth } from './config/firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 import { SignupPage } from './pages/SignupPage'
+import { UserExistContext } from './context/UserExistContext'
+import { UserSignedUpContext } from './context/UserSignedUpContext'
 
 
 
@@ -36,11 +38,9 @@ function App() {
   const [ user, setUser ] = useLocalStorage('user', null)
   const [ profile, setProfile ] = useLocalStorage('profile', null)
   const [loading, setLoading] = useState(false)
-
+  const [ userExists, setUserExists] = useState(false)
+  const [ userSignedUp, setUserSignedUp ] = useState(false)
     // tracks a user auth state
-
-    
-
     useEffect(()=>{
       onAuthStateChanged(auth, (user) => {
         if (user){
@@ -48,6 +48,8 @@ function App() {
             console.log("user is logged in")
         } else {
             console.log('user is logged out')
+            setUserExists(false)
+            
             setUser(null)
             setProfile(null)
         
@@ -55,12 +57,19 @@ function App() {
         })
     }, [user])
 
-  
+    // if user just signed up within the enter interests page, setUserSignedUp true
+    // they will then be navigated to the login page
+    // once they hit the sign in setUserSignedUp to false
+
+
+
+    console.log('user exists', userExists)
+    console.log('user just signed up', userSignedUp)
   let element = useRoutes([
     {
       path: '/',
       // show homep
-      element: user && !profile ? <HomePage /> : <LoginPage />
+      element: user && userExists && !userSignedUp ? <HomePage /> : <LoginPage />
     },
     {
       path: '/signup',
@@ -99,10 +108,14 @@ function App() {
 
 
   return (
-    <UserInfoContext.Provider value={{userInfo, setUserInfo}}>
-        
-        {element}
-    </UserInfoContext.Provider>
+    <UserExistContext.Provider value={{userExists, setUserExists}}>
+      <UserInfoContext.Provider value={{userInfo, setUserInfo}}>
+        <UserSignedUpContext.Provider value={{userSignedUp, setUserSignedUp}}>
+
+          {element}
+        </UserSignedUpContext.Provider>
+      </UserInfoContext.Provider>
+    </UserExistContext.Provider>
   )
 
   
