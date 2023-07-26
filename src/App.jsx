@@ -59,7 +59,8 @@ function App() {
   let element = useRoutes([
     {
       path: '/',
-      element: user && profile ? <HomePage /> : <LoginPage />
+      // show homep
+      element: user && !profile ? <HomePage /> : <LoginPage />
     },
     {
       path: '/signup',
@@ -87,7 +88,7 @@ function App() {
     },
     {
       path: '/profile',
-      element: user && profile ? <EnterNamePage /> : <LoginPage />
+      element: user ? <ProfilePage /> : <LoginPage />
     }
   ]);
 

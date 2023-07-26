@@ -13,7 +13,9 @@ import interestsData from '../interests.json'
 
 // firebase/firestore
 import { db } from "../config/firebase"
-import { collection, addDoc } from "firebase/firestore"
+import { collection, addDoc, doc, setDoc } from "firebase/firestore"
+import { auth } from "../config/firebase"
+
 import { NavbarComponent } from "../components/NavbarComponent"
 import { useLocalStorage } from "../hooks/useLocalStorage"
 
@@ -21,8 +23,9 @@ import { useLocalStorage } from "../hooks/useLocalStorage"
 
 export const EnterInterestsPage = () => {
 
+    const uid = auth.currentUser?.uid
     // collection ref to users when creating a new user
-    const usersCollectionRef = collection(db, "users")
+    const usersDocRef = doc(db, "users", uid)
 
     const [interestAmount, setInterestAmount] = useState(0)
 
@@ -81,7 +84,7 @@ export const EnterInterestsPage = () => {
             const destructuredInterestList = userInterest.map(({ name }) => name)
             setUserInfo({...userInfo, interests: destructuredInterestList})
             setProfile({...userInfo, interests: destructuredInterestList})
-            await addDoc(usersCollectionRef, {
+            await setDoc(usersDocRef, {
                 ...userInfo,
                 interests: destructuredInterestList
             })

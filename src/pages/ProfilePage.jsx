@@ -16,8 +16,7 @@ import { auth } from "../config/firebase"
 export const ProfilePage = () => {
 
     const [settingsShown, setSettingsShown] = useState(false)
-    const [ user, setUser ] = useLocalStorage('user', null)
-    const [ profile, setProfile ] = useLocalStorage('profile', null)
+    console.log('auth user', auth)
     const navigate = useNavigate()
     
     return (
@@ -26,7 +25,6 @@ export const ProfilePage = () => {
                  <div className="p-4 flex flex-col gap-y-16">
                
                  <div className="flex items-center justify-between">
- 
                      {/* tinder logo */}
                      <div className="flex">
  

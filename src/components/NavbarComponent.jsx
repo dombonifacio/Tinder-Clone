@@ -36,6 +36,9 @@ export const NavbarComponent = () =>{
         }).catch((error) => console.log(error))
     }
 
+    const handleNavigateProfilePage = () => {
+        navigate('/profile')
+    }
     
 
 
@@ -47,7 +50,7 @@ export const NavbarComponent = () =>{
 
                 <img src={logo} className='w-[2rem] h-[2rem]'/>
             </button>
-            <button>
+            <button onClick={handleNavigateProfilePage}>
 
                 <BsFillPersonFill size={"2rem"}/>
             </button>

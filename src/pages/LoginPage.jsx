@@ -1,4 +1,4 @@
-import { auth, googleProvider, facebookProvider } from "../config/firebase"
+import { auth, googleProvider, facebookProvider, db } from "../config/firebase"
 // methods that allows you to sign in
 import { onAuthStateChanged, signInWithPopup, signInWithEmailAndPassword } from "firebase/auth"
 
@@ -7,11 +7,13 @@ import { useNavigate } from "react-router-dom"
 //hooks
 import { useLocalStorage } from "../hooks/useLocalStorage"
 import { useEffect, useState } from "react"
+import { collection, onSnapshot, doc, getDoc } from "firebase/firestore"
 
 export const LoginPage = () => {
 
     const [user, setUser] = useLocalStorage("user", null)
     const [userInfo, setUserInfo] = useState({})
+    const usersCollectionRef = collection(db, "users")
     const navigate = useNavigate()
 
     const handleUserInfo = (event) => {
@@ -26,10 +28,8 @@ export const LoginPage = () => {
         signInWithPopup(auth, googleProvider).then((response) => {
 
             setUser(response.user)
-            setTimeout(() => {
-                navigate('/enterName')
-            }, 2000)
-        
+           
+            navigate('/')
         }).catch((error) => {
             console.log(error, 'error')
         })
@@ -55,13 +55,42 @@ export const LoginPage = () => {
         signInWithEmailAndPassword(auth, userInfo.email, userInfo.password).then((response) => {
             setUser(response.user)
             console.log('user successfully logged in')
-            setTimeout(() => {
-                navigate('/')
-            }, 2000)
+            navigate('/')
+        
         }).catch((error) => {
             console.log('error signing in', error)
         })
     }
+
+    // check to see if the current user exists in the users doc, if not, navigate them to the enter name page
+    const [users, setUsers] = useState([])
+    useEffect(() => {
+     
+        const checkIfUserExists = onAuthStateChanged(auth, (user) => {
+            if (user){
+                const userDocRef = doc(usersCollectionRef, user.uid)
+                getDoc(userDocRef).then((doc) => {
+                    if (doc.exists()){
+                        console.log('doc exists')
+                        navigate('/')
+                    } else {
+                        console.log('doc doesn\'t exists')
+                        navigate('/enterName')
+                    }
+                }).catch((error) => {
+                    console.log('error', error)
+                })
+            }
+        })
+        return () => {
+            // Unsubscribe from the listener when the component unmounts
+            checkIfUserExists();
+        };
+        
+    }, [])
+    
+
+
 
     return (
         <>
