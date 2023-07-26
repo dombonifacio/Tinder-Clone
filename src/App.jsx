@@ -20,6 +20,8 @@ import { useLocalStorage } from './hooks/useLocalStorage'
 import { LoadingComponent } from './components/LoadingComponent'
 import { auth } from './config/firebase'
 import { onAuthStateChanged } from 'firebase/auth'
+import { SignupPage } from './pages/SignupPage'
+
 
 
 function App() {
@@ -35,22 +37,33 @@ function App() {
   const [ profile, setProfile ] = useLocalStorage('profile', null)
   const [loading, setLoading] = useState(false)
 
-  // tracks a user auth state
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user){
-        console.log("user is logged in")
-        setUser(user)
-      } else {
-        setUser(null)
-      }
-    })
-  }, [])
+    // tracks a user auth state
+
+    
+
+    useEffect(()=>{
+      onAuthStateChanged(auth, (user) => {
+        if (user){
+            setUser(user)
+            console.log("user is logged in")
+        } else {
+            console.log('user is logged out')
+            setUser(null)
+            setProfile(null)
+        
+        }
+        })
+    }, [user])
+
   
   let element = useRoutes([
     {
       path: '/',
-      element: user && profile ? <HomePage /> : (user && !profile ? <EnterNamePage /> : <LoginPage />)
+      element: user && profile ? <HomePage /> : <LoginPage />
+    },
+    {
+      path: '/signup',
+      element: <SignupPage />
     },
     {
       path: '/home',
@@ -58,15 +71,15 @@ function App() {
     },
     {
       path: '/enterName',
-      element: <EnterNamePage />
+      element: <EnterNamePage /> 
     },
     {
       path: '/enterAge',
-      element: <EnterAgePage />
+      element:  <EnterAgePage /> 
     },
     {
       path: '/enterGender',
-      element: <EnterGenderPage />
+      element: <EnterGenderPage /> 
     },
     {
       path: '/enterInterests',
@@ -74,7 +87,7 @@ function App() {
     },
     {
       path: '/profile',
-      element: <ProfilePage />
+      element: user && profile ? <EnterNamePage /> : <LoginPage />
     }
   ]);
 

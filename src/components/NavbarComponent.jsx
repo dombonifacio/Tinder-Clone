@@ -11,7 +11,8 @@ import { useEffect, useState } from 'react'
 import { BsFillPersonFill } from 'react-icons/bs'
 // firebase
 import { auth } from "../config/firebase"
-import { signOut } from 'firebase/auth'
+import { signOut, onAuthStateChanged } from 'firebase/auth'
+
 
 export const NavbarComponent = () =>{
     const [ user, setUser ] = useLocalStorage('user', null)
@@ -21,14 +22,21 @@ export const NavbarComponent = () =>{
         // if signout is successful, navigate them back to the login page
         signOut(auth).then(() => {
           
-            console.log('user signed out')
-                // setUser(null)
-                // setProfile(null)
+                console.log('user signed out')
+                setTimeout(() => {
+
+                    setUser(null)
+                    setProfile(null)
+                    navigate('/')
+                }, 2000)
+                
                 // console.log('User and profile cleared from local storage.');
                 // navigate('/')
    
         }).catch((error) => console.log(error))
     }
+
+    
 
 
     
