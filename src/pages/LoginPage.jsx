@@ -23,23 +23,10 @@ export const LoginPage = () => {
     const { userSignedUp, setUserSignedUp } = useContext(UserSignedUpContext)
     const { userIsLoggedIn, setUserIsLoggedIn } = useContext(UserLoggedInContext)
     const navigate = useNavigate()
-
     const handleUserInfo = (event) => {
         setUserInfo({
             ...userInfo,
             [event.target.name]: event.target.value
-        })
-    }
-
-    const signInWithGoogle = () => {
-        // signinWithPop method takes in two parameters: auth and the provider (the third party email login)
-        signInWithPopup(auth, googleProvider).then((response) => {
-
-            setValue(response.user)
-           
-            navigate('/')
-        }).catch((error) => {
-            console.log(error, 'error')
         })
     }
 
@@ -50,6 +37,16 @@ export const LoginPage = () => {
             setTimeout(() => {
                 navigate('/enterName')
             }, 2000)
+        }).catch((error) => {
+            console.log(error, 'error')
+        })
+    }
+
+    const signInWithGoogle = () => {
+        // signinWithPop method takes in two parameters: auth and the provider (the third party email login)
+        signInWithPopup(auth, googleProvider).then((response) => {
+            setValue(response.user)
+            navigate('/')
         }).catch((error) => {
             console.log(error, 'error')
         })
@@ -75,13 +72,6 @@ export const LoginPage = () => {
         
         }
     }, [value])
-
-    
-
-    
-
-    // check to see if the current user exists in the users doc, if not, navigate them to the enter name page
-
     useEffect(() => {
         const checkIfUserExists = onAuthStateChanged(auth, (person) => {
             if (value){
@@ -118,11 +108,6 @@ export const LoginPage = () => {
         };
         
     }, [value])
-
-
-   
-
-
 
     return (
         <>

@@ -46,7 +46,7 @@ export const EnterInterestsPage = () => {
             isChecked: event.target.checked
         }
         
-        // only allow user to check if interest amount is less than 5 or equal to 5
+        // only allow user to check if interest amount is less than 5
         if(event.target.checked && !userInterest.some((interest) => interest.id === selectedInterest.id)){
             if (interestAmount < 5) {
                 // get the selected interest id from the interestList and see if it matches with the selectedInterest id

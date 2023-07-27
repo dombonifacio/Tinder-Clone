@@ -24,6 +24,7 @@ import { SignupPage } from './pages/SignupPage'
 import { UserExistContext } from './context/UserExistContext'
 import { UserSignedUpContext } from './context/UserSignedUpContext'
 import { UserLoggedInContext } from './context/UserLoggedInContext'
+import { EnterPhotosPage } from './pages/EnterPhotosPage'
 
 
 
@@ -74,6 +75,10 @@ function App() {
     {
       path: '/enterInterests',
       element: userSignedUp ? <EnterInterestsPage /> : <LoginPage />
+    },
+    {
+      path: '/enterPhotos',
+      element: <EnterPhotosPage />
     },
     {
       path: '/profile',
