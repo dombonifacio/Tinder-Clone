@@ -40,7 +40,7 @@ export const EnterPhotosPage = () => {
         
         setPreviewImages({
             ...previewImages,
-            [event.target.name]: event.target.files[0]
+            [event.target.name]: selectedImage
         })
     }
     
