@@ -12,6 +12,7 @@ import { collection, onSnapshot, doc, getDoc } from "firebase/firestore"
 // contexts
 import { UserExistContext } from "../context/UserExistContext"
 import { UserSignedUpContext } from "../context/UserSignedUpContext"
+import { UserLoggedInContext } from "../context/UserLoggedInContext"
 
 export const LoginPage = () => {
 
@@ -20,6 +21,7 @@ export const LoginPage = () => {
     const usersCollectionRef = collection(db, "users")
     const { userExists, setUserExists } = useContext(UserExistContext)
     const { userSignedUp, setUserSignedUp } = useContext(UserSignedUpContext)
+    const { userIsLoggedIn, setUserIsLoggedIn } = useContext(UserLoggedInContext)
     const navigate = useNavigate()
 
     const handleUserInfo = (event) => {
@@ -60,7 +62,7 @@ export const LoginPage = () => {
     const handleSignInWithEmailAndPass = () => {
         signInWithEmailAndPassword(auth, userInfo.email, userInfo.password).then((response) => {
             setUser(response.user)
-            console.log('user successfully logged in')
+            setUserIsLoggedIn(true)
             navigate('/')
         
         }).catch((error) => {
@@ -71,10 +73,11 @@ export const LoginPage = () => {
     // check to see if the current user exists in the users doc, if not, navigate them to the enter name page
 
     useEffect(() => {
-        const checkIfUserExists = onAuthStateChanged(auth, (user) => {
-            
+        const checkIfUserExists = onAuthStateChanged(auth, (person) => {
+            console.log('setting setUesr to object')
+
             if (user){
-                const userDocRef = doc(usersCollectionRef, user.uid)
+                const userDocRef = doc(usersCollectionRef, person.uid)
                 getDoc(userDocRef).then((doc) => {
                     if (doc.exists()){
                         setUserSignedUp(false)
@@ -83,6 +86,7 @@ export const LoginPage = () => {
                         setTimeout(() => {
                             navigate('/')
                         }, 2000)
+                        console.log(user,' user is on login page local storage')
                     } else {
                         setUserExists(false)
                         console.log('doc doesn\'t exists')
@@ -94,14 +98,20 @@ export const LoginPage = () => {
                     console.log('error', error)
                 })
             }
+            else {
+
+                console.log(auth, 'user is not here from the login page. onauthstatechanged useeffecct')
+            }
         })
         return () => {
             // Unsubscribe from the listener when the component unmounts
             checkIfUserExists();
         };
         
-    }, [])
-    
+    }, [user])
+
+
+   
 
 
 

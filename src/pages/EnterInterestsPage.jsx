@@ -84,12 +84,13 @@ export const EnterInterestsPage = () => {
     }
     
     const handleCreateUser = async () => {
+      
         try {
             // only get the name
             const destructuredInterestList = userInterest.map(({ name }) => name)
-            setUserInfo({...userInfo, interests: destructuredInterestList})
-            setProfile({...userInfo, interests: destructuredInterestList})
-            setUserSignedUp(true)
+            // setUserInfo({...userInfo, interests: destructuredInterestList})
+            // setProfile({...userInfo, interests: destructuredInterestList})
+            setUserSignedUp(false)
             await setDoc(usersDocRef, {
                 ...userInfo,
                 interests: destructuredInterestList
@@ -97,7 +98,7 @@ export const EnterInterestsPage = () => {
             
             setTimeout(() => {
               navigate('/')
-              setUserSignedUp(false)
+         
             }, 2000)
             
         } catch (error) {

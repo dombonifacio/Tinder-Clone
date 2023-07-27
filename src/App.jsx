@@ -23,6 +23,7 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { SignupPage } from './pages/SignupPage'
 import { UserExistContext } from './context/UserExistContext'
 import { UserSignedUpContext } from './context/UserSignedUpContext'
+import { UserLoggedInContext } from './context/UserLoggedInContext'
 
 
 
@@ -40,36 +41,13 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [ userExists, setUserExists] = useState(false)
   const [ userSignedUp, setUserSignedUp ] = useState(false)
-    // tracks a user auth state
-    useEffect(()=>{
-      onAuthStateChanged(auth, (user) => {
-        if (user){
-            setUser(user)
-            console.log("user is logged in")
-        } else {
-            console.log('user is logged out')
-            setUserExists(false)
-            
-            setUser(null)
-            setProfile(null)
-        
-        }
-        })
-    }, [user])
-
-    // if user just signed up within the enter interests page, setUserSignedUp true
-    // they will then be navigated to the login page
-    // once they hit the sign in setUserSignedUp to false
-
-
-
-    console.log('user exists', userExists)
-    console.log('user just signed up', userSignedUp)
+  const [ userIsLoggedIn, setUserIsLoggedIn ] = useState(false)
+    
   let element = useRoutes([
     {
       path: '/',
       // show homep
-      element: user && userExists && !userSignedUp ? <HomePage /> : <LoginPage />
+      element: userIsLoggedIn && userExists && !userSignedUp ? <HomePage /> : <LoginPage />
     },
     {
       path: '/signup',
@@ -108,14 +86,16 @@ function App() {
 
 
   return (
-    <UserExistContext.Provider value={{userExists, setUserExists}}>
-      <UserInfoContext.Provider value={{userInfo, setUserInfo}}>
-        <UserSignedUpContext.Provider value={{userSignedUp, setUserSignedUp}}>
+    <UserLoggedInContext.Provider value={{userIsLoggedIn, setUserIsLoggedIn}}>
+      <UserExistContext.Provider value={{userExists, setUserExists}}>
+        <UserInfoContext.Provider value={{userInfo, setUserInfo}}>
+          <UserSignedUpContext.Provider value={{userSignedUp, setUserSignedUp}}>
 
-          {element}
-        </UserSignedUpContext.Provider>
-      </UserInfoContext.Provider>
-    </UserExistContext.Provider>
+            {element}
+          </UserSignedUpContext.Provider>
+        </UserInfoContext.Provider>
+      </UserExistContext.Provider>
+    </UserLoggedInContext.Provider>
   )
 
   

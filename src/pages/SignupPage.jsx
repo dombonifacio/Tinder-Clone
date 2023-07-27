@@ -7,12 +7,14 @@ import { useNavigate } from "react-router-dom"
 
 // contexts
 import { UserExistContext } from "../context/UserExistContext"
+import { UserSignedUpContext } from "../context/UserSignedUpContext"
 
 
 export const SignupPage = () => {
 
     const [user, setUser] = useState({})
     const { userExists, setUserExists } = useContext(UserExistContext)
+    const { userSignedUp, setUserSignedUp } = useContext(UserSignedUpContext)
    
     const navigate = useNavigate()
     const handleUserInput = (event) => {
@@ -27,6 +29,7 @@ export const SignupPage = () => {
             
             console.log(response, 'response. user successfully signed up')
             setTimeout(() => {
+                setUserSignedUp(true)
                 navigate('/enterName')
             }, 2000)
         }).catch((error) => {
