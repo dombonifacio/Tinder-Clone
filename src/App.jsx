@@ -43,12 +43,13 @@ function App() {
   const [ userSignedUp, setUserSignedUp ] = useState(false)
   const [ userIsLoggedIn, setUserIsLoggedIn ] = useState(false)
   console.log('user is logged in? ', userIsLoggedIn)
-  console.log('value user', value)
+  console.log('user exists? ', userExists)
+  console.log('userSignedup', userSignedUp)
   let element = useRoutes([
     {
       path: '/',
       // show homep
-      element: userIsLoggedIn ? <HomePage /> : <LoginPage />
+      element: userIsLoggedIn && userExists && !userSignedUp ? <HomePage /> : <LoginPage />
     },
     {
       path: '/signup',
