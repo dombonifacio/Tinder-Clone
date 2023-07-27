@@ -36,18 +36,19 @@ function App() {
     gender: null,
     interests: null
   })
-  const [ user, setUser ] = useLocalStorage('user', null)
+  const [value, setValue] = useLocalStorage('user', null)
   const [ profile, setProfile ] = useLocalStorage('profile', null)
   const [loading, setLoading] = useState(false)
   const [ userExists, setUserExists] = useState(false)
   const [ userSignedUp, setUserSignedUp ] = useState(false)
   const [ userIsLoggedIn, setUserIsLoggedIn ] = useState(false)
-    
+  console.log('user is logged in? ', userIsLoggedIn)
+  console.log('value user', value)
   let element = useRoutes([
     {
       path: '/',
       // show homep
-      element: userIsLoggedIn && userExists && !userSignedUp ? <HomePage /> : <LoginPage />
+      element: userIsLoggedIn ? <HomePage /> : <LoginPage />
     },
     {
       path: '/signup',
@@ -59,23 +60,23 @@ function App() {
     },
     {
       path: '/enterName',
-      element: <EnterNamePage /> 
+      element: userSignedUp ? <EnterNamePage /> : <LoginPage />
     },
     {
       path: '/enterAge',
-      element:  <EnterAgePage /> 
+      element:  userSignedUp ? <EnterAgePage /> : <LoginPage />
     },
     {
       path: '/enterGender',
-      element: <EnterGenderPage /> 
+      element: userSignedUp ? <EnterGenderPage /> : <LoginPage />
     },
     {
       path: '/enterInterests',
-      element: <EnterInterestsPage />
+      element: userSignedUp ? <EnterInterestsPage /> : <LoginPage />
     },
     {
       path: '/profile',
-      element: user ? <ProfilePage /> : <LoginPage />
+      element: userIsLoggedIn && userExists && !userSignedUp ? <ProfilePage /> : <LoginPage />
     }
   ]);
 

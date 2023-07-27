@@ -16,20 +16,25 @@ import { UserLoggedInContext } from '../context/UserLoggedInContext'
 
 
 export const NavbarComponent = () =>{
-    const [ user, setUser ] = useLocalStorage('user', null)
-    const [ profile, setProfile ] = useLocalStorage('profile', null)
+    const [value, setValue] = useLocalStorage("user", null)
     const { userIsLoggedIn, setUserIsLoggedIn } = useContext(UserLoggedInContext)
     const navigate = useNavigate()
     const handleSignOut = () => {
         // if signout is successful, navigate them back to the login page
         signOut(auth).then(() => {
             console.log('user signed out')
-            setUser(null)
-            setUserIsLoggedIn(false)
+            setValue(null)
+            
             navigate('/')
                 
         }).catch((error) => console.log(error))
     }
+
+    useEffect(() => {
+        if (!value){
+            setUserIsLoggedIn(false)
+        }
+    }, [value])
 
     const handleNavigateProfilePage = () => {
         navigate('/profile')
