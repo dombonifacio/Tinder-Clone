@@ -74,12 +74,13 @@ export const EnterPhotosPage = () => {
             setImages([...images, selectedImageObj])
             const reader = new FileReader()
             reader.onloadend = () => {
-                setPreview({
-                    ...preview,
-                    [eventName]: reader.result,
-                    id: selectedImageObj.id
-                    
-                })
+                setPreview((prevPreview) => ({
+                    ...prevPreview,
+                    [eventName]: {
+                        url: reader.result,
+                        id: selectedImageObj.id
+                    }
+                }));
             }
             reader.readAsDataURL(selectedImage)
 
@@ -91,12 +92,15 @@ export const EnterPhotosPage = () => {
                 console.log('it is not a duplicate')
                  const reader = new FileReader()
                 reader.onloadend = () => {
-                    setPreview([{
-                    ...preview,
-                    [eventName]: reader.result,
-                    id: selectedImageObj.id
-                }])
+                    setPreview((prevPreview) => ({
+                        ...prevPreview,
+                        [eventName]: {
+                            url: reader.result,
+                            id: selectedImageObj.id
+                        }
+                    }));
                 }
+                
                 reader.readAsDataURL(selectedImage)
                 setImages([...images, selectedImageObj])
                
@@ -138,7 +142,7 @@ export const EnterPhotosPage = () => {
 
     const handleDeleteImage = (event) => {
         // only get the ones that doesn't match with the  event target id
-        if (images){
+        if (images.length >= 1){
 
             const deleteTargetImage = images.filter((image) => image.id !== event.target.id)
             const deleteEventName = event.target.name
@@ -146,6 +150,9 @@ export const EnterPhotosPage = () => {
             if (isMatchingImage){
                 console.log('it matches')
                 setPreview({...preview, [eventName]: null })
+                if (images.length === 1){
+                    setPreview(null)
+                }
 
                 
             } else {
@@ -154,12 +161,8 @@ export const EnterPhotosPage = () => {
             
             setImages(deleteTargetImage)
         }
+  
     }
-
-    
-
-    // Preview Images
-    
 
     return (
         <>
@@ -174,20 +177,20 @@ export const EnterPhotosPage = () => {
                 })}
             </div>
 
-            <div className='flex'>
-                <div className='border border-red-500 w-24 h-24'>
-                    { preview && <img src={preview.photoOne} />}
-                    <button className='bg-blue-500' onClick={handleDeleteImage} id={preview?.id}>Delete photo One</button>
-                    </div>
-                <div className='border border-red-500 w-24 h-24'>
-                    { preview?.photoTwo ? <img src={preview.photoTwo} /> : <h1>no image</h1>}
-                    <button className='bg-purple-500' onClick={handleDeleteImage} id={preview?.id}>Delete photo two</button>
-                    </div>
-                <div className='border border-red-500 w-24 h-24'>
-                    { preview && <img src={preview.photoThree} />}
-                    <button className='bg-green-500' onClick={handleDeleteImage} id={preview?.id}>Delete photo Three</button>
-                    </div>
+           <div className='flex'>
+            <div className='border border-red-500 w-24 h-24'>
+                {preview?.photoOne ? <img src={preview.photoOne?.url} alt="Preview" /> : <h1>no image</h1>}
+                {preview?.photoOne && <button className='bg-blue-500' onClick={handleDeleteImage} id={preview.photoOne?.id}>Delete photo One</button>}
             </div>
+            <div className='border border-red-500 w-24 h-24'>
+                {preview?.photoTwo ? <img src={preview.photoTwo?.url} alt="Preview" /> : <h1>no image</h1>}
+                {preview?.photoTwo && <button className='bg-purple-500' onClick={handleDeleteImage} id={preview.photoTwo?.id}>Delete photo Two</button>}
+            </div>
+            <div className='border border-red-500 w-24 h-24'>
+                {preview?.photoThree ? <img src={preview.photoThree?.url} alt="Preview" /> : <h1>no image</h1>}
+                {preview?.photoThree && <button className='bg-green-500' onClick={handleDeleteImage} id={preview.photoThree?.id}>Delete photo Three</button>}
+            </div>
+        </div>
           
   
             {/* container */}
