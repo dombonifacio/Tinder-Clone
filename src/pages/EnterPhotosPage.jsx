@@ -28,28 +28,17 @@ export const EnterPhotosPage = () => {
     const [ imageUrl, setImagesUrl ] = useState("")
     
     const handleUserInfoChange = (event) => {
-        const formData = new FormData();
-        formData.append("upload_preset", "lgeq7wmm");
-        formData.append("file", event.target.files[0]);
-        axios
-        .post("https://api.cloudinary.com/v1_1/dpj2su9ea/upload", formData)
-        .then((response) => {
-            console.log("result of axios cloudinary", response.data.url);
-            setImagesUrl(response.data.url);
-        })
-        .catch((error) => {
-            console.log("error has occurred", error);
-        });
+       
         setEventName(event.target.name)
         setSelectedImageObj({
             fileName: event.target.files[0].name,
             id: crypto.randomUUID(),
+            file: event.target.files[0]
         })
         setSelectedImage({
             ...selectedImageObj,
             [event.target.name]: [event.target.files[0]]
         })
-       
         const file = event.target.files[0]
         if (file && file.type.substr(0,5) === "image"){
 
@@ -64,14 +53,29 @@ export const EnterPhotosPage = () => {
     }
     useEffect(() => {
         if (selectedImageObj && images.length === 0 && eventName){
-            if (imageUrl){
-
+            const formData = new FormData();
+            formData.append("upload_preset", "lgeq7wmm");
+            formData.append("file", selectedImageObj.file);
+            axios
+            .post("https://api.cloudinary.com/v1_1/dpj2su9ea/upload", formData)
+            .then((response) => {
+                console.log("result of axios cloudinary", response.data.url);
+                setImagesUrl(response.data.url);
+                 // Now that you have the imageUrl, update the selectedImageObj
                 const updatedImageObj = {
                     ...selectedImageObj,
-                    url: imageUrl
-                }
-                setImages([...images, updatedImageObj])
-            }
+                    url: response.data.url,
+                };
+                setImagesUrl(imageUrl);
+                setSelectedImageObj(updatedImageObj);
+      
+                // Add updatedImageObj to the images array
+                setImages([...images, updatedImageObj]);
+            })
+            .catch((error) => {
+                console.log("error has occurred", error);
+            });
+            
             const reader = new FileReader()
             reader.onloadend = () => {
                 setPreview((prevPreview) => ({
@@ -85,9 +89,11 @@ export const EnterPhotosPage = () => {
             reader.readAsDataURL(selectedImage)
         } 
         else if (selectedImageObj && images.length > 0 && eventName){
+            
             const isDuplicate = images.some((image) => image.fileName === selectedImageObj.fileName)
              // if any of the eventName's file name in the image array matches the selectedImageObj
-            if (!isDuplicate){
+            if (!isDuplicate)
+            {
                 console.log('it is not a duplicate')
                 
                  const reader = new FileReader()
@@ -101,36 +107,63 @@ export const EnterPhotosPage = () => {
                     }));
                 }
                 reader.readAsDataURL(selectedImage)
-                if (imageUrl){
-
-                    const updatedImageObj = {
-                        ...selectedImageObj,
-                        url: imageUrl
-                    }
-                    setImages([...images, updatedImageObj])
-                }
+                const formData = new FormData();
+                formData.append("upload_preset", "lgeq7wmm");
+                formData.append("file", selectedImageObj.file);
+                axios
+                .post("https://api.cloudinary.com/v1_1/dpj2su9ea/upload", formData)
+                .then((response) => {
+                  console.log("result of axios cloudinary", response.data.url);
+                  const imageUrl = response.data.url;
+        
+                  // Now that you have the imageUrl, update the selectedImageObj
+                  const updatedImageObj = {
+                    ...selectedImageObj,
+                    url: imageUrl,
+                  };
+        
+                  // Update the state with the new imageUrl and selectedImageObj
+                  setImagesUrl(imageUrl);
+                  setSelectedImageObj(updatedImageObj);
+        
+                  // Add updatedImageObj to the images array
+                  setImages([...images, updatedImageObj]);
+                })
+               
             } 
             else {
                 console.log('it is a duplicate')
             }
-        } else {
+        } 
+        else {
             setPreview(null)
             setSelectedImageObj(null)
         }
-
         if (eventName && images){
              console.log('images.eventName', images[eventName])
              console.log('event name', eventName)
             console.log('selected image', selectedImageObj)
         }
-    }, [selectedImageObj, eventName, selectedImage, imageUrl])
+    }, [selectedImageObj, eventName, selectedImage])
 
     useEffect(() => {
         if (images){
-            console.log('images array', images)
+            console.log('images', images)
+            const getImageUrl = images.map((image) => { return image.url })
+            console.log('image url', getImageUrl)
+            setUserInfo((prevUserInfo) => ({
+                ...prevUserInfo,
+                images: getImageUrl
+            }));
         }
+
     }, [images])
 
+    useEffect(() => {
+        if (userInfo){
+            console.log('user info', userInfo)
+        }
+    }, [userInfo])
     const nextPage = () => {
         navigate('/enterAge')
     }
