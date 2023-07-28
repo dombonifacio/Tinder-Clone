@@ -18,62 +18,91 @@ export const EnterPhotosPage = () => {
     const navigate = useNavigate()
     const { userInfo, setUserInfo } = useContext(UserInfoContext)
     const [ images, setImages ] = useState([])
+    const [ selectedImageObj, setSelectedImageObj ] = useState(null)
     const [ selectedImage, setSelectedImage ] = useState(null)
     const [ previewImages, setPreviewImages ] = useState({})
+    const [ preview, setPreview ] = useState({})
+    const [ eventName, setEventName ] = useState(null)
     
-    // -- Setting Preview Images --
-    // Whatever the input type name is, make that the name in the previewImages and then grab the value that you retrieved from the file reader
-    // -- Showing Images --
-    // Map through the array? then have each div show that particular image depending on what the input name is
-    
-    
+
+
     const handleUserInfoChange = (event) => {
         // setUserInfo({
         //     ...userInfo,
         //     [event.target.name]: event.target.value,
         // })
-        setSelectedImage({
+        setEventName(event.target.name)
+        setSelectedImageObj({
           fileName: event.target.files[0].name,
           id: crypto.randomUUID()
         })
-        
+        const file = event.target.files[0]
+        if (file && file.type.substr(0,5) === "image"){
+
+            setSelectedImage(event.target.files[0])
+        } else {
+            setSelectedImage(null)
+        }
         setPreviewImages({
             ...previewImages,
-            [event.target.name]: selectedImage
+            [event.target.name]: event.target.files[0].name
         })
     }
-    
     useEffect(() => {
-        if (selectedImage && images.length === 0){
+        if (selectedImageObj && images.length === 0 && eventName){
             
-            setImages([...images, selectedImage])
+            setImages([...images, selectedImageObj])
+            const reader = new FileReader()
+            reader.onloadend = () => {
+                setPreview({
+                    ...preview,
+                    [eventName]: reader.result
+                })
+            }
+            reader.readAsDataURL(selectedImage)
 
-        } else if (selectedImage && images.length > 0){
-            const isDuplicate = images.some((image) => image.fileName === selectedImage.fileName)
+        } 
+        else if (selectedImageObj && images.length > 0 && eventName){
+            const isDuplicate = images.some((image) => image.fileName === selectedImageObj.fileName)
             console.log(isDuplicate, 'is duplicate')
+             
             if (!isDuplicate){
                 console.log('it is not a duplicate')
-                setImages([...images, selectedImage])
+                 const reader = new FileReader()
+                reader.onloadend = () => {
+                    setPreview({
+                    ...preview,
+                    [eventName]: reader.result
+                })
+                }
+                reader.readAsDataURL(selectedImage)
+                setImages([...images, selectedImageObj])
             } else{
                 console.log('it is a duplicate')
             }
+        } else {
+            setPreview(null)
+            setSelectedImageObj(null)
         }
-      
         
-    }, [selectedImage])
+        
+    }, [selectedImageObj, eventName, selectedImage])
 
-    useEffect(() => {
-       // whenever there are changes in the images state and image state is higher than 1,
-       // make sure to check each image in the images arr if it matches with selectedImage file name
-       // returns a boolean
-
-       console.log('images users', images)
+    // useEffect(() => {
        
-        
-      }, [images]);   
+    //    console.log('images users', images)
+       
+    // }, [images]);   
+    useEffect(() => {
+        if (preview){
+            console.log('preview image', preview)
+        }
+    }, [preview])
     const nextPage = () => {
         navigate('/enterAge')
     }
+
+    
 
     // Preview Images
     
@@ -82,15 +111,22 @@ export const EnterPhotosPage = () => {
         <>
             <div className='flex'>
 
-                {images.map((image) => {
+                {images.map((image, index) => {
                     return (
-                        <div>
+                        <div key={index}>
                             {image.fileName}
                         </div>
                     )
                 })}
             </div>
-           
+
+            <div className='flex'>
+                <div className='border border-red-500 w-24 h-24'>{ preview && <img src={preview.photoOne} />}</div>
+                <div className='border border-red-500 w-24 h-24'>{ preview && <img src={preview.photoTwo} />}</div>
+                <div className='border border-red-500 w-24 h-24'>{ preview && <img src={preview.photoThree} />}</div>
+            </div>
+          
+  
             {/* container */}
             <div className="flex h-screen justify-center items-center px-4">
                 <div className='min-h-[50%] flex flex-col justify-between w-full'>
