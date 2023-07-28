@@ -19,15 +19,14 @@ export const EnterPhotosPage = () => {
     const { userInfo, setUserInfo } = useContext(UserInfoContext)
     const [ images, setImages ] = useState([])
     const [ selectedImage, setSelectedImage ] = useState(null)
-    const [ previewImages, setPreviewImages ] = useState({
-
-    })
+    const [ previewImages, setPreviewImages ] = useState({})
     
-
-    // 1. Add selected image to the images
-    // 2. Set the selected image as a preview
-    // 3. If the selected item is a duplicate in the array, do not set that as the preview image
-    // 4. Do not add the duplicate into the array, just add the first
+    // -- Setting Preview Images --
+    // Whatever the input type name is, make that the name in the previewImages and then grab the value that you retrieved from the file reader
+    // -- Showing Images --
+    // Map through the array? then have each div show that particular image depending on what the input name is
+    
+    
     const handleUserInfoChange = (event) => {
         // setUserInfo({
         //     ...userInfo,
@@ -76,31 +75,37 @@ export const EnterPhotosPage = () => {
         navigate('/enterAge')
     }
 
+    // Preview Images
+    
+
     return (
         <>
+            <div className='flex'>
+
+                {images.map((image) => {
+                    return (
+                        <div>
+                            {image.fileName}
+                        </div>
+                    )
+                })}
+            </div>
+           
             {/* container */}
             <div className="flex h-screen justify-center items-center px-4">
-                {/* What's your first name section? */}
-                    <div className='min-h-[50%] flex flex-col justify-between w-full'>
-
-                        <div>
-                            <h1 className="text-4xl font-bold">Enter Photos?</h1>
-                            <input type='file' name='photoOne' required onChange={handleUserInfoChange}/>
-                            <input type='file' name='photoTwo' required onChange={handleUserInfoChange}/>
-                            <input type='file' name='photoThree' required onChange={handleUserInfoChange}/>
-   
-                            
-                        </div>
-
-                        {/* Next Button */}
-                        <div className="mt-8">
-                            <NextButtonComponent onClick={nextPage}/>
-                        </div>
+                <div className='min-h-[50%] flex flex-col justify-between w-full'>
+                    <div>
+                        <h1 className="text-4xl font-bold">Enter Photos?</h1>
+                        <input type='file' accept='image/*' name='photoOne' required onChange={handleUserInfoChange}/>
+                        <input type='file' accept='image/*' name='photoTwo' required onChange={handleUserInfoChange}/>
+                        <input type='file' accept='image/*' name='photoThree' required onChange={handleUserInfoChange}/>
                     </div>
-                  
-      
 
-
+                    {/* Next Button */}
+                    <div className="mt-8">
+                        <NextButtonComponent onClick={nextPage}/>
+                    </div>
+                </div>
             </div>
         </>
     )
