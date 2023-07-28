@@ -76,7 +76,9 @@ export const EnterPhotosPage = () => {
             reader.onloadend = () => {
                 setPreview({
                     ...preview,
-                    [eventName]: reader.result
+                    [eventName]: reader.result,
+                    id: selectedImageObj.id
+                    
                 })
             }
             reader.readAsDataURL(selectedImage)
@@ -89,13 +91,15 @@ export const EnterPhotosPage = () => {
                 console.log('it is not a duplicate')
                  const reader = new FileReader()
                 reader.onloadend = () => {
-                    setPreview({
+                    setPreview([{
                     ...preview,
-                    [eventName]: reader.result
-                })
+                    [eventName]: reader.result,
+                    id: selectedImageObj.id
+                }])
                 }
                 reader.readAsDataURL(selectedImage)
                 setImages([...images, selectedImageObj])
+               
             } 
             else {
                 console.log('it is a duplicate')
@@ -126,6 +130,32 @@ export const EnterPhotosPage = () => {
         navigate('/enterAge')
     }
 
+    useEffect(() => {
+        if (preview){
+            console.log('previews', preview)
+        }
+    }, [preview])
+
+    const handleDeleteImage = (event) => {
+        // only get the ones that doesn't match with the  event target id
+        if (images){
+
+            const deleteTargetImage = images.filter((image) => image.id !== event.target.id)
+            const deleteEventName = event.target.name
+            const isMatchingImage = images.some((image) => image.id === event.target.id)
+            if (isMatchingImage){
+                console.log('it matches')
+                setPreview({...preview, [eventName]: null })
+
+                
+            } else {
+                console.log('doesnt match')
+            }
+            
+            setImages(deleteTargetImage)
+        }
+    }
+
     
 
     // Preview Images
@@ -145,9 +175,18 @@ export const EnterPhotosPage = () => {
             </div>
 
             <div className='flex'>
-                <div className='border border-red-500 w-24 h-24'>{ preview && <img src={preview.photoOne} />}</div>
-                <div className='border border-red-500 w-24 h-24'>{ preview && <img src={preview.photoTwo} />}</div>
-                <div className='border border-red-500 w-24 h-24'>{ preview && <img src={preview.photoThree} />}</div>
+                <div className='border border-red-500 w-24 h-24'>
+                    { preview && <img src={preview.photoOne} />}
+                    <button className='bg-blue-500' onClick={handleDeleteImage} id={preview?.id}>Delete photo One</button>
+                    </div>
+                <div className='border border-red-500 w-24 h-24'>
+                    { preview?.photoTwo ? <img src={preview.photoTwo} /> : <h1>no image</h1>}
+                    <button className='bg-purple-500' onClick={handleDeleteImage} id={preview?.id}>Delete photo two</button>
+                    </div>
+                <div className='border border-red-500 w-24 h-24'>
+                    { preview && <img src={preview.photoThree} />}
+                    <button className='bg-green-500' onClick={handleDeleteImage} id={preview?.id}>Delete photo Three</button>
+                    </div>
             </div>
           
   
