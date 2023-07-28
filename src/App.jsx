@@ -43,9 +43,12 @@ function App() {
   const [ userExists, setUserExists] = useState(false)
   const [ userSignedUp, setUserSignedUp ] = useState(false)
   const [ userIsLoggedIn, setUserIsLoggedIn ] = useState(false)
-  console.log('user is logged in? ', userIsLoggedIn)
-  console.log('user exists? ', userExists)
-  console.log('userSignedup', userSignedUp)
+  useEffect(() => {
+    if(userInfo.images){
+
+      console.log('user info inside app.jsx', userInfo)
+    }
+  }, [userInfo])
   let element = useRoutes([
     {
       path: '/',

@@ -24,23 +24,13 @@ export const EnterPhotosPage = () => {
     const [ preview, setPreview ] = useState({})
     const [ eventName, setEventName ] = useState(null)
     
-
-
     const handleUserInfoChange = (event) => {
-        // setUserInfo({
-        //     ...userInfo,
-        //     [event.target.name]: event.target.value,
-        // })
+       
         setEventName(event.target.name)
-        // original selectedImAGEOBJ
-        // setSelectedImageObj({
-        //   [eventName]: event.target.files[0].name,
-        //   id: crypto.randomUUID()
-        // })
-
         setSelectedImageObj({
             fileName: event.target.files[0].name,
-            id: crypto.randomUUID()
+            id: crypto.randomUUID(),
+            file: event.target.files[0]
           })
         
         setSelectedImage({
@@ -60,17 +50,9 @@ export const EnterPhotosPage = () => {
             [event.target.name]: event.target.files[0].name
         })
     }
-    // [
-    //  photoOne: event.target.files[0],
-    //  photoTwo: event.target.files[0],
-    //  photoThree: event.target.files[0]
-    // ]
-
-    
-
     useEffect(() => {
         if (selectedImageObj && images.length === 0 && eventName){
-            
+           
             setImages([...images, selectedImageObj])
             const reader = new FileReader()
             reader.onloadend = () => {
@@ -90,6 +72,7 @@ export const EnterPhotosPage = () => {
              // if any of the eventName's file name in the image array matches the selectedImageObj
             if (!isDuplicate){
                 console.log('it is not a duplicate')
+                
                  const reader = new FileReader()
                 reader.onloadend = () => {
                     setPreview((prevPreview) => ({
@@ -100,7 +83,6 @@ export const EnterPhotosPage = () => {
                         }
                     }));
                 }
-                
                 reader.readAsDataURL(selectedImage)
                 setImages([...images, selectedImageObj])
                
@@ -118,31 +100,52 @@ export const EnterPhotosPage = () => {
              console.log('event name', eventName)
             console.log('selected image', selectedImageObj)
         }
-         
-
-       
-        
     }, [selectedImageObj, eventName, selectedImage])
 
     // photosOne: 
     useEffect(() => {
-        if (images){
-            console.log('images of the users', images)
-        }
-    }, [images])
+        // Function to upload images to Cloudinary
+       
+        const uploadToCloudinary = async () => {
+            const formData = new FormData();
+
+            // Append each image to the formData
+            images.forEach((image) => {
+                formData.append("upload_preset", "lgeq7wmm");
+                formData.append("file", image.file);
+                // Upload images to Cloudinary
+                const response = await fetch('https://api.cloudinary.com/v1_1/dpj2su9ea/upload', {
+                    method: "POST",
+                    body: formData
+                });    
+                const responseWithJson = await response.json();
+                console.log(responseWithJson, 'json object');
+            });
+
+
+           
+            const imageUrls = responseWithJson.map((item) => item.url);
+            setUserInfo((prevUserInfo) => ({
+                ...prevUserInfo,
+                images: imageUrls,
+            }));
+
+           if (images) {
+
+               uploadToCloudinary();
+           }
+            
+    
+        };
+        console.log(userInfo, 'user info')
+    }, [images, setUserInfo]);
+   
     const nextPage = () => {
         navigate('/enterAge')
     }
-
-    useEffect(() => {
-        if (preview){
-            console.log('previews', preview)
-        }
-    }, [preview])
-
     const handleDeleteImage = (event) => {
         // only get the ones that doesn't match with the  event target id
-        if (images.length >= 1){
+        if (images){
 
             const deleteTargetImage = images.filter((image) => image.id !== event.target.id)
             const deleteEventName = event.target.name
@@ -154,28 +157,16 @@ export const EnterPhotosPage = () => {
                     setPreview(null)
                 }
 
-                
             } else {
                 console.log('doesnt match')
             }
-            
             setImages(deleteTargetImage)
         }
-  
     }
 
     return (
         <>
-            <div className='flex'>
-
-                {images.map((image, index) => {
-                    return (
-                        <div key={index}>
-                            {image.fileName}
-                        </div>
-                    )
-                })}
-            </div>
+            
 
            <div className='flex'>
             <div className='border border-red-500 w-24 h-24'>
