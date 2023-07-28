@@ -53,29 +53,11 @@ export const EnterPhotosPage = () => {
     }
     useEffect(() => {
         if (selectedImageObj && images.length === 0 && eventName){
-            const formData = new FormData();
-            formData.append("upload_preset", "lgeq7wmm");
-            formData.append("file", selectedImageObj.file);
-            axios
-            .post("https://api.cloudinary.com/v1_1/dpj2su9ea/upload", formData)
-            .then((response) => {
-                console.log("result of axios cloudinary", response.data.url);
-                setImagesUrl(response.data.url);
-                 // Now that you have the imageUrl, update the selectedImageObj
-                const updatedImageObj = {
-                    ...selectedImageObj,
-                    url: response.data.url,
-                };
+            uploadToCloudinary(selectedImageObj, (imageUrl, updatedImageObj) => {
                 setImagesUrl(imageUrl);
                 setSelectedImageObj(updatedImageObj);
-      
-                // Add updatedImageObj to the images array
                 setImages([...images, updatedImageObj]);
             })
-            .catch((error) => {
-                console.log("error has occurred", error);
-            });
-            
             const reader = new FileReader()
             reader.onloadend = () => {
                 setPreview((prevPreview) => ({
@@ -107,27 +89,10 @@ export const EnterPhotosPage = () => {
                     }));
                 }
                 reader.readAsDataURL(selectedImage)
-                const formData = new FormData();
-                formData.append("upload_preset", "lgeq7wmm");
-                formData.append("file", selectedImageObj.file);
-                axios
-                .post("https://api.cloudinary.com/v1_1/dpj2su9ea/upload", formData)
-                .then((response) => {
-                  console.log("result of axios cloudinary", response.data.url);
-                  const imageUrl = response.data.url;
-        
-                  // Now that you have the imageUrl, update the selectedImageObj
-                  const updatedImageObj = {
-                    ...selectedImageObj,
-                    url: imageUrl,
-                  };
-        
-                  // Update the state with the new imageUrl and selectedImageObj
-                  setImagesUrl(imageUrl);
-                  setSelectedImageObj(updatedImageObj);
-        
-                  // Add updatedImageObj to the images array
-                  setImages([...images, updatedImageObj]);
+                uploadToCloudinary(selectedImageObj, (imageUrl, updatedImageObj) => {
+                    setImagesUrl(imageUrl);
+                    setSelectedImageObj(updatedImageObj);
+                    setImages([...images, updatedImageObj]);
                 })
                
             } 
@@ -139,13 +104,7 @@ export const EnterPhotosPage = () => {
             setPreview(null)
             setSelectedImageObj(null)
         }
-        if (eventName && images){
-             console.log('images.eventName', images[eventName])
-             console.log('event name', eventName)
-            console.log('selected image', selectedImageObj)
-        }
     }, [selectedImageObj, eventName, selectedImage])
-
     useEffect(() => {
         if (images){
             console.log('images', images)
@@ -156,14 +115,27 @@ export const EnterPhotosPage = () => {
                 images: getImageUrl
             }));
         }
-
     }, [images])
+    
+    const uploadToCloudinary = (imageSelected, updateStates) => {
+        const formData = new FormData();
+        formData.append("upload_preset", "lgeq7wmm");
+        formData.append("file", imageSelected.file);
+        axios
+          .post("https://api.cloudinary.com/v1_1/dpj2su9ea/upload", formData)
+          .then((response) => {
+            const imageUrl = response.data.url;
+            const updatedImageObj = {
+              ...imageSelected,
+              url: imageUrl,
+            };
+            updateStates(imageUrl, updatedImageObj);
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
+      };
 
-    useEffect(() => {
-        if (userInfo){
-            console.log('user info', userInfo)
-        }
-    }, [userInfo])
     const nextPage = () => {
         navigate('/enterAge')
     }
