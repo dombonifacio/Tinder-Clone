@@ -84,7 +84,7 @@ export const EnterPhotosPage = () => {
         } 
         else if (selectedImageObj && images.length > 0 && eventName){
             const isDuplicate = images.some((image) => image.fileName === selectedImageObj.fileName)
-             
+             // if any of the eventName's file name in the image array matches the selectedImageObj
             if (!isDuplicate){
                 console.log('it is not a duplicate')
                  const reader = new FileReader()
@@ -96,7 +96,8 @@ export const EnterPhotosPage = () => {
                 }
                 reader.readAsDataURL(selectedImage)
                 setImages([...images, selectedImageObj])
-            } else{
+            } 
+            else {
                 console.log('it is a duplicate')
             }
         } else {
@@ -118,7 +119,7 @@ export const EnterPhotosPage = () => {
     // photosOne: 
     useEffect(() => {
         if (images){
-            console.log('images', images)
+            console.log('images of the users', images)
         }
     }, [images])
     const nextPage = () => {
