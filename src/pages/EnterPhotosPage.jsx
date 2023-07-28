@@ -11,6 +11,8 @@ import { UserInfoContext } from '../context/UserInfoContext'
 // firestore
 import { auth } from "../config/firebase"
 
+// third party libraries
+import axios from 'axios'
 
 
 export const EnterPhotosPage = () => {
@@ -23,16 +25,26 @@ export const EnterPhotosPage = () => {
     const [ previewImages, setPreviewImages ] = useState({})
     const [ preview, setPreview ] = useState({})
     const [ eventName, setEventName ] = useState(null)
+    const [ imageUrl, setImagesUrl ] = useState("")
     
     const handleUserInfoChange = (event) => {
-       
+        const formData = new FormData();
+        formData.append("upload_preset", "lgeq7wmm");
+        formData.append("file", event.target.files[0]);
+        axios
+        .post("https://api.cloudinary.com/v1_1/dpj2su9ea/upload", formData)
+        .then((response) => {
+            console.log("result of axios cloudinary", response.data.url);
+            setImagesUrl(response.data.url);
+        })
+        .catch((error) => {
+            console.log("error has occurred", error);
+        });
         setEventName(event.target.name)
         setSelectedImageObj({
             fileName: event.target.files[0].name,
             id: crypto.randomUUID(),
-            file: event.target.files[0]
-          })
-        
+        })
         setSelectedImage({
             ...selectedImageObj,
             [event.target.name]: [event.target.files[0]]
@@ -52,8 +64,14 @@ export const EnterPhotosPage = () => {
     }
     useEffect(() => {
         if (selectedImageObj && images.length === 0 && eventName){
-           
-            setImages([...images, selectedImageObj])
+            if (imageUrl){
+
+                const updatedImageObj = {
+                    ...selectedImageObj,
+                    url: imageUrl
+                }
+                setImages([...images, updatedImageObj])
+            }
             const reader = new FileReader()
             reader.onloadend = () => {
                 setPreview((prevPreview) => ({
@@ -65,7 +83,6 @@ export const EnterPhotosPage = () => {
                 }));
             }
             reader.readAsDataURL(selectedImage)
-
         } 
         else if (selectedImageObj && images.length > 0 && eventName){
             const isDuplicate = images.some((image) => image.fileName === selectedImageObj.fileName)
@@ -84,8 +101,14 @@ export const EnterPhotosPage = () => {
                     }));
                 }
                 reader.readAsDataURL(selectedImage)
-                setImages([...images, selectedImageObj])
-               
+                if (imageUrl){
+
+                    const updatedImageObj = {
+                        ...selectedImageObj,
+                        url: imageUrl
+                    }
+                    setImages([...images, updatedImageObj])
+                }
             } 
             else {
                 console.log('it is a duplicate')
@@ -100,46 +123,14 @@ export const EnterPhotosPage = () => {
              console.log('event name', eventName)
             console.log('selected image', selectedImageObj)
         }
-    }, [selectedImageObj, eventName, selectedImage])
+    }, [selectedImageObj, eventName, selectedImage, imageUrl])
 
-    // photosOne: 
     useEffect(() => {
-        // Function to upload images to Cloudinary
-       
-        const uploadToCloudinary = async () => {
-            const formData = new FormData();
+        if (images){
+            console.log('images array', images)
+        }
+    }, [images])
 
-            // Append each image to the formData
-            images.forEach((image) => {
-                formData.append("upload_preset", "lgeq7wmm");
-                formData.append("file", image.file);
-                // Upload images to Cloudinary
-                const response = await fetch('https://api.cloudinary.com/v1_1/dpj2su9ea/upload', {
-                    method: "POST",
-                    body: formData
-                });    
-                const responseWithJson = await response.json();
-                console.log(responseWithJson, 'json object');
-            });
-
-
-           
-            const imageUrls = responseWithJson.map((item) => item.url);
-            setUserInfo((prevUserInfo) => ({
-                ...prevUserInfo,
-                images: imageUrls,
-            }));
-
-           if (images) {
-
-               uploadToCloudinary();
-           }
-            
-    
-        };
-        console.log(userInfo, 'user info')
-    }, [images, setUserInfo]);
-   
     const nextPage = () => {
         navigate('/enterAge')
     }
@@ -163,7 +154,6 @@ export const EnterPhotosPage = () => {
             setImages(deleteTargetImage)
         }
     }
-
     return (
         <>
             
@@ -203,3 +193,5 @@ export const EnterPhotosPage = () => {
         </>
     )
 }
+
+// use the Cloudinary function to get an api for a specific image
