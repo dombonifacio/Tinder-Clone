@@ -32,10 +32,22 @@ export const EnterPhotosPage = () => {
         //     [event.target.name]: event.target.value,
         // })
         setEventName(event.target.name)
+        // original selectedImAGEOBJ
+        // setSelectedImageObj({
+        //   [eventName]: event.target.files[0].name,
+        //   id: crypto.randomUUID()
+        // })
+
         setSelectedImageObj({
-          fileName: event.target.files[0].name,
-          id: crypto.randomUUID()
+            fileName: event.target.files[0].name,
+            id: crypto.randomUUID()
+          })
+        
+        setSelectedImage({
+            ...selectedImageObj,
+            [event.target.name]: [event.target.files[0]]
         })
+       
         const file = event.target.files[0]
         if (file && file.type.substr(0,5) === "image"){
 
@@ -48,6 +60,14 @@ export const EnterPhotosPage = () => {
             [event.target.name]: event.target.files[0].name
         })
     }
+    // [
+    //  photoOne: event.target.files[0],
+    //  photoTwo: event.target.files[0],
+    //  photoThree: event.target.files[0]
+    // ]
+
+    
+
     useEffect(() => {
         if (selectedImageObj && images.length === 0 && eventName){
             
@@ -64,7 +84,6 @@ export const EnterPhotosPage = () => {
         } 
         else if (selectedImageObj && images.length > 0 && eventName){
             const isDuplicate = images.some((image) => image.fileName === selectedImageObj.fileName)
-            console.log(isDuplicate, 'is duplicate')
              
             if (!isDuplicate){
                 console.log('it is not a duplicate')
@@ -84,20 +103,24 @@ export const EnterPhotosPage = () => {
             setPreview(null)
             setSelectedImageObj(null)
         }
-        
+
+        if (eventName && images){
+             console.log('images.eventName', images[eventName])
+             console.log('event name', eventName)
+            console.log('selected image', selectedImageObj)
+        }
+         
+
+       
         
     }, [selectedImageObj, eventName, selectedImage])
 
-    // useEffect(() => {
-       
-    //    console.log('images users', images)
-       
-    // }, [images]);   
+    // photosOne: 
     useEffect(() => {
-        if (preview){
-            console.log('preview image', preview)
+        if (images){
+            console.log('images', images)
         }
-    }, [preview])
+    }, [images])
     const nextPage = () => {
         navigate('/enterAge')
     }
