@@ -56,12 +56,12 @@ function App() {
       element: userIsLoggedIn && userExists && !userSignedUp ? <HomePage /> : <LoginPage />
     },
     {
-      path: '/signup',
-      element: <SignupPage />
-    },
-    {
       path: '/home',
       element: <HomePage />
+    },
+    {
+      path: '/signup',
+      element: <SignupPage />
     },
     {
       path: '/enterName',
@@ -69,7 +69,7 @@ function App() {
     },
     {
       path: '/enterAge',
-      element:  userSignedUp ? <EnterAgePage /> : <LoginPage />
+      element: userSignedUp ? <EnterAgePage /> : <LoginPage />
     },
     {
       path: '/enterGender',
@@ -77,11 +77,11 @@ function App() {
     },
     {
       path: '/enterInterests',
-      element: userSignedUp ? <EnterInterestsPage /> : <LoginPage />
+      element: <EnterInterestsPage />
     },
     {
       path: '/enterPhotos',
-      element: <EnterPhotosPage />
+      element: userSignedUp ? <EnterPhotosPage /> : <LoginPage />
     },
     {
       path: '/profile',

@@ -37,7 +37,8 @@ export const EnterInterestsPage = () => {
     const { userInfo, setUserInfo } = useContext(UserInfoContext)
     const { userExists, setUserExists } = useContext(UserExistContext)
     const [ profile, setProfile ] = useLocalStorage('profile', null)
-    const { userSignedUp, setUserSignedUp } = useContext(UserSignedUpContext)
+
+
     const navigate = useNavigate()
     const handleCheckedInterest = (event) => {
         const selectedInterest = {
@@ -83,28 +84,39 @@ export const EnterInterestsPage = () => {
         }
     }
     
-    const handleCreateUser = async () => {
-      
-        try {
-            // only get the name
-            const destructuredInterestList = userInterest.map(({ name }) => name)
-            // setUserInfo({...userInfo, interests: destructuredInterestList})
-            // setProfile({...userInfo, interests: destructuredInterestList})
-            setUserSignedUp(false)
-            await setDoc(usersDocRef, {
-                ...userInfo,
-                interests: destructuredInterestList
-            })
+//  try {
+//             // only get the name
+//             const destructuredInterestList = userInterest.map(({ name }) => name)
+//             // setUserInfo({...userInfo, interests: destructuredInterestList})
+//             // setProfile({...userInfo, interests: destructuredInterestList})
+//             setUserSignedUp(false)
+//             await setDoc(usersDocRef, {
+//                 ...userInfo,
+//                 interests: destructuredInterestList
+//             })
             
-            setTimeout(() => {
-              navigate('/')
+//             setTimeout(() => {
+//               navigate('/')
          
-            }, 2000)
+//             }, 2000)
             
-        } catch (error) {
-            console.log(error, 'error message')
-        }
+//         } catch (error) {
+//             console.log(error, 'error message')
+//         }
+
+    const handleNavigate = () => {
+      const destructuredInterestList = userInterest.map(({ name }) => name)
+      setUserInfo({
+        ...userInfo,
+        interests: destructuredInterestList
+      })
+      setTimeout(() => {
+
+        navigate('/enterPhotos')
+      }, 2000)
     }
+    
+  
 
     const handleToggleButton = () => {
       setToggle((prevState) => !prevState);
@@ -158,9 +170,9 @@ export const EnterInterestsPage = () => {
               <div>
                 <button
                   className="bg-gradient-to-t from-electric-pink to-fiery-rose rounded-full hover:from-pink-700 hover:to-rose-500 text-white text-center font-bold py-3 px-4 w-full"
-                  onClick={handleCreateUser}
+                  onClick={handleNavigate}
                 >
-                  Create User
+                  Next
                 </button>
                 
               </div>

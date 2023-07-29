@@ -9,11 +9,13 @@ import { NextButtonComponent } from "../components/NextButtonComponent"
 import { UserInfoContext } from '../context/UserInfoContext'
 
 // firestore
-import { auth } from "../config/firebase"
+import { db } from "../config/firebase"
+import { auth } from '../config/firebase'
+import { collection, addDoc, doc, setDoc } from "firebase/firestore"
 
 // third party libraries
 import axios from 'axios'
-
+import { UserSignedUpContext } from '../context/UserSignedUpContext'
 
 export const EnterPhotosPage = () => {
 
@@ -26,7 +28,9 @@ export const EnterPhotosPage = () => {
     const [ preview, setPreview ] = useState({})
     const [ eventName, setEventName ] = useState(null)
     const [ imageUrl, setImagesUrl ] = useState("")
-    
+    const { userSignedUp, setUserSignedUp } = useContext(UserSignedUpContext)
+    const uid = auth.currentUser?.uid
+
     const handleUserInfoChange = (event) => {
        
         setEventName(event.target.name)
@@ -159,6 +163,18 @@ export const EnterPhotosPage = () => {
             setImages(deleteTargetImage)
         }
     }
+
+    const handleCreateUser = async () => {
+        setUserSignedUp(false)
+         // ref to database
+        const usersDocRef = doc(db, "users", uid)
+        await setDoc(usersDocRef, { userInfo })
+        
+        setTimeout(() => {
+            navigate('/')
+        
+        }, 2000)
+    }
     return (
         <>
             
@@ -190,9 +206,12 @@ export const EnterPhotosPage = () => {
                     </div>
 
                     {/* Next Button */}
-                    <div className="mt-8">
-                        <NextButtonComponent onClick={nextPage}/>
-                    </div>
+                    <button
+                        className="bg-gradient-to-t from-electric-pink to-fiery-rose rounded-full hover:from-pink-700 hover:to-rose-500 text-white text-center font-bold py-3 px-4 w-full"
+                        onClick={handleCreateUser}
+                        >
+                        Create User
+                    </button>
                 </div>
             </div>
         </>
