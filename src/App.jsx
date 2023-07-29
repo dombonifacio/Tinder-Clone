@@ -9,7 +9,7 @@ import './App.css'
 import { UserInfoContext } from './context/UserInfoContext'
 
 // pages
-import { LoginPage } from './pages/loginPage'
+import { LoginPage } from './pages/LoginPage'
 import { HomePage } from './pages/HomePage'
 import { EnterAgePage } from './pages/EnterAgePage'
 import { EnterNamePage } from './pages/EnterNamePage'
