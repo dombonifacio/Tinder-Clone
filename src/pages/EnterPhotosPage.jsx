@@ -55,6 +55,12 @@ export const EnterPhotosPage = () => {
             [event.target.name]: event.target.files[0].name
         })
     }
+
+    const handleAddSubcollection = () => {
+        const swipesSubcollectionRef = collection(db, "users", uid, "swipes")
+
+    }
+
     useEffect(() => {
         if (selectedImageObj && images.length === 0 && eventName){
             uploadToCloudinary(selectedImageObj, (imageUrl, updatedImageObj) => {
@@ -168,8 +174,13 @@ export const EnterPhotosPage = () => {
         setUserSignedUp(false)
          // ref to database
         const usersDocRef = doc(db, "users", uid)
+        const swipesSubcollectionRef = collection(db, "users", uid, "swipes")
+        const swipesSubCollectionRightRef = collection(swipesSubcollectionRef, "swipedRight")
+        const userObj = {
+            name: "Mustard"
+        }
         await setDoc(usersDocRef, { userInfo })
-        
+        await addDoc(swipesSubcollectionRef, userObj)
         setTimeout(() => {
             navigate('/')
         

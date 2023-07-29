@@ -11,12 +11,14 @@ import { NavbarComponent } from "../components/NavbarComponent"
 export const HomePage = () => {
     const usersCollectionRef = collection(db, "users")
     const [users, setUsers] = useState([])
+    const currentUser = auth.currentUser
     useEffect(() => {
         const getUsersData = onSnapshot(usersCollectionRef, (doc) => {
             const readableUsersData = doc.docs.map((userInfo) => {
-                return {...userInfo.data(), id: userInfo.id}
+                return {...userInfo.data()}
             })
-            setUsers(readableUsersData)
+            const removeCurrentUser = readableUsersData.filter(({userInfo}) => userInfo.id !== currentUser.uid)
+            setUsers(removeCurrentUser)
         })
 
         return () => {
@@ -24,20 +26,21 @@ export const HomePage = () => {
             getUsersData()
         }
     }, [])
-    console.log('available users', users)
+    
+    console.log('users', users)
+    
     return (
         <div>
             You are on the home page
-            {users.map((user) => {
+            {users.map((user, index) => {
                 return (
                     
-                    <div>
-                        {user.id}
+                    <div key={index}>
+                        {user.userInfo.id}
                     </div>
                 )
             })}
             <NavbarComponent />
-
         </div>
     )
 }
