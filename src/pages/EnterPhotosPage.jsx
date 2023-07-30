@@ -117,7 +117,7 @@ export const EnterPhotosPage = () => {
     }, [selectedImageObj, eventName, selectedImage])
     useEffect(() => {
         if (images){
-            console.log('images', images)
+            console.log('images inside the photos image', images)
             const getImageUrl = images.map((image) => { return image.url })
             console.log('image url', getImageUrl)
             setUserInfo((prevUserInfo) => ({
@@ -161,32 +161,46 @@ export const EnterPhotosPage = () => {
                 setPreview({...preview, [eventName]: null })
                 if (images.length === 1){
                     setPreview(null)
+                 
                 }
 
             } else {
                 console.log('doesnt match')
             }
             setImages(deleteTargetImage)
+           
+        }
+   
+    }
+   
+    console.log('preview images', preview)
+    const handleCreateUser = async () => {
+        try {
+            if (images.length > 0){
+
+                setUserSignedUp(false)
+                 // ref to database
+                const usersDocRef = doc(db, "users", uid)
+                // const swipesSubcollectionRef = collection(db, "users", uid, "swipes")
+                // const swipesSubCollectionRightRef = collection(swipesSubcollectionRef, "swipedRight")
+                const userObj = {
+                    name: "Mustard"
+                }
+                
+                await setDoc(usersDocRef, {...userInfo} )
+                // await addDoc(swipesSubcollectionRef, userObj)
+                setTimeout(() => {
+                    navigate('/')
+                
+                }, 2000)
+            } else {
+                console.log('there need to be at least 1 image')
+            }
+        } catch(error) {
+            console.log('error creating user', error)
         }
     }
 
-    const handleCreateUser = async () => {
-        setUserSignedUp(false)
-         // ref to database
-        const usersDocRef = doc(db, "users", uid)
-        // const swipesSubcollectionRef = collection(db, "users", uid, "swipes")
-        // const swipesSubCollectionRightRef = collection(swipesSubcollectionRef, "swipedRight")
-        const userObj = {
-            name: "Mustard"
-        }
-        
-        await setDoc(usersDocRef, {...userInfo} )
-        // await addDoc(swipesSubcollectionRef, userObj)
-        setTimeout(() => {
-            navigate('/')
-        
-        }, 2000)
-    }
     return (
         <>
             
