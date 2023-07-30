@@ -68,7 +68,7 @@ export const HomePage = () => {
                 You are on the home page
             </div>
           
-            <TinderCards data={data} setData={setData}/>
+            <TinderCards data={users} setData={setData}/>
  
             <NavbarComponent />
         </>

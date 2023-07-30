@@ -17,7 +17,7 @@ export const TinderCards = ({data, setData}) => {
         setCardsThatLeft([...cardsThatLeft, index])
         setCurrentIndex(currentIndex - 1)
         // remove the card that is the currentIndex removed 
-        const removeCard = data.filter((image) => )
+       
       
     }
 
@@ -27,22 +27,22 @@ export const TinderCards = ({data, setData}) => {
         console.log(cardsThatLeft, 'cards that left')
     }, [cardsThatLeft])
 
-    
+    console.log(data, 'data')
     return (
         <>
             {/* tinder cards container */}
             <div className="h-[90vh] flex justify-center items-center ">
                 
           
-                {data.map((image, index) => {
+                {data.map((user, index) => {
                     return (
                         
                        <TinderCard
-                       key={image.name}
-                       className={cardsThatLeft.includes(index) ? `hidden` : `absolute pressable`}
-                       onCardLeftScreen={() => cardLeavesScreen(image.name, index)}>
-                         <div style={{ backgroundImage: 'url(' + image.url + ')' }} className='relative h-96 w-96 shadow-xl rounded-lg bg-cover bg-center'>
-                            <h3>{image.name}</h3>
+                       key={user.userInfo.id}
+                       className={cardsThatLeft.includes(user.userInfo.id) ? `hidden` : `absolute pressable`}
+                       onCardLeftScreen={() => cardLeavesScreen(user.userInfo.id, index)}>
+                         <div style={{ backgroundImage: 'url(' + user.userInfo.images[0] + ')' }} className='relative h-96 w-96 shadow-xl rounded-lg bg-cover bg-center'>
+                            <h3>{user.userInfo.name}</h3>
                         </div>
                        </TinderCard>
                     )
