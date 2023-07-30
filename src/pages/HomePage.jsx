@@ -17,6 +17,7 @@ import { TinderCards } from "../components/TinderCards"
 
 export const HomePage = () => {
      // dummy data
+
      const dummyData = [
         {
             "name": "Object 1",
@@ -39,6 +40,7 @@ export const HomePage = () => {
             "url": "https://images.unsplash.com/photo-1690381527500-4997fb084cc0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=764&q=80"
         }
     ]
+     const [ data, setData ] = useState(dummyData)
 
     const usersCollectionRef = collection(db, "users")
     const [users, setUsers] = useState([])
@@ -66,7 +68,7 @@ export const HomePage = () => {
                 You are on the home page
             </div>
           
-            <TinderCards data={dummyData}/>
+            <TinderCards data={data} setData={setData}/>
  
             <NavbarComponent />
         </>
