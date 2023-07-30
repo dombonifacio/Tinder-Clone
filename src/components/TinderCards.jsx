@@ -11,6 +11,7 @@ export const TinderCards = ({data, setData}) => {
     const [ currentIndex, setCurrentIndex ] = useState(data.length - 1)
     const [ cardsThatLeft, setCardsThatLeft ] = useState([]) 
 
+    
     // when card leaves screen, remove it from the index then add it to the setCardsThatLeft
     const cardLeavesScreen = (name, index) => {
         console.log(name, ' and index', index,  ' has left the screen')
@@ -21,28 +22,29 @@ export const TinderCards = ({data, setData}) => {
       
     }
 
-    // when a card leaves the screen, add it to the cardsThatLeft array
-    // if one of the map indexes are inside the cardsThatLeft array, make it hidden
+    
+    // when a card leaves the screen, delete that card from the data array
+
     useEffect(() => {
         console.log(cardsThatLeft, 'cards that left')
     }, [cardsThatLeft])
-
-    console.log(data, 'data')
+    console.log(data, 'new data')
+    
     return (
         <>
             {/* tinder cards container */}
             <div className="h-[90vh] flex justify-center items-center ">
                 
           
-                {data.map((user, index) => {
+                {data.map((image, index) => {
                     return (
                         
                        <TinderCard
-                       key={user.userInfo.id}
-                       className={cardsThatLeft.includes(user.userInfo.id) ? `hidden` : `absolute pressable`}
-                       onCardLeftScreen={() => cardLeavesScreen(user.userInfo.id, index)}>
-                         <div style={{ backgroundImage: 'url(' + user.userInfo.images[0] + ')' }} className='relative h-96 w-96 shadow-xl rounded-lg bg-cover bg-center'>
-                            <h3>{user.userInfo.name}</h3>
+                       key={index}
+                       className={cardsThatLeft.includes(index) ? `hidden` : `absolute pressable`}
+                       onCardLeftScreen={() => cardLeavesScreen(image.name, index)}>
+                         <div style={{ backgroundImage: 'url(' + image.url + ')' }} className='relative h-96 w-96 shadow-xl rounded-lg bg-cover bg-center'>
+                            <h3>{image.name}</h3>
                         </div>
                        </TinderCard>
                     )

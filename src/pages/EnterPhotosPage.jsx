@@ -174,13 +174,14 @@ export const EnterPhotosPage = () => {
         setUserSignedUp(false)
          // ref to database
         const usersDocRef = doc(db, "users", uid)
-        const swipesSubcollectionRef = collection(db, "users", uid, "swipes")
-        const swipesSubCollectionRightRef = collection(swipesSubcollectionRef, "swipedRight")
+        // const swipesSubcollectionRef = collection(db, "users", uid, "swipes")
+        // const swipesSubCollectionRightRef = collection(swipesSubcollectionRef, "swipedRight")
         const userObj = {
             name: "Mustard"
         }
-        await setDoc(usersDocRef, { userInfo })
-        await addDoc(swipesSubcollectionRef, userObj)
+        
+        await setDoc(usersDocRef, {...userInfo} )
+        // await addDoc(swipesSubcollectionRef, userObj)
         setTimeout(() => {
             navigate('/')
         

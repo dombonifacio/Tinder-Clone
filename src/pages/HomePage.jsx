@@ -40,7 +40,15 @@ export const HomePage = () => {
             "url": "https://images.unsplash.com/photo-1690381527500-4997fb084cc0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=764&q=80"
         }
     ]
-     const [ data, setData ] = useState(dummyData)
+
+    const origData = dummyData.map((image) => {
+        // add new isDeleted property
+        return {...image, isDeleted: false}
+    })
+    const [ data, setData ] = useState(origData)
+
+    // add IsDeleted property from the data
+    
 
     const usersCollectionRef = collection(db, "users")
     const [users, setUsers] = useState([])
@@ -50,6 +58,7 @@ export const HomePage = () => {
             const readableUsersData = doc.docs.map((userInfo) => {
                 return {...userInfo.data()}
             })
+            console.log(readableUsersData, 'redableusers data')
             const removeCurrentUser = readableUsersData.filter(({userInfo}) => userInfo.id !== currentUser.uid)
             setUsers(removeCurrentUser)
         })
@@ -59,7 +68,7 @@ export const HomePage = () => {
             getUsersData()
         }
     }, [])
-
+ 
     
     return (
         <>
@@ -68,7 +77,7 @@ export const HomePage = () => {
                 You are on the home page
             </div>
           
-            <TinderCards data={users} setData={setData}/>
+            <TinderCards data={data} setData={setData}/>
  
             <NavbarComponent />
         </>
