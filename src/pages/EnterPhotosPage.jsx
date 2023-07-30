@@ -205,25 +205,30 @@ export const EnterPhotosPage = () => {
         <>
             
 
-           <div className='flex'>
-            <div className='border border-red-500 w-24 h-24'>
-                {preview?.photoOne ? <img src={preview.photoOne?.url} alt="Preview" /> : <h1>no image</h1>}
-                {preview?.photoOne && <button className='bg-blue-500' onClick={handleDeleteImage} id={preview.photoOne?.id}>Delete photo One</button>}
-            </div>
-            <div className='border border-red-500 w-24 h-24'>
-                {preview?.photoTwo ? <img src={preview.photoTwo?.url} alt="Preview" /> : <h1>no image</h1>}
-                {preview?.photoTwo && <button className='bg-purple-500' onClick={handleDeleteImage} id={preview.photoTwo?.id}>Delete photo Two</button>}
-            </div>
-            <div className='border border-red-500 w-24 h-24'>
-                {preview?.photoThree ? <img src={preview.photoThree?.url} alt="Preview" /> : <h1>no image</h1>}
-                {preview?.photoThree && <button className='bg-green-500' onClick={handleDeleteImage} id={preview.photoThree?.id}>Delete photo Three</button>}
-            </div>
-        </div>
-          
+           
+
+            
   
             {/* container */}
             <div className="flex h-screen justify-center items-center px-4">
                 <div className='min-h-[50%] flex flex-col justify-between w-full'>
+                    {/* preview images */}
+                <div className='flex'>
+                    <div className='border border-red-500 w-24 h-24'>
+                        <h1>no image</h1>
+                        {preview?.photoOne ? <img src={preview.photoOne.url} alt="Preview" /> : <h1>no image</h1>}
+                        {preview?.photoOne && <button className='bg-blue-500' onClick={handleDeleteImage} id={preview.photoOne?.id}>Delete photo One</button>}
+                    </div>
+                    <div className='border border-red-500 w-24 h-24'>
+                        {preview?.photoTwo ? <img src={preview.photoTwo?.url} alt="Preview" /> : <h1>no image</h1>}
+                        {preview?.photoTwo && <button className='bg-purple-500' onClick={handleDeleteImage} id={preview.photoTwo?.id}>Delete photo Two</button>}
+                    </div>
+                    <div className='border border-red-500 w-24 h-24'>
+                        {preview?.photoThree ? <img src={preview.photoThree?.url} alt="Preview" /> : <h1>no image</h1>}
+                        {preview?.photoThree && <button className='bg-green-500' onClick={handleDeleteImage} id={preview.photoThree?.id}>Delete photo Three</button>}
+                    </div>
+                </div>
+                {/* end of preview images */}
                     <div>
                         <h1 className="text-4xl font-bold">Enter Photos?</h1>
                         <input type='file' accept='image/*' name='photoOne' required onChange={handleUserInfoChange}/>

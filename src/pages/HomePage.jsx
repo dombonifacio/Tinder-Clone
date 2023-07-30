@@ -43,7 +43,7 @@ export const HomePage = () => {
 
     const origData = dummyData.map((image) => {
         // add new isDeleted property
-        return {...image, isDeleted: false}
+        return {...image, isSwiped: false}
     })
     const [ data, setData ] = useState(origData)
 

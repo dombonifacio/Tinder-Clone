@@ -15,20 +15,16 @@ export const TinderCards = ({data, setData}) => {
     // when card leaves screen, remove it from the index then add it to the setCardsThatLeft
     const cardLeavesScreen = (name, index) => {
         console.log(name, ' and index', index,  ' has left the screen')
+        console.log('remove card', removeCard)
         setCardsThatLeft([...cardsThatLeft, index])
         setCurrentIndex(currentIndex - 1)
-        // remove the card that is the currentIndex removed 
-       
       
     }
-
-    
-    // when a card leaves the screen, delete that card from the data array
-
+    // filter the data map once the id of the cardLeavesScreen. ONLY GET THE ONES THAT DO NOT MATCH WITH THE CARDLEAVESSCREEN ID
     useEffect(() => {
         console.log(cardsThatLeft, 'cards that left')
     }, [cardsThatLeft])
-    console.log(data, 'new data')
+    console.log('dummy data', data)
     
     return (
         <>

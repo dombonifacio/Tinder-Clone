@@ -81,7 +81,7 @@ function App() {
     },
     {
       path: '/enterPhotos',
-      element: <EnterPhotosPage />
+      element: userSignedUp ? <EnterPhotosPage /> : <LoginPage />
     },
     {
       path: '/profile',
