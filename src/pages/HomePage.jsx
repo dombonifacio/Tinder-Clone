@@ -41,25 +41,16 @@ export const HomePage = () => {
         }
     ]
 
-    const origData = dummyData.map((image) => {
-        // add new isDeleted property
-        return {...image, isSwiped: false}
-    })
-    const [ data, setData ] = useState(origData)
-
-    // add IsDeleted property from the data
-    
-
     const usersCollectionRef = collection(db, "users")
     const [users, setUsers] = useState([])
     const currentUser = auth.currentUser
     useEffect(() => {
         const getUsersData = onSnapshot(usersCollectionRef, (doc) => {
             const readableUsersData = doc.docs.map((userInfo) => {
-                return {...userInfo.data()}
+              // add the isSwiped
+                return {...userInfo.data(), isSwiped: false}
             })
-            console.log(readableUsersData, 'redableusers data')
-            const removeCurrentUser = readableUsersData.filter(({userInfo}) => userInfo.id !== currentUser.uid)
+            const removeCurrentUser = readableUsersData.filter((userInfo) => userInfo.id !== currentUser.uid)
             setUsers(removeCurrentUser)
         })
 
@@ -68,8 +59,11 @@ export const HomePage = () => {
             getUsersData()
         }
     }, [])
- 
     
+    
+  
+   
+
     return (
         <>
             <div>
@@ -77,7 +71,7 @@ export const HomePage = () => {
                 You are on the home page
             </div>
           
-            <TinderCards data={data} setData={setData}/>
+            <TinderCards data={users} setData={setUsers}/>
  
             <NavbarComponent />
         </>

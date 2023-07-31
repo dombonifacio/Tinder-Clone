@@ -12,38 +12,50 @@ export const TinderCards = ({data, setData}) => {
     const [ cardsThatLeft, setCardsThatLeft ] = useState([]) 
 
     
-    // when card leaves screen, remove it from the index then add it to the setCardsThatLeft
+    
+    // get the speciific id of the user, if it is true of the index, then make te isSwiped to true
+    // now only print out data that if their value of isSwiped is false
     const cardLeavesScreen = (name, index) => {
-        console.log(name, ' and index', index,  ' has left the screen')
-        console.log('remove card', removeCard)
-        setCardsThatLeft([...cardsThatLeft, index])
-        setCurrentIndex(currentIndex - 1)
-      
-    }
-    // filter the data map once the id of the cardLeavesScreen. ONLY GET THE ONES THAT DO NOT MATCH WITH THE CARDLEAVESSCREEN ID
+        console.log('index of the swiped card', index);
+        const updatedData = data.map((user, i) => {
+            if (i === index) {
+              user.isSwiped = true
+            }
+            return user; 
+        });
+        setData(updatedData);
+  };
+
     useEffect(() => {
         console.log(cardsThatLeft, 'cards that left')
     }, [cardsThatLeft])
-    console.log('dummy data', data)
     
+
+    console.log('users inside home page', data)
+   
+   
     return (
         <>
             {/* tinder cards container */}
             <div className="h-[90vh] flex justify-center items-center ">
                 
           
-                {data.map((image, index) => {
-                    return (
-                        
-                       <TinderCard
-                       key={index}
-                       className={cardsThatLeft.includes(index) ? `hidden` : `absolute pressable`}
-                       onCardLeftScreen={() => cardLeavesScreen(image.name, index)}>
-                         <div style={{ backgroundImage: 'url(' + image.url + ')' }} className='relative h-96 w-96 shadow-xl rounded-lg bg-cover bg-center'>
-                            <h3>{image.name}</h3>
-                        </div>
-                       </TinderCard>
-                    )
+                {data.map((user, index) => {
+                  
+                    if (user.isSwiped === false){
+
+                        return (
+                            
+                           <TinderCard
+                           key={index}
+                           className={user.isSwiped === true ? `hidden` : `absolute pressable`}
+                           onCardLeftScreen={() => cardLeavesScreen(user.name, index)}>
+                             <div style={{ backgroundImage: 'url(' + user.images[0] + ')' }} className='relative h-96 w-96 shadow-xl rounded-lg bg-cover bg-center'>
+                                <h3>{user.name}</h3>
+                            </div>
+                           </TinderCard>
+                        )
+                    }
                 })}
             </div>
         </>
