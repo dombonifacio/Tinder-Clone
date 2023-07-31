@@ -48,7 +48,7 @@ export const HomePage = () => {
         const getUsersData = onSnapshot(usersCollectionRef, (doc) => {
             const readableUsersData = doc.docs.map((userInfo) => {
               // add the isSwiped
-                return {...userInfo.data(), isSwiped: false}
+                return {...userInfo.data(), isSwipedRight: false, isSwipedLeft: false, isSwipedUp: false}
             })
             const removeCurrentUser = readableUsersData.filter((userInfo) => userInfo.id !== currentUser.uid)
             setUsers(removeCurrentUser)
@@ -60,7 +60,7 @@ export const HomePage = () => {
         }
     }, [])
     
-    
+    console.log(users, 'users')
   
    
 
