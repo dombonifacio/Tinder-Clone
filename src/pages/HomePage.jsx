@@ -1,6 +1,6 @@
 // database
 import { auth, db } from "../config/firebase"
-import { getDocs, collection, getDoc, onSnapshot } from "firebase/firestore"
+import { getDocs, collection, getDoc, onSnapshot, doc } from "firebase/firestore"
 import { signOut } from 'firebase/auth'
 // hooks
 import { useEffect, useState, useMemo, useRef } from 'react'
@@ -41,10 +41,31 @@ export const HomePage = () => {
         }
     ]
 
-    const usersCollectionRef = collection(db, "users")
+
     const [users, setUsers] = useState([])
+    const [ likedByUsers, setLikedByUsers ] = useState([])
     const currentUser = auth.currentUser
+
+    const getSwipesData = async () => {
+        const query = collection(db, "swipes")
+        const snapshot = await getDocs(query)
+        const data = snapshot.docs.map((doc) => ({
+            ...doc.data(), id: doc.id
+        }))
+        data.map( async (subcollection) => {
+            const swipedRightq = collection(db, `swipes/${subcollection.id}/swipedRight`)
+            const swipedRightDetails = await getDocs(swipedRightq)
+            const swipedRightInfo = swipedRightDetails.docs.map((doc) => ({
+                ...doc.data(), id: doc.id
+            }))
+            setLikedByUsers(swipedRightInfo)
+        })
+        
+    }
+
     useEffect(() => {
+        const usersCollectionRef = collection(db, "users")
+        const swipesCollectionRef = collection(db, "swipes")
         const getUsersData = onSnapshot(usersCollectionRef, (doc) => {
             const readableUsersData = doc.docs.map((userInfo) => {
               // add the isSwiped
@@ -54,16 +75,23 @@ export const HomePage = () => {
             setUsers(removeCurrentUser)
         })
 
+        
+    
         return () => {
            
             getUsersData()
+            getSwipesData()
         }
     }, [])
     
-    console.log(users, 'users')
-  
-   
+    useEffect(() => {
+        if (likedByUsers){
 
+            console.log('liked by users data', likedByUsers)
+        }
+
+    }, [likedByUsers])
+    
     return (
         <>
             <div>

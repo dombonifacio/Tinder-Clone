@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 
 // firebase
 import { auth, db } from "../config/firebase"
+import { collection, addDoc, doc, setDoc } from "firebase/firestore"; 
 
 export const TinderCards = ({data, setData}) => {
 
@@ -13,6 +14,10 @@ export const TinderCards = ({data, setData}) => {
     const [ visibleCard, setVisibleCard ] = useState(true)
     const [ currentIndex, setCurrentIndex ] = useState(data.length - 1)
     const [ cardsThatLeft, setCardsThatLeft ] = useState([]) 
+    const [swipedRightCards, setSwipedRightCards] = useState([])
+    const [swipedLeftCards, setSwipedLeftCards ] = useState([])
+    const [ swipedUpCards, setSwipedUpCards ] = useState([])
+    const currentUser = auth.currentUser
 
     
     
@@ -29,12 +34,19 @@ export const TinderCards = ({data, setData}) => {
             if (i === index){
                 if (direction === 'up'){
                     user.isSwipedUp = true
+                    setSwipedUpCards([...swipedUpCards, user])
+                    addSwipedDoc(user, "swipedUp")
                 }
                 else if (direction === 'right'){
                     user.isSwipedRight = true
+                    setSwipedRightCards([...swipedRightCards, user])
+                    addSwipedDoc(user, "swipedRight")
+                    
                 }
                 else {
                     user.isSwipedLeft = true
+                    setSwipedLeftCards([...swipedLeftCards, user])
+                    addSwipedDoc(user, "swipedLeft")
                 }
 
             }
@@ -42,18 +54,46 @@ export const TinderCards = ({data, setData}) => {
         })
         setData(updatedData)
     }
-
-  
-
-    // useEffect(() => {
-    //     console.log(cardsThatLeft, 'cards that left')
-    // }, [cardsThatLeft])
-    
-
     useEffect(() => {
-       // if their isSwiped is set to true, then add it to the swipes collection, doc id (current user uid), swipedRight
-    }, [data])
-   
+        console.log('swiped right cards', swipedRightCards)
+    }, [swipedRightCards])
+    useEffect(() => {
+        console.log('swiped up cards', swipedUpCards)
+    }, [swipedUpCards])
+    useEffect(() => {
+        console.log('swiped left cards', swipedLeftCards)
+    }, [swipedLeftCards])
+
+    const addSwipedDoc = async (user, direction) => {
+        // Assuming you have the Firebase auth 'currentUser' object available
+        const userId = currentUser.uid;
+        // refers to the doc
+        // const userDocRef = doc(db, "swipes", userId, `${direction}`, user.id)
+
+       
+       
+        try {
+          
+          await setDoc(doc(db, "swipes", userId), {
+            id: user.id
+          })
+
+          // get db, go to swipes collection, specify swipes collectikon doc id, go to swipedRight subcollection of that id then specify a doc id for the swipedRight doc
+          const userDocRef = doc(db, "swipes", userId, `${direction}`, user.id)
+          // intialize the data for that doc in the swipedRight
+          await setDoc(userDocRef, {
+            ...user
+          })
+
+          
+        
+        //   await addDoc(swipedRightSubcollectionRef, dummyData);
+          console.log("Document added to the subcollection successfully!");
+        } catch (error) {
+          console.error("Error adding document:", error);
+        }
+      };
+
    
     return (
         <>
@@ -63,13 +103,13 @@ export const TinderCards = ({data, setData}) => {
           
                 {data.map((user, index) => {
                     // if isSwipedTop || isSwipedRight || isSwipedLeft === false
-                    if (user.isSwipedRight || user.isSwipedLeft || user.isSwipedUp === false){
+                    if (!(user.isSwipedRight || user.isSwipedLeft || user.isSwipedUp)){
 
                         return (
                             
                            <TinderCard
                            key={index}
-                           className={user.isSwiped === true ? `hidden` : `absolute pressable swipe`}
+                           className={`absolute pressable swipe`}
                            onSwipe={(dir) => swipedCard(dir, index, user)}
                            preventSwipe={'down'}
                            onCardLeftScreen={() => cardLeavesScreen(user.name, index)}>
