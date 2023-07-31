@@ -43,7 +43,7 @@ export const HomePage = () => {
 
 
     const [users, setUsers] = useState([])
-    const [ likedByUsers, setLikedByUsers ] = useState([])
+    const [ swipedRightByUsers, setSwipedRightByUsers ] = useState([])
     const currentUser = auth.currentUser
 
     const getSwipesData = async () => {
@@ -58,7 +58,7 @@ export const HomePage = () => {
             const swipedRightInfo = swipedRightDetails.docs.map((doc) => ({
                 ...doc.data(), id: doc.id
             }))
-            setLikedByUsers(swipedRightInfo)
+            setSwipedRightByUsers(swipedRightInfo)
         })
         
     }
@@ -74,9 +74,6 @@ export const HomePage = () => {
             const removeCurrentUser = readableUsersData.filter((userInfo) => userInfo.id !== currentUser.uid)
             setUsers(removeCurrentUser)
         })
-
-        
-    
         return () => {
            
             getUsersData()
@@ -85,12 +82,12 @@ export const HomePage = () => {
     }, [])
     
     useEffect(() => {
-        if (likedByUsers){
+        if (swipedRightByUsers){
 
-            console.log('liked by users data', likedByUsers)
+            console.log('liked by users data', swipedRightByUsers)
         }
 
-    }, [likedByUsers])
+    }, [swipedRightByUsers])
     
     return (
         <>
@@ -99,7 +96,7 @@ export const HomePage = () => {
                 You are on the home page
             </div>
           
-            <TinderCards data={users} setData={setUsers}/>
+            <TinderCards data={users} setData={setUsers} swipedRightData={swipedRightByUsers}/>
  
             <NavbarComponent />
         </>

@@ -179,11 +179,8 @@ export const EnterPhotosPage = () => {
             if (images.length > 0){
 
                 setUserSignedUp(false)
-                 // ref to database
                 const usersDocRef = doc(db, "users", uid)
-               
                 await setDoc(usersDocRef, {...userInfo} )
-                // await addDoc(swipesSubcollectionRef, userObj)
                 setTimeout(() => {
                     navigate('/')
                 

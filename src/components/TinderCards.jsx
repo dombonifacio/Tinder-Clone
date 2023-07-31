@@ -8,7 +8,7 @@ import { useEffect, useState } from "react"
 import { auth, db } from "../config/firebase"
 import { collection, addDoc, doc, setDoc } from "firebase/firestore"; 
 
-export const TinderCards = ({data, setData}) => {
+export const TinderCards = ({data, setData, swipedRightData}) => {
 
      // when visibleCard is set to true, don't apply the hidden className, otherwise apply it
     const [ visibleCard, setVisibleCard ] = useState(true)
@@ -19,10 +19,12 @@ export const TinderCards = ({data, setData}) => {
     const [ swipedUpCards, setSwipedUpCards ] = useState([])
     const currentUser = auth.currentUser
 
+
+    // TODO
+    // 1. Only render user data if a user.id is not included in the currentUser's swipedRight || Up || Down subcollection
     
-    
-    // get the speciific id of the user, if it is true of the index, then make te isSwiped to true
-    // now only print out data that if their value of isSwiped is false
+
+
     const cardLeavesScreen = (name, index) => {
       
     };
@@ -65,36 +67,27 @@ export const TinderCards = ({data, setData}) => {
     }, [swipedLeftCards])
 
     const addSwipedDoc = async (user, direction) => {
-        // Assuming you have the Firebase auth 'currentUser' object available
         const userId = currentUser.uid;
-        // refers to the doc
-        // const userDocRef = doc(db, "swipes", userId, `${direction}`, user.id)
-
-       
-       
         try {
           
           await setDoc(doc(db, "swipes", userId), {
             id: user.id
           })
-
-          // get db, go to swipes collection, specify swipes collectikon doc id, go to swipedRight subcollection of that id then specify a doc id for the swipedRight doc
+          // doc that refers to db/swipes/currentUser/swipedRight||Up||Down/id of the user that's been swiped
           const userDocRef = doc(db, "swipes", userId, `${direction}`, user.id)
-          // intialize the data for that doc in the swipedRight
+          // removes the isSwipedProps from the user
+          const {isSwipedUp, isSwipedLeft, isSwipedRight, ...newUser} = user
           await setDoc(userDocRef, {
-            ...user
+            // removed isSwipedProps
+            ...newUser, 
           })
-
-          
-        
-        //   await addDoc(swipedRightSubcollectionRef, dummyData);
-          console.log("Document added to the subcollection successfully!");
         } catch (error) {
           console.error("Error adding document:", error);
         }
       };
 
-   
+      
+    // if any of the users are in the swipedRIght, swipedLeft, swipedUp, do not render them
     return (
         <>
             {/* tinder cards container */}
