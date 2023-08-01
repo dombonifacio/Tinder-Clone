@@ -64,15 +64,17 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
         })
         setData(updatedData)
     }
-    useEffect(() => {
-        console.log('swiped right cards', swipedRightCards)
-    }, [swipedRightCards])
-    useEffect(() => {
-        console.log('swiped up cards', swipedUpCards)
-    }, [swipedUpCards])
-    useEffect(() => {
-        console.log('swiped left cards', swipedLeftCards)
-    }, [swipedLeftCards])
+    // useEffect(() => {
+    //     console.log('swiped right cards', swipedRightCards)
+    // }, [swipedRightCards])
+    // useEffect(() => {
+    //     console.log('swiped up cards', swipedUpCards)
+    // }, [swipedUpCards])
+    // useEffect(() => {
+    //     console.log('swiped left cards', swipedLeftCards)
+    // }, [swipedLeftCards])
+
+    
 
     const addSwipedDoc = async (user, direction) => {
         const userId = currentUser.uid;
@@ -98,7 +100,7 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
     // if any of the users are in the swipedRIght, swipedLeft, swipedUp, do not render them
     return (
         <>
-        <div className="card-container">
+        <div className="h-[80vh] flex justify-center items-center">
             {data.map((user, index) => {
                 if (!(user.isSwipedRight || user.isSwipedLeft || user.isSwipedUp)) {
                 return (
@@ -111,9 +113,9 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
                     >
                         <div
                         style={{ backgroundImage: "url(" + user.images[0] + ")" }}
-                        className="card "
+                        className="card relative w-[600px] max-w-[80vw] h-[50vh] p-20 rounded-2xl bg-cover bg-center "
                         >
-                        <h3>{user.name}</h3>
+                        <h3 className="absolute bottom-20 text-white">{user.name}</h3>
                         </div>
                     </TinderCard>
             );
@@ -121,7 +123,7 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
             })}
    
         </div>
-        <div className='buttons'>
+        <div className='w-full flex justify-evenly mt-[-40px]'>
             <button >Swipe left!</button>
             <button >Undo swipe!</button>
             <button >Swipe right!</button>
