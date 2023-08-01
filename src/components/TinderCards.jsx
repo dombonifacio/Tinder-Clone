@@ -8,6 +8,8 @@ import { useEffect, useState } from "react"
 import { auth, db } from "../config/firebase"
 import { collection, addDoc, doc, setDoc } from "firebase/firestore"; 
 
+import '../App.css'
+
 export const TinderCards = ({data, setData, swipedRightData}) => {
 
      // when visibleCard is set to true, don't apply the hidden className, otherwise apply it
@@ -18,6 +20,11 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
     const [swipedLeftCards, setSwipedLeftCards ] = useState([])
     const [ swipedUpCards, setSwipedUpCards ] = useState([])
     const currentUser = auth.currentUser
+
+    // user can only swipe if there is at least 1 user or more than 1 users to swipe
+    const canSwipe = currentIndex >= 0
+    const canGoBack = currentIndex < data.length - 1
+
 
 
     // TODO
@@ -32,23 +39,24 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
     // swiped cards
     const swipedCard = (direction, index, user) => {
         console.log(user.name, 'has been swiped to the', direction, ' direction')
+        setCurrentIndex(currentIndex - 1)
         const updatedData = data.map((user, i) => {
             if (i === index){
                 if (direction === 'up'){
                     user.isSwipedUp = true
                     setSwipedUpCards([...swipedUpCards, user])
-                    addSwipedDoc(user, "swipedUp")
+                     // TODO addSwipedDoc(user, "swipedUp")
                 }
                 else if (direction === 'right'){
                     user.isSwipedRight = true
                     setSwipedRightCards([...swipedRightCards, user])
-                    addSwipedDoc(user, "swipedRight")
+                     // TODO addSwipedDoc(user, "swipedRight")
                     
                 }
                 else {
                     user.isSwipedLeft = true
                     setSwipedLeftCards([...swipedLeftCards, user])
-                    addSwipedDoc(user, "swipedLeft")
+                    // TODO addSwipedDoc(user, "swipedLeft")
                 }
 
             }
@@ -90,30 +98,47 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
     // if any of the users are in the swipedRIght, swipedLeft, swipedUp, do not render them
     return (
         <>
-            {/* tinder cards container */}
-            <div className="h-[90vh] flex justify-center items-center ">
-                
-          
-                {data.map((user, index) => {
-                    // if isSwipedTop || isSwipedRight || isSwipedLeft === false
-                    if (!(user.isSwipedRight || user.isSwipedLeft || user.isSwipedUp)){
+        <div className="card-container">
+            {data.map((user, index) => {
+                if (!(user.isSwipedRight || user.isSwipedLeft || user.isSwipedUp)) {
+                return (
+                    <TinderCard
+                        key={index}
+                        className={`swipe`}
+                        onSwipe={(dir) => swipedCard(dir, index, user)}
+                        preventSwipe={"down"}
+                        onCardLeftScreen={() => cardLeavesScreen(user.name, index)}
+                    >
+                        <div
+                        style={{ backgroundImage: "url(" + user.images[0] + ")" }}
+                        className="card "
+                        >
+                        <h3>{user.name}</h3>
+                        </div>
+                    </TinderCard>
+            );
+            }
+            })}
+   
+        </div>
+        <div className='buttons'>
+            <button >Swipe left!</button>
+            <button >Undo swipe!</button>
+            <button >Swipe right!</button>
+        </div>
+            
+        
 
-                        return (
-                            
-                           <TinderCard
-                           key={index}
-                           className={`absolute pressable swipe`}
-                           onSwipe={(dir) => swipedCard(dir, index, user)}
-                           preventSwipe={'down'}
-                           onCardLeftScreen={() => cardLeavesScreen(user.name, index)}>
-                             <div style={{ backgroundImage: 'url(' + user.images[0] + ')' }} className='relative h-96 w-96 shadow-xl rounded-lg bg-cover bg-center'>
-                                <h3>{user.name}</h3>
-                            </div>
-                           </TinderCard>
-                        )
-                    }
-                })}
-            </div>
+{/* 
+        <div className='buttons'>
+            <button style={{ backgroundColor: !canSwipe && '#c3c4d3' }} onClick={() => swipe('left')}>Swipe left!</button>
+            <button style={{ backgroundColor: !canGoBack && '#c3c4d3' }} onClick={() => goBack()}>Undo swipe!</button>
+            <button style={{ backgroundColor: !canSwipe && '#c3c4d3' }} onClick={() => swipe('right')}>Swipe right!</button>
+        </div> */}
+                
+           
         </>
     )
 }
+
+

@@ -12,6 +12,7 @@ import React from "react"
 // components
 import { NavbarComponent } from "../components/NavbarComponent"
 import { TinderCards } from "../components/TinderCards"
+import { FooterComponent } from "../components/FooterComponent"
 
 
 
@@ -91,13 +92,14 @@ export const HomePage = () => {
     
     return (
         <>
-            <div>
+            <div className="">
 
-                You are on the home page
+              
+                <TinderCards data={users} setData={setUsers} swipedRightData={swipedRightByUsers}/>
+     
+            
             </div>
-          
-            <TinderCards data={users} setData={setUsers} swipedRightData={swipedRightByUsers}/>
- 
+            
             <NavbarComponent />
         </>
     )
