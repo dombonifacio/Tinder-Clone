@@ -102,18 +102,22 @@ export const HomePage = () => {
             const combinedSwipedUsers = [...swipedRightByUsers, ...swipedLeftByUsers, ...swipedUpByUsers];
             const removedSwipedUsers = users.filter((user) => !combinedSwipedUsers.some((swipedUsers) => swipedUsers.id === user.id))
             setUsers(removedSwipedUsers)
-            console.log('checking if users are in the swiped users', combinedSwipedUsers)
+            
 
         }
 
     }, [swipedRightByUsers, swipedLeftByUsers, swipedUpByUsers])
+
+    useEffect(() => {
+        console.log('checking if users are in the swiped users', users)
+    }, [users])
     
     return (
         <>
             <div className="">
 
               
-                <TinderCards data={users} setData={setUsers} swipedRightData={swipedRightByUsers}/>
+                <TinderCards data={ users && users} setData={setUsers} swipedRightData={swipedRightByUsers}/>
      
             
             </div>

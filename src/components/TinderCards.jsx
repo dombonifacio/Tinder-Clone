@@ -17,7 +17,7 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
     const [ visibleCard, setVisibleCard ] = useState(true)
 
     // data will not be there automatically. use the useEffect hook
-    const [ currentIndex, setCurrentIndex ] = useState(data.length - 1)
+    const [ currentIndex, setCurrentIndex ] = useState(null)
     const [ cardsThatLeft, setCardsThatLeft ] = useState([]) 
     const [swipedRightCards, setSwipedRightCards] = useState([])
     const [swipedLeftCards, setSwipedLeftCards ] = useState([])
@@ -26,7 +26,7 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
     const [childRefs, setChildRefs] = useState([]);
     const currentUser = auth.currentUser
     const currentIndexRef = useRef(currentIndex)
-    
+    console.log('current index ref', currentIndexRef)
     useEffect(() => {
         if (data) {
           // Create childRefs with the length of data
@@ -39,21 +39,24 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
       }, [data, currentIndex]);
 
 
-
+      
 
     // user can only swipe if there is at least 1 user or more than 1 users to swipe
     const canSwipe = currentIndex >= 0
+    // if user undo swipe, currentIndex will increase because it will near the end of the array
     const canGoBack = currentIndex < data.length - 1
 
-
-    // TODO
-    // 1. Only render user data if a user.id is not included in the currentUser's swipedRight || Up || Down subcollection
-    
     useEffect(() => {
-        if (data && currentIndex === null) {
+        if (data && (currentIndex === null || currentIndex === -1)) {
             setCurrentIndex(data.length - 1);
-        }
+            console.log('useEffect triggered ')
+        } 
     }, [data, currentIndex]);
+
+    const updateCurrentIndex = (val) => {
+        setCurrentIndex(val)
+        currentIndexRef.current = val
+    }
 
     const cardLeavesScreen = (name, index) => {
         currentIndexRef.current >= index && childRefs[index].current.restoreCard()
@@ -63,7 +66,7 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
     // swiped cards
     const swipedCard = (direction, index, user) => {
         setLastDirection(direction)
-        setCurrentIndex(currentIndex - 1)
+        updateCurrentIndex(index - 1)
         console.log(user.name, 'has been swiped to the', direction, ' direction')
         
         const updatedData = data.map((user, i) => {
@@ -95,6 +98,18 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
           await childRefs[currentIndex].current.swipe(direction); // Swipe the card!
         }
     };
+
+    const goBack = async () => {
+        if (canGoBack && childRefs){
+
+            const newIndex = currentIndex + 1
+            updateCurrentIndex(newIndex)
+            await childRefs[newIndex].current.restoreCard()
+        } else return
+    
+        
+      
+      }
 
     console.log('current index', currentIndex)
 
@@ -165,20 +180,9 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
         </div>
         <div className='w-full flex justify-evenly mt-[-40px]'>
             <button onClick={() => swipe('left')}>Swipe left!</button>
-            <button >Undo swipe!</button>
-            <button >Swipe right!</button>
-        </div>
-            
-        
-
-{/* 
-        <div className='buttons'>
-            <button style={{ backgroundColor: !canSwipe && '#c3c4d3' }} onClick={() => swipe('left')}>Swipe left!</button>
-            <button style={{ backgroundColor: !canGoBack && '#c3c4d3' }} onClick={() => goBack()}>Undo swipe!</button>
-            <button style={{ backgroundColor: !canSwipe && '#c3c4d3' }} onClick={() => swipe('right')}>Swipe right!</button>
-        </div> */}
-                
-           
+            <button onClick={() => goBack()}>Undo swipe!</button>
+            <button onClick={() => swipe('right')}>Swipe right!</button>
+        </div>  
         </>
     )
 }
