@@ -1,8 +1,9 @@
 // third party libraries
 import TinderCard from "react-tinder-card"
 
+import React from "react";
 // hooks
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef, useMemo } from "react"
 
 // firebase
 import { auth, db } from "../config/firebase"
@@ -14,32 +15,57 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
 
      // when visibleCard is set to true, don't apply the hidden className, otherwise apply it
     const [ visibleCard, setVisibleCard ] = useState(true)
+
+    // data will not be there automatically. use the useEffect hook
     const [ currentIndex, setCurrentIndex ] = useState(data.length - 1)
     const [ cardsThatLeft, setCardsThatLeft ] = useState([]) 
     const [swipedRightCards, setSwipedRightCards] = useState([])
     const [swipedLeftCards, setSwipedLeftCards ] = useState([])
     const [ swipedUpCards, setSwipedUpCards ] = useState([])
+    const [ lastDirection, setLastDirection ] = useState()
+    const [childRefs, setChildRefs] = useState([]);
     const currentUser = auth.currentUser
+    const currentIndexRef = useRef(currentIndex)
+    
+    useEffect(() => {
+        if (data) {
+          // Create childRefs with the length of data
+          const newChildRefs = Array(data.length).fill(0).map(() => React.createRef());
+          // Update the childRefs state with the new array
+          setChildRefs(newChildRefs);
+          // Set the currentIndexRef.current to the current index
+          currentIndexRef.current = currentIndex;
+        }
+      }, [data, currentIndex]);
+
+
+
 
     // user can only swipe if there is at least 1 user or more than 1 users to swipe
     const canSwipe = currentIndex >= 0
     const canGoBack = currentIndex < data.length - 1
 
 
-
     // TODO
     // 1. Only render user data if a user.id is not included in the currentUser's swipedRight || Up || Down subcollection
     
-
+    useEffect(() => {
+        if (data && currentIndex === null) {
+            setCurrentIndex(data.length - 1);
+        }
+    }, [data, currentIndex]);
 
     const cardLeavesScreen = (name, index) => {
-      
+        currentIndexRef.current >= index && childRefs[index].current.restoreCard()
+       
     };
 
     // swiped cards
     const swipedCard = (direction, index, user) => {
-        console.log(user.name, 'has been swiped to the', direction, ' direction')
+        setLastDirection(direction)
         setCurrentIndex(currentIndex - 1)
+        console.log(user.name, 'has been swiped to the', direction, ' direction')
+        
         const updatedData = data.map((user, i) => {
             if (i === index){
                 if (direction === 'up'){
@@ -64,6 +90,14 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
         })
         setData(updatedData)
     }
+    const swipe = async (direction) => {
+        if (canSwipe && currentIndex < data.length && childRefs[currentIndex]?.current) {
+          await childRefs[currentIndex].current.swipe(direction); // Swipe the card!
+        }
+    };
+
+    console.log('current index', currentIndex)
+
     // useEffect(() => {
     //     console.log('swiped right cards', swipedRightCards)
     // }, [swipedRightCards])
@@ -110,6 +144,7 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
                 if (!(user.isSwipedRight || user.isSwipedLeft || user.isSwipedUp)) {
                 return (
                     <TinderCard
+                        ref={childRefs[index]}
                         key={index}
                         className={`swipe`}
                         onSwipe={(dir) => swipedCard(dir, index, user)}
@@ -118,9 +153,9 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
                     >
                         <div
                         style={{ backgroundImage: "url(" + user.images[0] + ")" }}
-                        className="card relative w-[600px] max-w-[80vw] h-[50vh] p-20 rounded-2xl bg-cover bg-center "
+                        className="card relative w-[600px] max-w-[80vw] h-[50vh] p-20 rounded-2xl bg-cover bg-right "
                         >
-                        <h3 className="absolute bottom-20 text-white">{user.name}</h3>
+                        <h3 className="absolute left-0 p-4 bottom-0 text-white">{user.name}</h3>
                         </div>
                     </TinderCard>
             );
@@ -129,7 +164,7 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
    
         </div>
         <div className='w-full flex justify-evenly mt-[-40px]'>
-            <button >Swipe left!</button>
+            <button onClick={() => swipe('left')}>Swipe left!</button>
             <button >Undo swipe!</button>
             <button >Swipe right!</button>
         </div>
