@@ -50,7 +50,7 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
                 else if (direction === 'right'){
                     user.isSwipedRight = true
                     setSwipedRightCards([...swipedRightCards, user])
-                     // TODO addSwipedDoc(user, "swipedRight")
+                    addSwipedDoc(user, "swipedRight")
                     
                 }
                 else {
@@ -78,15 +78,20 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
 
     const addSwipedDoc = async (user, direction) => {
         const userId = currentUser.uid;
+      
         try {
           
-          await setDoc(doc(db, "swipes", userId), {
-            id: user.id
-          })
-          // doc that refers to db/swipes/currentUser/swipedRight||Up||Down/id of the user that's been swiped
+            // givess a doc a specific id using the currentUser.uid
+          const docRef = doc(db, "swipes", userId)
+          // creates a doc using a custom id (currentUser.uid) then giving a field id
+          await setDoc(docRef, {id: userId})
+          // goes to the db, swipes collection, has to refer a specific document id (currentUser), goes to that specific doc's subcollection swipedRight
+          // then refers to that user.id (the user being referred to is the current user being swiped)
+          // swipes -> Mark -> swipedRight -> the user Mark swiped right on
           const userDocRef = doc(db, "swipes", userId, `${direction}`, user.id)
           // removes the isSwipedProps from the user
           const {isSwipedUp, isSwipedLeft, isSwipedRight, ...newUser} = user
+          // creates a document inside the 
           await setDoc(userDocRef, {
             // removed isSwipedProps
             ...newUser, 
@@ -96,7 +101,7 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
         }
       };
 
-      
+   
     // if any of the users are in the swipedRIght, swipedLeft, swipedUp, do not render them
     return (
         <>

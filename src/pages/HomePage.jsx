@@ -48,20 +48,15 @@ export const HomePage = () => {
     const currentUser = auth.currentUser
 
     const getSwipesData = async () => {
-        const query = collection(db, "swipes")
-        const snapshot = await getDocs(query)
-        const data = snapshot.docs.map((doc) => ({
+
+        const data = collection(db, "swipes", currentUser.uid, "swipedRight")
+        const dataTwo = await getDocs(data)
+
+        const swipedRightData = dataTwo.docs.map((doc) => ({
             ...doc.data(), id: doc.id
         }))
-        data.map( async (subcollection) => {
-            const swipedRightq = collection(db, `swipes/${subcollection.id}/swipedRight`)
-            const swipedRightDetails = await getDocs(swipedRightq)
-            const swipedRightInfo = swipedRightDetails.docs.map((doc) => ({
-                ...doc.data(), id: doc.id
-            }))
-            setSwipedRightByUsers(swipedRightInfo)
-        })
         
+        setSwipedRightByUsers(swipedRightData)
     }
 
     useEffect(() => {
@@ -81,11 +76,15 @@ export const HomePage = () => {
             getSwipesData()
         }
     }, [])
-    
+
+    console.log('ids')
     useEffect(() => {
         if (swipedRightByUsers){
-
-            console.log('liked by users data', swipedRightByUsers)
+            // only get users from users array if their user.id do not match with any of the swipedRIghtByUsersArray
+            const removedSwipedUsers = users.filter((user) => !swipedRightByUsers.some((swipedUsers) => swipedUsers.id === user.id))
+            setUsers(removedSwipedUsers)
+            console.log('checking if users are in the swiped users', removedSwipedUsers)
+            console.log('Swiped Right Array by the current user', swipedRightByUsers)
         }
 
     }, [swipedRightByUsers])
