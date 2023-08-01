@@ -45,7 +45,7 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
                 if (direction === 'up'){
                     user.isSwipedUp = true
                     setSwipedUpCards([...swipedUpCards, user])
-                     // TODO addSwipedDoc(user, "swipedUp")
+                    addSwipedDoc(user, "swipedUp")
                 }
                 else if (direction === 'right'){
                     user.isSwipedRight = true
@@ -56,7 +56,7 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
                 else {
                     user.isSwipedLeft = true
                     setSwipedLeftCards([...swipedLeftCards, user])
-                    // TODO addSwipedDoc(user, "swipedLeft")
+                    addSwipedDoc(user, "swipedLeft")
                 }
 
             }

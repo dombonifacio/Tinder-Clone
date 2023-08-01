@@ -45,18 +45,36 @@ export const HomePage = () => {
 
     const [users, setUsers] = useState([])
     const [ swipedRightByUsers, setSwipedRightByUsers ] = useState([])
+    const [ swipedLeftByUsers, setSwipedLeftByUsers ] = useState([])
+    const [ swipedUpByUsers, setSwipedUpByUsers ] = useState([])
     const currentUser = auth.currentUser
 
     const getSwipesData = async () => {
 
-        const data = collection(db, "swipes", currentUser.uid, "swipedRight")
-        const dataTwo = await getDocs(data)
+        // referring to each sub cols depending on the direction
+        const swipedRightSubColRef = collection(db, "swipes", currentUser.uid, "swipedRight")
+        const swipedLeftSubColRef = collection(db, "swipes", currentUser.uid, "swipedLeft")
+        const swipedUpSubColRef = collection(db, "swipes", currentUser.uid, "swipedUp")
+        
+        // getting the docs
+        const swipedRightSubColDocs = await getDocs(swipedRightSubColRef)
+        const swipedLeftSubColDocs = await getDocs(swipedLeftSubColRef)
+        const swipedUpSubColDocs = await getDocs(swipedUpSubColRef)
 
-        const swipedRightData = dataTwo.docs.map((doc) => ({
+
+        const swipedRightReadableDocs = swipedRightSubColDocs.docs.map((doc) => ({
+            ...doc.data(), id: doc.id
+        }))
+        const swipedLeftReadableDocs = swipedLeftSubColDocs.docs.map((doc) => ({
+            ...doc.data(), id: doc.id
+        }))
+        const swipedUpReadableDocs = swipedUpSubColDocs.docs.map((doc) => ({
             ...doc.data(), id: doc.id
         }))
         
-        setSwipedRightByUsers(swipedRightData)
+        setSwipedRightByUsers(swipedRightReadableDocs)
+        setSwipedLeftByUsers(swipedLeftReadableDocs)
+        setSwipedUpByUsers(swipedUpReadableDocs)
     }
 
     useEffect(() => {
@@ -77,17 +95,18 @@ export const HomePage = () => {
         }
     }, [])
 
-    console.log('ids')
     useEffect(() => {
-        if (swipedRightByUsers){
+        if (swipedRightByUsers || swipedLeftByUsers || swipedUpByUsers){
             // only get users from users array if their user.id do not match with any of the swipedRIghtByUsersArray
-            const removedSwipedUsers = users.filter((user) => !swipedRightByUsers.some((swipedUsers) => swipedUsers.id === user.id))
+            // only return the users if the some returns false
+            const combinedSwipedUsers = [...swipedRightByUsers, ...swipedLeftByUsers, ...swipedUpByUsers];
+            const removedSwipedUsers = users.filter((user) => !combinedSwipedUsers.some((swipedUsers) => swipedUsers.id === user.id))
             setUsers(removedSwipedUsers)
-            console.log('checking if users are in the swiped users', removedSwipedUsers)
-            console.log('Swiped Right Array by the current user', swipedRightByUsers)
+            console.log('checking if users are in the swiped users', combinedSwipedUsers)
+
         }
 
-    }, [swipedRightByUsers])
+    }, [swipedRightByUsers, swipedLeftByUsers, swipedUpByUsers])
     
     return (
         <>
