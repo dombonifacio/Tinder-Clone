@@ -78,7 +78,7 @@ export const LoginPage = () => {
     useEffect(() => {
         const checkIfUserExists = onAuthStateChanged(auth, (person) => {
             if (value){
-                const userDocRef = doc(usersCollectionRef, person.uid)
+                const userDocRef = doc(usersCollectionRef, person?.uid)
                 getDoc(userDocRef).then((doc) => {
                     if (doc.exists()){
                         setUserSignedUp(false)

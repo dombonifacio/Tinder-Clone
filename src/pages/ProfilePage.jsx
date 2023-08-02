@@ -1,23 +1,66 @@
 // components
 import { NavbarComponent } from "../components/NavbarComponent"
-
+import { SwipedByUsersComponent } from "../components/SwipedByUsersComponent"
 // icons
 import logo from '../assets/icons/logo.svg'
 import { IoIosSettings } from 'react-icons/io'
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 
 // third party libraries
 import { signOut } from "firebase/auth"
+import { auth, db } from "../config/firebase"
+import { getDoc, doc, collection, onSnapshot } from "firebase/firestore"
 
-import { auth } from "../config/firebase"
 
 
 export const ProfilePage = () => {
 
     const [settingsShown, setSettingsShown] = useState(false)
-    console.log('auth user', auth)
+    const [ profile, setProfile ] = useState({})
+    const currentUserId = auth.currentUser?.uid
+
+    // Get current user's profile
     const navigate = useNavigate()
+
+    useEffect(() => {
+        const getProfile = async () => {
+            const docUserRef = doc(db, "users", currentUserId)
+            const docUserData = await getDoc(docUserRef)
+            if (docUserData.exists()) {
+                setProfile(docUserData.data())
+            } else {
+                console.log('user does not exist.')
+            }
+        }
+
+          // TODO
+         // 1. Go to the collection of swipes
+        const getSwipedByUsers = () => {
+            const swipesColRef = collection(db, "swipes")
+            const swipesDocsData = onSnapshot(swipesColRef, (doc) => {
+                doc.docs.forEach((user) => {
+                  
+                    const swipedRightSubColRef = collection(db, "swipes", user.id, "swipedRight")
+                    const swipedRightDocsData = onSnapshot(swipedRightSubColRef, (doc) => {
+                        doc.docs.forEach((user) => {
+                            const readableData = user.data()
+                            console.log('each users in swiped right', readableData)
+                        })
+                    })
+                })
+            })
+        }
+
+        return () => {
+            getProfile()
+            getSwipedByUsers()
+        }
+    }, [])
+
+  
+
+    
     
     return (
         <>
@@ -45,6 +88,7 @@ export const ProfilePage = () => {
                      </p>
                      <p> Age</p>
                  </div>
+                 <SwipedByUsersComponent />
                      
          
  
@@ -64,11 +108,7 @@ export const ProfilePage = () => {
  
                          <IoIosSettings size={"2rem"}/>
                     </button>
-                    <button onClick={handleLogout}>
-                        <div className="text-red">
-                            Log out
-                        </div>
-                    </button>
+                    
                 </>
             )
         }

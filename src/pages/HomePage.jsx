@@ -25,13 +25,21 @@ export const HomePage = () => {
     const [ profile, setProfile ] = useState({})
     const currentUser = auth.currentUser?.uid
 
-    const profileDocRef = doc(db, "users", currentUser)
+    
     const getProfile = async () => {
-        const profile = await getDoc(profileDocRef)
-        if (profile.exists()){
-            setProfile(profile.data())
-        } else {
-            console.log('profile is not there')
+        try {
+            if (currentUser){
+
+                const profileDocRef = doc(db, "users", auth.currentUser?.uid)
+                const profile = await getDoc(profileDocRef)
+                if (profile.exists()){
+                    setProfile(profile.data())
+                } else {
+                    console.log('profile is not there')
+                }
+            }
+        } catch (error) {
+            console.log('error', error)
         }
     }
 

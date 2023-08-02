@@ -31,7 +31,9 @@ export const TinderCards = ({data, setData, profile}) => {
     const canSwipe = currentIndex >= 0
     // if user undo swipe, currentIndex will increase because it will near the end of the array
     const canGoBack = currentIndex < data.length - 1
-   
+    if (!data) {
+        return null; // or return some loading indicator
+      }
     useEffect(() => {
         if (data) {
           // Create childRefs with the length of data
