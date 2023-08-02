@@ -11,7 +11,7 @@ import { collection, addDoc, doc, setDoc, getDoc } from "firebase/firestore";
 
 import '../App.css'
 
-export const TinderCards = ({data, setData, swipedRightData}) => {
+export const TinderCards = ({data, setData, profile}) => {
 
      // when visibleCard is set to true, don't apply the hidden className, otherwise apply it
     const [ visibleCard, setVisibleCard ] = useState(true)
@@ -25,9 +25,13 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
     const [ lastDirection, setLastDirection ] = useState()
     const [childRefs, setChildRefs] = useState([]);
     const currentUser = auth.currentUser
-    const userId = currentUser.uid;
+    const userId = currentUser?.uid;
     const currentIndexRef = useRef(currentIndex)
-    console.log('current index ref', currentIndexRef)
+    // user can only swipe if there is at least 1 user or more than 1 users to swipe
+    const canSwipe = currentIndex >= 0
+    // if user undo swipe, currentIndex will increase because it will near the end of the array
+    const canGoBack = currentIndex < data.length - 1
+   
     useEffect(() => {
         if (data) {
           // Create childRefs with the length of data
@@ -38,14 +42,6 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
           currentIndexRef.current = currentIndex;
         }
       }, [data, currentIndex]);
-
-
-      
-
-    // user can only swipe if there is at least 1 user or more than 1 users to swipe
-    const canSwipe = currentIndex >= 0
-    // if user undo swipe, currentIndex will increase because it will near the end of the array
-    const canGoBack = currentIndex < data.length - 1
 
     useEffect(() => {
         if (data && (currentIndex === null || currentIndex === -1)) {
@@ -114,7 +110,10 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
             // givess a doc a specific id using the currentUser.uid
           const docRef = doc(db, "swipes", userId)
           // creates a doc using a custom id (currentUser.uid) then giving a field id
-          await setDoc(docRef, {id: userId})
+          if (profile){
+
+              await setDoc(docRef, {...profile})
+          }
           // goes to the db, swipes collection, has to refer a specific document id (currentUser), goes to that specific doc's subcollection swipedRight
           // then refers to that user.id (the user being referred to is the current user being swiped)
           // swipes -> Mark -> swipedRight -> the user Mark swiped right on

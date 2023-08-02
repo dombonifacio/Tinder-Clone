@@ -73,6 +73,9 @@ export const LoginPage = () => {
         }
     }, [value])
     useEffect(() => {
+        console.log('auth.currentuser.uid', auth.currentUser?.uid)
+    }, [])
+    useEffect(() => {
         const checkIfUserExists = onAuthStateChanged(auth, (person) => {
             if (value){
                 const userDocRef = doc(usersCollectionRef, person.uid)
