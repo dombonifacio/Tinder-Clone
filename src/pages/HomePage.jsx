@@ -38,6 +38,7 @@ export const HomePage = () => {
                     console.log('profile is not there')
                 }
             }
+            // TODO: GETPROFILE IS IN USEEFFECT SO IT WILL BREAK BUT  CATCH ERROR FIXES IT BUT YOU NEED TO FIX THE UI ALSO
         } catch (error) {
             console.log('error', error)
         }

@@ -18,6 +18,7 @@ export const ProfilePage = () => {
 
     const [settingsShown, setSettingsShown] = useState(false)
     const [ profile, setProfile ] = useState({})
+    const [ swipedByUsers, setSwipedByUsers ] = useState([])
     const currentUserId = auth.currentUser?.uid
 
     // Get current user's profile
@@ -40,13 +41,17 @@ export const ProfilePage = () => {
             const swipesColRef = collection(db, "swipes")
             const swipesDocsData = onSnapshot(swipesColRef, (doc) => {
                 doc.docs.forEach((user) => {
-                  
+                    const swipedByUser = user.data()
                     const swipedRightSubColRef = collection(db, "swipes", user.id, "swipedRight")
                     const swipedRightDocsData = onSnapshot(swipedRightSubColRef, (doc) => {
-                        doc.docs.forEach((user) => {
-                            const readableData = user.data()
-                            console.log('each users in swiped right', readableData)
-                        })
+                        const isCurrentUserSwipedRight = doc.docs.some((subDoc) => subDoc.id === currentUserId);
+                        if (isCurrentUserSwipedRight) {
+                            // If the currentUser.uid exists in the swipedRight subcollection for this user,
+                            // you can access the user's ID using 'userId'
+                            console.log("User ID with currentUser in swipedRight:", swipedByUser.name);
+                            setSwipedByUsers([...swipedByUsers, swipedByUser])
+                            
+                        }
                     })
                 })
             })
@@ -58,10 +63,11 @@ export const ProfilePage = () => {
         }
     }, [])
 
-  
-
-    
-    
+    useEffect(() => {
+        if (swipedByUsers && swipedByUsers.length > 0) {
+          console.log('swiped by users', swipedByUsers);
+        }
+      }, [swipedByUsers]);
     return (
         <>
            {!settingsShown ? (
@@ -101,7 +107,6 @@ export const ProfilePage = () => {
            ) 
         :
             (
-                
                 <>
                     <h1>Settings is shown.</h1>
                     <button onClick={() => setSettingsShown(prevState => !prevState)}>
