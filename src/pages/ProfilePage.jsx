@@ -1,5 +1,6 @@
 // components
 import { NavbarComponent } from "../components/NavbarComponent"
+import { ProfileComponent } from "../components/ProfileComponent"
 
 // icons
 import logo from '../assets/icons/logo.svg'
@@ -19,6 +20,12 @@ export const ProfilePage = () => {
     console.log('auth user', auth)
     const navigate = useNavigate()
     
+    // TODO 
+    // See who liked you
+    // Go to the "swipes" and check each doc.id except the current user
+    // Check their swipedRight or swipedUp
+    // See if the current user's uid exists in the swipedRight or swipedUp sub collection
+
     return (
         <>
            {!settingsShown ? (
@@ -45,11 +52,12 @@ export const ProfilePage = () => {
                      </p>
                      <p> Age</p>
                  </div>
+                 <ProfileComponent />
                      
          
  
                  <div className="flex justify-center">
- 
+            
                      <NavbarComponent />
                  </div>
                  

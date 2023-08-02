@@ -17,13 +17,14 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
     const [ visibleCard, setVisibleCard ] = useState(true)
 
     // data will not be there automatically. use the useEffect hook
-    const [ currentIndex, setCurrentIndex ] = useState(null)
+    const [ currentIndex, setCurrentIndex ] = useState(data.length - 1)
     const [swipedRightCards, setSwipedRightCards] = useState([])
     const [swipedLeftCards, setSwipedLeftCards ] = useState([])
     const [ swipedUpCards, setSwipedUpCards ] = useState([])
     const [ lastDirection, setLastDirection ] = useState()
     const [ lastSwipedUsers, setLastSwipedUsers ] = useState([])
     const [childRefs, setChildRefs] = useState([]);
+    const [ profileShown, setProfileShown ] = useState(false)
     const currentUser = auth.currentUser
     const userId = currentUser.uid;
     const currentIndexRef = useRef(currentIndex)
@@ -47,11 +48,11 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
     const canSwipe = currentIndex >= 0
     // if user undo swipe, currentIndex will increase because it will near the end of the array
     const canGoBack = currentIndex < data.length - 1
-    
+    console.log('current index', currentIndex)
 
     useEffect(() => {
         if (data && (currentIndex === null || currentIndex === -1 || currentIndex !== data.length - 1)){
-
+            
             setCurrentIndex(data.length - 1);
         }
         
@@ -59,7 +60,8 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
 
     useEffect(() => {
         if (currentIndex){
-            console.log('current index', currentIndex)
+            
+            console.log('can go back', canGoBack)
         }
     }, [currentIndex])
 
@@ -78,7 +80,7 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
         setLastDirection(direction)
         updateCurrentIndex(index - 1)
         setLastSwipedUsers([...lastSwipedUsers, user])
-        console.log(user.name, 'has been swiped to the', direction, ' direction')
+     
         
         const updatedData = data.map((user, i) => {
             if (i === index){
@@ -107,6 +109,7 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
     }
     const swipe = async (direction) => {
         if (canSwipe && currentIndex < data.length && childRefs[currentIndex]?.current) {
+            console.log('swiped ', direction)
           await childRefs[currentIndex].current.swipe(direction); // Swipe the card!
         }
     };
@@ -115,6 +118,35 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
     console.log('data length', data.length)
     console.log('data user', data)
 
+    const [userProfile, setUserProfile] = useState(null);
+
+    const getCurrentUserData = async () => {
+      try {
+        // Create a reference to the user document
+        const userDocRef = doc(db, "users", userId);
+  
+        // Fetch the user document once using getDoc
+        const userDocSnapshot = await getDoc(userDocRef);
+  
+        if (userDocSnapshot.exists()) {
+          // The document exists, so you can access its data using .data()
+          const userData = userDocSnapshot.data();
+          setUserProfile(userData);
+          console.log("User Data:", userData);
+        } else {
+          // The document doesn't exist
+          console.log("User document not found.");
+        }
+      } catch (error) {
+        console.error("Error fetching user document:", error);
+      }
+    };
+  
+    useEffect(() => {
+      getCurrentUserData();
+    }, [userId]);
+  
+
 
     const addSwipedDoc = async (user, direction) => {
         try {
@@ -122,7 +154,7 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
             // givess a doc a specific id using the currentUser.uid
           const docRef = doc(db, "swipes", userId)
           // creates a doc using a custom id (currentUser.uid) then giving a field id
-          await setDoc(docRef, {id: userId})
+          await setDoc(docRef, {...userProfile})
           // goes to the db, swipes collection, has to refer a specific document id (currentUser), goes to that specific doc's subcollection swipedRight
           // then refers to that user.id (the user being referred to is the current user being swiped)
           // swipes -> Mark -> swipedRight -> the user Mark swiped right on
@@ -140,14 +172,13 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
     };
 
     const goBack = async () => {
-        if (!canGoBack) return
+        if (!data || currentIndex >= data.length) return 
+
         const newIndex = currentIndex + 1
         updateCurrentIndex(newIndex)
         await childRefs[newIndex].current.restoreCard()
     }
 
-
-   
     // if any of the users are in the swipedRIght, swipedLeft, swipedUp, do not render them
     return (
         <>
@@ -167,7 +198,11 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
                         style={{ backgroundImage: "url(" + user.images[0] + ")" }}
                         className="card relative w-[600px] max-w-[80vw] h-[50vh] p-20 rounded-2xl bg-cover bg-right "
                         >
-                        <h3 className="absolute left-0 p-4 bottom-0 text-white">{user.name}</h3>
+                        <div className="absolute flex items-center bottom-0 left-0 p-4 w-full justify-between">
+
+                            <h3 className=" text-white">{user.name}</h3>
+                            <button className="text-white" onClick={(user) => showProfile(user)}>Show Profile</button>
+                        </div>
                         </div>
                     </TinderCard>
             );
@@ -177,11 +212,15 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
         </div>
         <div className='w-full flex justify-evenly mt-[-40px]'>
             <button onClick={() => swipe('left')}>Swipe left!</button>
+            <button onClick={() => swipe('up')}>Swipe Up</button>
             <button onClick={() => goBack()}>Undo swipe!</button>
             <button onClick={() => swipe('right')}>Swipe right!</button>
         </div>  
         </>
     )
 }
+
+// TODO : FOLLOWERS AND FOLLOWING LIST
+// 
 
 
