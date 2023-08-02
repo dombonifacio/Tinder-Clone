@@ -7,7 +7,7 @@ import { useEffect, useState, useRef, useMemo } from "react"
 
 // firebase
 import { auth, db } from "../config/firebase"
-import { collection, addDoc, doc, setDoc } from "firebase/firestore"; 
+import { collection, addDoc, doc, setDoc, getDoc } from "firebase/firestore"; 
 
 import '../App.css'
 
@@ -25,6 +25,7 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
     const [ lastDirection, setLastDirection ] = useState()
     const [childRefs, setChildRefs] = useState([]);
     const currentUser = auth.currentUser
+    const userId = currentUser.uid;
     const currentIndexRef = useRef(currentIndex)
     console.log('current index ref', currentIndexRef)
     useEffect(() => {
@@ -91,6 +92,7 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
             }
             return user
         })
+        console.log('updated data', updatedData)
         setData(updatedData)
     }
     const swipe = async (direction) => {
@@ -98,36 +100,15 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
           await childRefs[currentIndex].current.swipe(direction); // Swipe the card!
         }
     };
+   
+    const goBack = () => {
 
-    const goBack = async () => {
-        if (canGoBack && childRefs){
+    }
 
-            const newIndex = currentIndex + 1
-            updateCurrentIndex(newIndex)
-            await childRefs[newIndex].current.restoreCard()
-        } else return
-    
-        
-      
-      }
-
-    console.log('current index', currentIndex)
-
-    // useEffect(() => {
-    //     console.log('swiped right cards', swipedRightCards)
-    // }, [swipedRightCards])
-    // useEffect(() => {
-    //     console.log('swiped up cards', swipedUpCards)
-    // }, [swipedUpCards])
-    // useEffect(() => {
-    //     console.log('swiped left cards', swipedLeftCards)
-    // }, [swipedLeftCards])
-
-    
+    console.log('data length', data.length)
+    console.log('data', data)
 
     const addSwipedDoc = async (user, direction) => {
-        const userId = currentUser.uid;
-      
         try {
           
             // givess a doc a specific id using the currentUser.uid
@@ -148,7 +129,14 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
         } catch (error) {
           console.error("Error adding document:", error);
         }
-      };
+    };
+
+    const deleteDoc = async () => {
+        
+        const docRef = doc(db, "swipes", userId, "swipedRight", "vMkdbiFVH8Rmb7P2oSQXg2Ny6NG3")
+        const getData = await getDoc(docRef)
+        console.log('getting doc from swipedright subcollection for specific id', getData)
+    }
 
    
     // if any of the users are in the swipedRIght, swipedLeft, swipedUp, do not render them
@@ -180,7 +168,7 @@ export const TinderCards = ({data, setData, swipedRightData}) => {
         </div>
         <div className='w-full flex justify-evenly mt-[-40px]'>
             <button onClick={() => swipe('left')}>Swipe left!</button>
-            <button onClick={() => goBack()}>Undo swipe!</button>
+            <button onClick={() => deleteDoc()}>Undo swipe!</button>
             <button onClick={() => swipe('right')}>Swipe right!</button>
         </div>  
         </>

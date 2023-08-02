@@ -47,34 +47,63 @@ export const HomePage = () => {
     const [ swipedRightByUsers, setSwipedRightByUsers ] = useState([])
     const [ swipedLeftByUsers, setSwipedLeftByUsers ] = useState([])
     const [ swipedUpByUsers, setSwipedUpByUsers ] = useState([])
-    const currentUser = auth.currentUser
+    const currentUser = auth.currentUser.uid
 
     const getSwipesData = async () => {
 
         // referring to each sub cols depending on the direction
-        const swipedRightSubColRef = collection(db, "swipes", currentUser.uid, "swipedRight")
-        const swipedLeftSubColRef = collection(db, "swipes", currentUser.uid, "swipedLeft")
-        const swipedUpSubColRef = collection(db, "swipes", currentUser.uid, "swipedUp")
+        const swipedRightSubColRef = collection(db, "swipes", currentUser, "swipedRight")
+        const swipedLeftSubColRef = collection(db, "swipes", currentUser, "swipedLeft")
+        const swipedUpSubColRef = collection(db, "swipes", currentUser, "swipedUp")
         
-        // getting the docs
-        const swipedRightSubColDocs = await getDocs(swipedRightSubColRef)
-        const swipedLeftSubColDocs = await getDocs(swipedLeftSubColRef)
-        const swipedUpSubColDocs = await getDocs(swipedUpSubColRef)
+        const swipedRightSnapshot = onSnapshot(swipedRightSubColRef, (snapshot) => {
+            const readableSwipedRightData = snapshot.docs.map((doc) => (
+                {...doc.data(), id: doc.id}
+            ))
+            setSwipedRightByUsers(readableSwipedRightData)
+        })
+
+        const swipedLeftSnapshot = onSnapshot(swipedLeftSubColRef, (snapshot) => {
+            const readableSwipedLeftData = snapshot.docs.map((doc) => (
+                {...doc.data(), id: doc.id}
+            ))
+            setSwipedLeftByUsers(readableSwipedLeftData)
+        })
+
+        const swipedUpSnapshot = onSnapshot(swipedUpSubColRef, (snapshot) => {
+            const readableSwipedUpData = snapshot.docs.map((doc) => (
+                {...doc.data(), id: doc.id}
+            ))
+            setSwipedUpByUsers(readableSwipedUpData)
+        })
 
 
-        const swipedRightReadableDocs = swipedRightSubColDocs.docs.map((doc) => ({
-            ...doc.data(), id: doc.id
-        }))
-        const swipedLeftReadableDocs = swipedLeftSubColDocs.docs.map((doc) => ({
-            ...doc.data(), id: doc.id
-        }))
-        const swipedUpReadableDocs = swipedUpSubColDocs.docs.map((doc) => ({
-            ...doc.data(), id: doc.id
-        }))
+        return () => {
+            swipedRightSnapshot()
+            swipedLeftSnapshot()
+            swipedUpSnapshot()
+
+        }
+
+        // // getting the docs
+        // const swipedRightSubColDocs = await getDocs(swipedRightSubColRef)
+        // const swipedLeftSubColDocs = await getDocs(swipedLeftSubColRef)
+        // const swipedUpSubColDocs = await getDocs(swipedUpSubColRef)
+
+
+        // const swipedRightReadableDocs = swipedRightSubColDocs.docs.map((doc) => ({
+        //     ...doc.data(), id: doc.id
+        // }))
+        // const swipedLeftReadableDocs = swipedLeftSubColDocs.docs.map((doc) => ({
+        //     ...doc.data(), id: doc.id
+        // }))
+        // const swipedUpReadableDocs = swipedUpSubColDocs.docs.map((doc) => ({
+        //     ...doc.data(), id: doc.id
+        // }))
         
-        setSwipedRightByUsers(swipedRightReadableDocs)
-        setSwipedLeftByUsers(swipedLeftReadableDocs)
-        setSwipedUpByUsers(swipedUpReadableDocs)
+        // setSwipedRightByUsers(swipedRightReadableDocs)
+        // setSwipedLeftByUsers(swipedLeftReadableDocs)
+        // setSwipedUpByUsers(swipedUpReadableDocs)
     }
 
     useEffect(() => {
@@ -85,7 +114,7 @@ export const HomePage = () => {
               // add the isSwiped
                 return {...userInfo.data(), isSwipedRight: false, isSwipedLeft: false, isSwipedUp: false}
             })
-            const removeCurrentUser = readableUsersData.filter((userInfo) => userInfo.id !== currentUser.uid)
+            const removeCurrentUser = readableUsersData.filter((userInfo) => userInfo.id !== currentUser)
             setUsers(removeCurrentUser)
         })
         return () => {
@@ -108,10 +137,9 @@ export const HomePage = () => {
 
     }, [swipedRightByUsers, swipedLeftByUsers, swipedUpByUsers])
 
-    useEffect(() => {
-        console.log('checking if users are in the swiped users', users)
-    }, [users])
+   
     
+
     return (
         <>
             <div className="">
