@@ -43,12 +43,6 @@ function App() {
   const [ userExists, setUserExists] = useState(false)
   const [ userSignedUp, setUserSignedUp ] = useState(false)
   const [ userIsLoggedIn, setUserIsLoggedIn ] = useState(false)
-  useEffect(() => {
-    if(userInfo.images){
-
-      console.log('user info inside app.jsx', userInfo)
-    }
-  }, [userInfo])
   let element = useRoutes([
     {
       path: '/',
