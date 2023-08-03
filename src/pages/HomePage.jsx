@@ -81,9 +81,9 @@ export const HomePage = () => {
         }
     }
 
+    // * * Filtering data. Only get the users from the database excluding the current user
     useEffect(() => {
         const usersCollectionRef = collection(db, "users")
-        const swipesCollectionRef = collection(db, "swipes")
         const getUsersData = onSnapshot(usersCollectionRef, (doc) => {
             const readableUsersData = doc.docs.map((userInfo) => {
               // add the isSwiped
@@ -100,21 +100,16 @@ export const HomePage = () => {
         }
     }, [])
 
+
     useEffect(() => {
         if (swipedRightByUsers || swipedLeftByUsers || swipedUpByUsers){
-            // only get users from users array if their user.id do not match with any of the swipedRIghtByUsersArray
-            // only return the users if the some returns false
+            // * * only get users from users array if their user.id do not match with any of the swiped sub collection
+            // * * only return the users if the some returns false OR get users that are not in any of the swiped sub collections of the current user
             const combinedSwipedUsers = [...swipedRightByUsers, ...swipedLeftByUsers, ...swipedUpByUsers];
             const removedSwipedUsers = users.filter((user) => !combinedSwipedUsers.some((swipedUsers) => swipedUsers.id === user.id))
             setUsers(removedSwipedUsers)
-            
-
         }
-
     }, [swipedRightByUsers, swipedLeftByUsers, swipedUpByUsers])
-
-   
-    
 
     return (
         <>

@@ -7,7 +7,7 @@ import { useEffect, useState, useRef, useMemo } from "react"
 
 // firebase
 import { auth, db } from "../config/firebase"
-import { collection, addDoc, doc, setDoc, getDoc } from "firebase/firestore"; 
+import { collection, addDoc, doc, setDoc, getDoc, getDocs } from "firebase/firestore"; 
 
 import '../App.css'
 
@@ -60,10 +60,49 @@ export const TinderCards = ({data, setData, profile}) => {
     const cardLeavesScreen = (name, index) => {
         currentIndexRef.current >= index && childRefs[index].current.restoreCard()
        
-    };
+    }
+
+    const getToSwipeUser = async (user) => {
+
+        // TODO: 
+        // Check if the parameter's user's id exists in the swipes collection
+        // If it does, go to the swipedRight or swipedUp subcollection
+        // Now go through each document in the swipedRight subcollection and check if the current user LOGGED in exists in that subcollection
+        try {
+
+            const swipesColRef = collection(db, "swipes")
+            const userToSwipeOnRef = doc(swipesColRef, user.id)
+            const userToSwipeOnDoc = await getDoc(userToSwipeOnRef)
+    
+            
+            if (userToSwipeOnDoc.exists()) {
+                console.log(userToSwipeOnDoc.data(), ' the current user that swiped from the database')
+                // * Now we got the current user on screen to swipe from the database.
+                // * * go to this getDocRef's swipedRight subcollection
+                const swipedRightSubColRef = doc(db, "swipes", userToSwipeOnDoc.id, "swipedRight", userId)
+                // get docs from this swipedRightSUbColRef
+                const swipedRightCurrentUser = await getDoc(swipedRightSubColRef)
+                if (swipedRightCurrentUser.exists()){
+                    console.log(swipedRightCurrentUser.data())
+                    console.log('current user', userId, 'exists in', user.name, 'swiped right sub col')
+                } else {
+                    console.log('current user does not exist in', user.name, 'swiped right sub col')
+                }
+
+                console.log(user.name, ' has logged in before and has swiped someone already.')
+            } else {
+                console.log(user.name, 'has not swiped right anybody.')
+            }
+        } catch (error) {
+            console.log('error', error)
+        }
+    }
 
     // swiped cards
     const swipedCard = (direction, index, user) => {
+        
+
+        getToSwipeUser(user)
         setLastDirection(direction)
         updateCurrentIndex(index - 1)
         console.log(user.name, 'has been swiped to the', direction, ' direction')
@@ -90,7 +129,7 @@ export const TinderCards = ({data, setData, profile}) => {
             }
             return user
         })
-        console.log('updated data', updatedData)
+      
         setData(updatedData)
     }
     const swipe = async (direction) => {
@@ -98,13 +137,6 @@ export const TinderCards = ({data, setData, profile}) => {
           await childRefs[currentIndex].current.swipe(direction); // Swipe the card!
         }
     };
-   
-    const goBack = () => {
-
-    }
-
-    console.log('data length', data.length)
-    console.log('data', data)
 
     const addSwipedDoc = async (user, direction) => {
         try {
@@ -122,7 +154,6 @@ export const TinderCards = ({data, setData, profile}) => {
           const userDocRef = doc(db, "swipes", userId, `${direction}`, user.id)
           // removes the isSwipedProps from the user
           const {isSwipedUp, isSwipedLeft, isSwipedRight, ...newUser} = user
-          // creates a document inside the 
           await setDoc(userDocRef, {
             // removed isSwipedProps
             ...newUser, 
@@ -132,14 +163,7 @@ export const TinderCards = ({data, setData, profile}) => {
         }
     };
 
-    const deleteDoc = async () => {
-        
-        const docRef = doc(db, "swipes", userId, "swipedRight", "vMkdbiFVH8Rmb7P2oSQXg2Ny6NG3")
-        const getData = await getDoc(docRef)
-        console.log('getting doc from swipedright subcollection for specific id', getData)
-    }
 
-   
     // if any of the users are in the swipedRIght, swipedLeft, swipedUp, do not render them
     return (
         <>
@@ -160,7 +184,6 @@ export const TinderCards = ({data, setData, profile}) => {
                         className="card relative w-[600px] max-w-[80vw] h-[50vh] p-20 rounded-2xl bg-cover bg-right "
                         >
                         <h3 className="absolute left-0 p-4 bottom-0 text-white">{user.name}</h3>
-                        <h3 className="absolute">it's a match!</h3>
                         </div>
                     </TinderCard>
             );
@@ -178,13 +201,5 @@ export const TinderCards = ({data, setData, profile}) => {
 }
 
 
-
-
-// TODO:
-// See people who liked the current user
-// If the current user liked someone and another user liked the current user, show a notifaction that it's a match
-
-// TODO: Implement the match algorithm
-// Get the current user's id and see if the current user's id exists from the
-// users's both swipedRight and swipedUp sub col docs by using the some function.
-// fr
+// TODO: Matching Algorithm
+// 
