@@ -160,6 +160,7 @@ export const TinderCards = ({data, setData, profile}) => {
                         className="card relative w-[600px] max-w-[80vw] h-[50vh] p-20 rounded-2xl bg-cover bg-right "
                         >
                         <h3 className="absolute left-0 p-4 bottom-0 text-white">{user.name}</h3>
+                        <h3 className="absolute">it's a match!</h3>
                         </div>
                     </TinderCard>
             );
@@ -169,7 +170,7 @@ export const TinderCards = ({data, setData, profile}) => {
         </div>
         <div className='w-full flex justify-evenly mt-[-40px]'>
             <button onClick={() => swipe('left')}>Swipe left!</button>
-            <button onClick={() => deleteDoc()}>Undo swipe!</button>
+            <button onClick={() => swipe('up')}> Super like!</button>
             <button onClick={() => swipe('right')}>Swipe right!</button>
         </div>  
         </>
@@ -177,3 +178,13 @@ export const TinderCards = ({data, setData, profile}) => {
 }
 
 
+
+
+// TODO:
+// See people who liked the current user
+// If the current user liked someone and another user liked the current user, show a notifaction that it's a match
+
+// TODO: Implement the match algorithm
+// Get the current user's id and see if the current user's id exists from the
+// users's both swipedRight and swipedUp sub col docs by using the some function.
+// fr

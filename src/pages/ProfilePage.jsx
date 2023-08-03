@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom"
 // third party libraries
 import { signOut } from "firebase/auth"
 import { auth, db } from "../config/firebase"
-import { getDoc, doc, collection, onSnapshot } from "firebase/firestore"
+import { getDoc, doc, collection, onSnapshot, query, where, getDocs } from "firebase/firestore"
 
 
 
@@ -24,50 +24,44 @@ export const ProfilePage = () => {
     // Get current user's profile
     const navigate = useNavigate()
 
-    useEffect(() => {
-        const getProfile = async () => {
-            const docUserRef = doc(db, "users", currentUserId)
-            const docUserData = await getDoc(docUserRef)
-            if (docUserData.exists()) {
-                setProfile(docUserData.data())
-            } else {
-                console.log('user does not exist.')
+    const getUsersWhoSwipedRight = async () => {
+        try {
+          const swipesColRef = collection(db, "swipes")
+          const docsFromSwipesCol = await getDocs(swipesColRef)
+      
+          const tempSwipedByUsers = []
+          for (const swipesDoc of docsFromSwipesCol.docs) {
+            if (swipesDoc.exists()) { 
+              const swipedRightSubColRef = collection(db, "swipes", swipesDoc.id, "swipedRight")
+                
+      
+              const userWhoSwiped = swipesDoc.data()
+      
+              const docsFromSwipedRightSubCol = await getDocs(swipedRightSubColRef)
+              docsFromSwipedRightSubCol.forEach((swipedRightDoc) => {
+                if (swipedRightDoc.id === currentUserId) {
+                  console.log("user is swiped by", userWhoSwiped.name)
+                  tempSwipedByUsers.push(userWhoSwiped)
+                }
+              });
             }
+          }
+      
+          setSwipedByUsers(tempSwipedByUsers)
+        } catch (error) {
+          console.log("error catching data", error)
         }
-
-          // TODO
-         // 1. Go to the collection of swipes
-        const getSwipedByUsers = () => {
-            const swipesColRef = collection(db, "swipes")
-            const swipesDocsData = onSnapshot(swipesColRef, (doc) => {
-                doc.docs.forEach((user) => {
-                    const swipedByUser = user.data()
-                    const swipedRightSubColRef = collection(db, "swipes", user.id, "swipedRight")
-                    const swipedRightDocsData = onSnapshot(swipedRightSubColRef, (doc) => {
-                        const isCurrentUserSwipedRight = doc.docs.some((subDoc) => subDoc.id === currentUserId);
-                        if (isCurrentUserSwipedRight) {
-                            // If the currentUser.uid exists in the swipedRight subcollection for this user,
-                            // you can access the user's ID using 'userId'
-                            console.log("User ID with currentUser in swipedRight:", swipedByUser.name);
-                            setSwipedByUsers([...swipedByUsers, swipedByUser])
-                            
-                        }
-                    })
-                })
-            })
-        }
-
-        return () => {
-            getProfile()
-            getSwipedByUsers()
-        }
-    }, [])
+      };
 
     useEffect(() => {
-        if (swipedByUsers && swipedByUsers.length > 0) {
-          console.log('swiped by users', swipedByUsers);
+        getUsersWhoSwipedRight()
+      }, [])
+
+    useEffect(() => {
+        if (swipedByUsers) {
+            console.log('this user is liked by', swipedByUsers)
         }
-      }, [swipedByUsers]);
+    }, [swipedByUsers])
     return (
         <>
            {!settingsShown ? (
@@ -86,6 +80,8 @@ export const ProfilePage = () => {
                          <IoIosSettings size={"2rem"}/>
                      </button>
                  </div>
+                 {profile?.name}, {profile?.age}
+                 
  
                  {/* profile section */}
                  <div className="flex justify-center">
@@ -93,10 +89,15 @@ export const ProfilePage = () => {
                          Name, 
                      </p>
                      <p> Age</p>
+                    
                  </div>
                  <SwipedByUsersComponent />
                      
-         
+                 {swipedByUsers?.map((user) => {
+                        return (
+                            <div>{user.name}</div>
+                        )
+                })}
  
                  <div className="flex justify-center">
  
