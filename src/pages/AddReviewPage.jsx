@@ -12,6 +12,7 @@ export const AddReviewPage = () => {
     const {id} = useParams()
     const [ user, setUser ] = useState({})
     const [ content, setContent ] = useState("")
+    const [ rating, setRating ] = useState(0)
     const currentUser = auth.currentUser
 
     // get the user who's being reviewed
@@ -30,7 +31,8 @@ export const AddReviewPage = () => {
             const reviewFields = {
                 reviewedBy: currentUser.uid,
                 reviewedFor: id,
-                description: content
+                description: content,
+                rating: rating
             }
             await addDoc(reviewsColRef, {...reviewFields})
         } catch(error){
@@ -42,8 +44,9 @@ export const AddReviewPage = () => {
     const handleContentChange = (event) => {
         setContent(event.target.value)
     }
-    console.log('content', content)
-
+    
+  
+    console.log('rating', rating)
 
     return (
         <div>
@@ -55,6 +58,20 @@ export const AddReviewPage = () => {
             placeholder="Enter Review . . . Max 200 characters">
 
             </textarea>
+            <p>Please select your age:</p>
+            <div className="flex gap-x-4">
+
+                <input type="radio" id="rating1" name="rating" value="1.0" onChange={(event) => setRating(event.target.value)}/>
+                <label for="rating1">1</label>
+                <input type="radio" id="rating2" name="rating" value="2.0" onChange={(event) => setRating(event.target.value)}/>
+                <label for="rating2">2</label>
+                <input type="radio" id="rating3" name="rating" value="3.0" onChange={(event) => setRating(event.target.value)}/>
+                <label for="rating3">3</label>
+                <input type="radio" id="rating4" name="rating" value="4.0" onChange={(event) => setRating(event.target.value)}/>
+                <label for="rating4">4</label>
+                <input type="radio" id="rating5" name="rating" value="5.0" onChange={(event) => setRating(event.target.value)}/>
+                <label for="rating5">5</label>
+            </div>
             <button onClick={addReview}> adding a review</button>
             <NavbarComponent />
         </div>

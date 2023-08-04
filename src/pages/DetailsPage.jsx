@@ -47,7 +47,15 @@ export const DetailsPage = () => {
         <div>
             Details Page user profile
             <p>{id}</p>
-            {receivedReviews?.map((review) => <p>{review.description}</p>)}
+            {receivedReviews?.map((review) => {
+                return (
+                    <div>
+                        <p>{review.description}</p>
+                        <p>{review.rating}</p>
+                        <p>{review.reviewedBy}</p>
+                    </div>
+                )
+            })}
             <NavbarComponent />
             
         </div>
