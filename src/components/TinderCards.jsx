@@ -76,16 +76,24 @@ export const TinderCards = ({data, setData, profile}) => {
     
             
             if (userToSwipeOnDoc.exists()) {
-                console.log(userToSwipeOnDoc.data(), ' the current user that swiped from the database')
+               
                 // * Now we got the current user on screen to swipe from the database.
                 // * * go to this getDocRef's swipedRight subcollection
                 const swipedRightSubColRef = doc(db, "swipes", userToSwipeOnDoc.id, "swipedRight", userId)
+                const swipedUpSubColRef = doc(db, "swipes", userToSwipeOnDoc.id, "swipedUp", userId)
                 // get docs from this swipedRightSUbColRef
                 const swipedRightCurrentUser = await getDoc(swipedRightSubColRef)
+                const swipedUpCurrentUser = await getDoc(swipedUpSubColRef)
                 if (swipedRightCurrentUser.exists()){
-                    console.log(swipedRightCurrentUser.data())
-                    console.log('current user', userId, 'exists in', user.name, 'swiped right sub col')
-                } else {
+                    const readableSwipedRightUser =  swipedRightCurrentUser.data()
+                    console.log('current user', readableSwipedRightUser.name, 'exists in', user.name, 'swiped right')
+                } 
+                else if (swipedUpCurrentUser.exists()){
+                    const readableSwipedUpUser =  swipedUpCurrentUser.data()
+                    console.log('current user', readableSwipedUpUser.name, 'exists in', user.name, 'swiped right')
+                }
+
+                else {
                     console.log('current user does not exist in', user.name, 'swiped right sub col')
                 }
 
