@@ -25,6 +25,8 @@ import { UserExistContext } from './context/UserExistContext'
 import { UserSignedUpContext } from './context/UserSignedUpContext'
 import { UserLoggedInContext } from './context/UserLoggedInContext'
 import { EnterPhotosPage } from './pages/EnterPhotosPage'
+import { AddReviewPage } from './pages/AddReviewPage'
+import { DetailsPage } from './pages/DetailsPage'
 
 
 
@@ -80,6 +82,15 @@ function App() {
     {
       path: '/profile',
       element: userIsLoggedIn && userExists && !userSignedUp ? <ProfilePage /> : <LoginPage />
+    },
+    {
+      path: '/review/:id',
+      element: <AddReviewPage />
+    },
+    {
+      path: '/:id',
+      element: <DetailsPage />
+      
     }
   ]);
 
