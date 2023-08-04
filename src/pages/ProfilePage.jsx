@@ -5,13 +5,13 @@ import { SwipedByUsersComponent } from "../components/SwipedByUsersComponent"
 import logo from '../assets/icons/logo.svg'
 import { IoIosSettings } from 'react-icons/io'
 import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 // third party libraries
 import { signOut } from "firebase/auth"
 import { auth, db } from "../config/firebase"
 import { getDoc, doc, collection, onSnapshot, query, where, getDocs } from "firebase/firestore"
-import { AddReviewComponent } from "../components/AddReviewComponent"
+
 
 
 
@@ -69,7 +69,9 @@ export const ProfilePage = () => {
         }
     };
 
-    
+    const handleReview = (user) => {
+      console.log(user.id, 'is clicked')
+    }
 
     useEffect(() => {
         getUsers()
@@ -78,7 +80,7 @@ export const ProfilePage = () => {
 
     return (
         <>
-          {!addReviewShown ? (
+          {!settingsShown ? (
                  <div className="p-4 flex flex-col gap-y-16">
                
                  <div className="flex items-center justify-between">
@@ -120,11 +122,15 @@ export const ProfilePage = () => {
                 {/* Users that you swiped */}
                 <div>
                   Users I Swiped
-                  {swipedUsers?.map((user) => {
+                  {swipedUsers?.map((user, index) => {
                     return (
-                      <div className="flex gap-x-10">
+                      <div className="flex gap-x-10" key={user.id}>
                         <p>{user.name}</p>
-                        <button onClick={() => setAddReviewShown(prevState => !prevState)}>Add review</button>
+                        
+                        <Link to={`/review/${user.id}`} >
+                          Add review
+                        </Link>
+                    
                       </div>
                     )
                   })}
@@ -139,7 +145,7 @@ export const ProfilePage = () => {
         :
             (
                 <>
-                  <AddReviewComponent data={swipedByUsers}/>
+                
                   <button onClick={() => setAddReviewShown(prevState => !prevState)}>
 
                         <IoIosSettings size={"2rem"}/>

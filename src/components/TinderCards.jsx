@@ -10,6 +10,7 @@ import { auth, db } from "../config/firebase"
 import { collection, addDoc, doc, setDoc, getDoc, getDocs } from "firebase/firestore"; 
 
 import '../App.css'
+import { Link } from "react-router-dom";
 
 export const TinderCards = ({data, setData, profile}) => {
 
@@ -192,6 +193,7 @@ export const TinderCards = ({data, setData, profile}) => {
                         className="card relative w-[600px] max-w-[80vw] h-[50vh] p-20 rounded-2xl bg-cover bg-right "
                         >
                         <h3 className="absolute left-0 p-4 bottom-0 text-white">{user.name}</h3>
+                        <Link to={`/${user.id}`} className="absolute text-white bottom-0 right-0">Link to profile</Link>
                         </div>
                     </TinderCard>
             );
