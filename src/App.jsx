@@ -104,18 +104,17 @@ function App() {
 
 
   return (
-    <LoadingContext.Provider value={{loading, setLoading}}>
+   
     <UserLoggedInContext.Provider value={{userIsLoggedIn, setUserIsLoggedIn}}>
       <UserExistContext.Provider value={{userExists, setUserExists}}>
         <UserInfoContext.Provider value={{userInfo, setUserInfo}}>
           <UserSignedUpContext.Provider value={{userSignedUp, setUserSignedUp}}>
-            
-          {loading ? <LoadingComponent /> : element}
+          {element}
           </UserSignedUpContext.Provider>
         </UserInfoContext.Provider>
       </UserExistContext.Provider>
     </UserLoggedInContext.Provider>
-    </LoadingContext.Provider>
+
   )
 
   

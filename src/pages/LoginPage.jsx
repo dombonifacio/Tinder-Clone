@@ -13,19 +13,31 @@ import { collection, onSnapshot, doc, getDoc } from "firebase/firestore"
 import { UserExistContext } from "../context/UserExistContext"
 import { UserSignedUpContext } from "../context/UserSignedUpContext"
 import { UserLoggedInContext } from "../context/UserLoggedInContext"
-import { LoadingContext } from "../context/LoadingContext"
+import { LoadingComponent } from "../components/LoadingComponent"
+import { WhiteLogoComponent } from "../components/WhiteLogoComponent"
+
+// icons
+import { FcGoogle } from 'react-icons/fc'
+import { AiFillFacebook } from 'react-icons/ai'
+import { HiMail } from 'react-icons/hi'
+import { IoIosArrowBack } from 'react-icons/io'
+import { LoginButtonComponent } from "../components/LoginButtonComponent"
+import { LoginComponent } from "../components/LoginComponent"
+
 
 export const LoginPage = () => {
 
     const [value, setValue] = useLocalStorage("user", null)
     const [userInfo, setUserInfo] = useState({})
+    const [showEmailLogin, setEmailLogin] = useState(false)
     const usersCollectionRef = collection(db, "users")
+    
 
     // contexts
     const { userExists, setUserExists } = useContext(UserExistContext)
     const { userSignedUp, setUserSignedUp } = useContext(UserSignedUpContext)
     const { userIsLoggedIn, setUserIsLoggedIn } = useContext(UserLoggedInContext)
-    const { loading, setLoading } = useContext(LoadingContext)
+    const [ loading, setLoading ] = useState(false)
 
     
     const navigate = useNavigate()
@@ -123,23 +135,27 @@ export const LoginPage = () => {
 
     return (
         <>
+            <div className="max-w-[500px] mx-auto relative px-4 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-electric-pink via-pastel-red to-fiery-rose">
+               {showEmailLogin && <button className="absolute top-2 text-white flex" onClick={() => setEmailLogin((prevState) => !prevState)}><IoIosArrowBack size={"1.5em"} color="white" />Back to Login</button> }
+                
+                <div className=" px-4 flex flex-col items-center justify-evenly min-h-[100vh] ">
+                    { showEmailLogin ? <LoginComponent loginFunc={handleSignInWithEmailAndPass} userInfoFunc={handleUserInfo} /> : (
+                        <>
+                            <WhiteLogoComponent /><div className="flex flex-col px-4 mt-20 gap-y-3">
+                                <p className="text-slate-100 text-center">By clicking Log in, you agree with our Terms. Learn how we process your data in our Privacy Policy and Cookies Policy.</p>
+                                <LoginButtonComponent message="LOG IN WITH GOOGLE" icon={<FcGoogle size={"1.5em"} />} onClick={signInWithGoogle} />
+                                <LoginButtonComponent message="LOG IN WITH FACEBOOK" icon={<AiFillFacebook size={"1.5em"} color="black" />} onClick={signInWithFacebook} />
+                                <LoginButtonComponent message="LOG IN WITH EMAIL" icon={<HiMail size={"1.5em"} color="black" />} onClick={() => setEmailLogin((prevState) => !prevState)} />
 
-            <h1>Login Page</h1>
-            <input type="text" name="email" placeholder="Enter your email" required value={userInfo.email} onChange={handleUserInfo}/>
-            <input type="password" name="password" placeholder="Enter your password" required value={userInfo.password} onChange={handleUserInfo}/>
-            <button className="bg-blue-400" onClick={handleSignInWithEmailAndPass}>
-                Log In
-            </button>
-            <div className="">
-                <button onClick={signInWithGoogle}>Sign in with Google</button>
-               
+                                <p className="text-slate-300 text-center" onClick={handleSignup}>Don't have an account? <button className="text-white hover:text-xl">Sign Up Now</button></p>
+
+                            </div>
+                        </>
+                    )}
+                </div>
             </div>
-            <div>
-                <button onClick={signInWithFacebook}>Sign in with Facebook</button>
-            </div>
-            <button onClick={handleSignup}>
-                Don't have an account? Sign up here
-            </button>
+      
+            
         </>
     )
 }
