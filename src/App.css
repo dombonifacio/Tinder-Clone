@@ -36,7 +36,9 @@ input[type="checkbox"] + label {
   justify-content: space-evenly;
   margin-top: -40px;
  
+}
 
-
-
+/* tinder loading component  */
+.loading-background {
+  background: radial-gradient(at right top, rgb(251, 146, 60), rgb(251, 113, 133))
 }

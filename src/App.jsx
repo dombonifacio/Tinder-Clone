@@ -27,6 +27,8 @@ import { UserLoggedInContext } from './context/UserLoggedInContext'
 import { EnterPhotosPage } from './pages/EnterPhotosPage'
 import { AddReviewPage } from './pages/AddReviewPage'
 import { DetailsPage } from './pages/DetailsPage'
+import { SettingsPage } from './pages/SettingsPage'
+import { LoadingContext } from './context/LoadingContext'
 
 
 
@@ -41,7 +43,7 @@ function App() {
   })
   const [value, setValue] = useLocalStorage('user', null)
   const [ profile, setProfile ] = useLocalStorage('profile', null)
-  const [loading, setLoading] = useState(false)
+  const [ loading, setLoading ] = useState(false)
   const [ userExists, setUserExists] = useState(false)
   const [ userSignedUp, setUserSignedUp ] = useState(false)
   const [ userIsLoggedIn, setUserIsLoggedIn ] = useState(false)
@@ -91,26 +93,29 @@ function App() {
       path: '/:id',
       element: <DetailsPage />
       
+    },
+    {
+      path: '/settings',
+      element: <SettingsPage />
     }
   ]);
 
-  if (loading) {
-    return <LoadingComponent />;
-  }
 
 
 
   return (
+    <LoadingContext.Provider value={{loading, setLoading}}>
     <UserLoggedInContext.Provider value={{userIsLoggedIn, setUserIsLoggedIn}}>
       <UserExistContext.Provider value={{userExists, setUserExists}}>
         <UserInfoContext.Provider value={{userInfo, setUserInfo}}>
           <UserSignedUpContext.Provider value={{userSignedUp, setUserSignedUp}}>
-
-            {element}
+            
+          {loading ? <LoadingComponent /> : element}
           </UserSignedUpContext.Provider>
         </UserInfoContext.Provider>
       </UserExistContext.Provider>
     </UserLoggedInContext.Provider>
+    </LoadingContext.Provider>
   )
 
   

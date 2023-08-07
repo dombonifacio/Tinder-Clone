@@ -13,15 +13,21 @@ import { collection, onSnapshot, doc, getDoc } from "firebase/firestore"
 import { UserExistContext } from "../context/UserExistContext"
 import { UserSignedUpContext } from "../context/UserSignedUpContext"
 import { UserLoggedInContext } from "../context/UserLoggedInContext"
+import { LoadingContext } from "../context/LoadingContext"
 
 export const LoginPage = () => {
 
     const [value, setValue] = useLocalStorage("user", null)
     const [userInfo, setUserInfo] = useState({})
     const usersCollectionRef = collection(db, "users")
+
+    // contexts
     const { userExists, setUserExists } = useContext(UserExistContext)
     const { userSignedUp, setUserSignedUp } = useContext(UserSignedUpContext)
     const { userIsLoggedIn, setUserIsLoggedIn } = useContext(UserLoggedInContext)
+    const { loading, setLoading } = useContext(LoadingContext)
+
+    
     const navigate = useNavigate()
     const handleUserInfo = (event) => {
         setUserInfo({
@@ -57,9 +63,15 @@ export const LoginPage = () => {
     }
 
     const handleSignInWithEmailAndPass = () => {
+
         signInWithEmailAndPassword(auth, userInfo.email, userInfo.password).then((response) => {
             setValue(response.user)
-            navigate('/')
+            setLoading(true)
+            setTimeout(() => {
+
+                setLoading(false)
+                navigate('/')
+            }, 2000)
         
         }).catch((error) => {
             console.log('error signing in', error)
@@ -72,9 +84,6 @@ export const LoginPage = () => {
         
         }
     }, [value])
-    useEffect(() => {
-        console.log('auth.currentuser.uid', auth.currentUser?.uid)
-    }, [])
     useEffect(() => {
         const checkIfUserExists = onAuthStateChanged(auth, (person) => {
             if (value){
@@ -114,15 +123,16 @@ export const LoginPage = () => {
 
     return (
         <>
+
             <h1>Login Page</h1>
             <input type="text" name="email" placeholder="Enter your email" required value={userInfo.email} onChange={handleUserInfo}/>
             <input type="password" name="password" placeholder="Enter your password" required value={userInfo.password} onChange={handleUserInfo}/>
             <button className="bg-blue-400" onClick={handleSignInWithEmailAndPass}>
                 Log In
             </button>
-            <div>
+            <div className="">
                 <button onClick={signInWithGoogle}>Sign in with Google</button>
-                
+               
             </div>
             <div>
                 <button onClick={signInWithFacebook}>Sign in with Facebook</button>

@@ -3,6 +3,7 @@
 import { useNavigate } from 'react-router-dom'
 import logo from '../assets/icons/logo.svg'
 
+
 //hooks 
 import { useLocalStorage } from "../hooks/useLocalStorage"
 import { useContext, useEffect, useState } from 'react'
@@ -47,7 +48,7 @@ export const NavbarComponent = () =>{
                 <img src={logo} className='w-[2rem] h-[2rem]'/>
             </button>
             <button onClick={handleNavigateProfilePage}>
-
+               
                 <BsFillPersonFill size={"2rem"}/>
             </button>
         </div>
