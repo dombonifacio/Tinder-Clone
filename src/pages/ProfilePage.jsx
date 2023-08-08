@@ -1,5 +1,5 @@
 // components
-import { NavbarComponent } from "../components/NavbarComponent"
+import { NavbarComponent } from "../components/NavbarBotComponent"
 import { SwipedByUsersComponent } from "../components/SwipedByUsersComponent"
 // icons
 import logo from '../assets/icons/logo.svg'

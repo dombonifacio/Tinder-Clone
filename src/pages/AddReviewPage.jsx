@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom"
 // firebase backend
 import { auth, db } from "../config/firebase"
 import { addDoc, collection } from "firebase/firestore"
-import { NavbarComponent } from "../components/NavbarComponent"
+import { NavbarComponent } from "../components/NavbarBotComponent"
 
 
 export const AddReviewPage = () => {

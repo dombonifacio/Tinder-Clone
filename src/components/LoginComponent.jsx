@@ -35,7 +35,7 @@ export const LoginComponent = ({loginFunc, userInfoFunc}) => {
                     </div>
 
                     <div class="mt-4">
-                        <button onClick={loginFunc} class="flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 bg-gradient-to-t from-electric-pink  to-fiery-rose hover:from-pink-700 hover:to-rose-500">Sign in</button>
+                        <button onClick={loginFunc} class="ease-in-out duration-300 flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 bg-gradient-to-t from-electric-pink  to-fiery-rose hover:from-pink-700 hover:to-rose-500">Sign in</button>
                     </div>
                 
 

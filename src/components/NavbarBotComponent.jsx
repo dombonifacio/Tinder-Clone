@@ -41,16 +41,20 @@ export const NavbarComponent = () =>{
         navigate('/profile')
     }
     return (
-        <div className='flex items-center justify-center gap-x-5 fixed bottom-0'>
+      
+        <div className='flex  items-center justify-center gap-x-5 fixed bottom-0  left-0 w-full px-4  py-2 sm:px-0'>
             <button onClick={handleSignOut}>Sign out</button>
-            <button>
+            <button className='flex'>
 
                 <img src={logo} className='w-[2rem] h-[2rem]'/>
+               
             </button>
             <button onClick={handleNavigateProfilePage}>
-               
-                <BsFillPersonFill size={"2rem"}/>
+            
+                <BsFillPersonFill size={"2rem"} color='grey'/>
             </button>
         </div>
+           
+
     )
 } 

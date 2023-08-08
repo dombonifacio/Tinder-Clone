@@ -29,6 +29,7 @@ import { AddReviewPage } from './pages/AddReviewPage'
 import { DetailsPage } from './pages/DetailsPage'
 import { SettingsPage } from './pages/SettingsPage'
 import { LoadingContext } from './context/LoadingContext'
+import { ShowSettingsContext } from './context/ShowSettingsContext'
 
 
 
@@ -47,6 +48,8 @@ function App() {
   const [ userExists, setUserExists] = useState(false)
   const [ userSignedUp, setUserSignedUp ] = useState(false)
   const [ userIsLoggedIn, setUserIsLoggedIn ] = useState(false)
+  const [ showSettings, setShowSettings ] = useState(false)
+ 
   let element = useRoutes([
     {
       path: '/',
@@ -109,7 +112,10 @@ function App() {
       <UserExistContext.Provider value={{userExists, setUserExists}}>
         <UserInfoContext.Provider value={{userInfo, setUserInfo}}>
           <UserSignedUpContext.Provider value={{userSignedUp, setUserSignedUp}}>
-          {element}
+            <ShowSettingsContext.Provider value={{showSettings, setShowSettings}}>
+
+              {element}
+            </ShowSettingsContext.Provider>
           </UserSignedUpContext.Provider>
         </UserInfoContext.Provider>
       </UserExistContext.Provider>

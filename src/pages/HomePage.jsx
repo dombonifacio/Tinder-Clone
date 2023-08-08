@@ -3,31 +3,40 @@ import { auth, db } from "../config/firebase"
 import { getDocs, collection, getDoc, onSnapshot, doc } from "firebase/firestore"
 import { signOut } from 'firebase/auth'
 // hooks
-import { useEffect, useState, useMemo, useRef } from 'react'
+import { useEffect, useState, useMemo, useRef, useContext } from 'react'
 
 import React from "react"
 
 // icons
 
 // components
-import { NavbarComponent } from "../components/NavbarComponent"
+import { NavbarComponent } from "../components/NavbarBotComponent"
 import { TinderCards } from "../components/TinderCards"
 import { FooterComponent } from "../components/FooterComponent"
+import { LoadingComponent } from "../components/LoadingComponent"
+import { NavbarTopComponent } from "../components/NavbarTopComponent"
+import { ShowSettingsContext } from "../context/ShowSettingsContext"
+import { SettingsComponent } from "../components/SettingsComponent"
 
 
 
 export const HomePage = () => {
      
-    const [users, setUsers] = useState([])
+    const [ users, setUsers ] = useState([])
     const [ swipedRightByUsers, setSwipedRightByUsers ] = useState([])
     const [ swipedLeftByUsers, setSwipedLeftByUsers ] = useState([])
     const [ swipedUpByUsers, setSwipedUpByUsers ] = useState([])
     const [ profile, setProfile ] = useState({})
+    const [ loading, setLoading ] = useState(false)
+    const [ error, setError ] = useState(false)
     const currentUser = auth.currentUser?.uid
+    // contexts
+    const { showSettings, setShowSettings } = useContext(ShowSettingsContext)
 
     
     const getProfile = async () => {
         try {
+            setLoading(true)
             if (currentUser){
 
                 const profileDocRef = doc(db, "users", auth.currentUser?.uid)
@@ -42,37 +51,49 @@ export const HomePage = () => {
         } catch (error) {
             console.log('error', error)
         }
+        finally {
+            setLoading(false)
+        }
     }
 
     const getSwipesData = async () => {
+        try {
+            setLoading(true)
+            // referring to each sub cols depending on the direction
+            const swipedRightSubColRef = collection(db, "swipes", currentUser, "swipedRight")
+            const swipedLeftSubColRef = collection(db, "swipes", currentUser, "swipedLeft")
+            const swipedUpSubColRef = collection(db, "swipes", currentUser, "swipedUp")
+            
+            const swipedRightSnapshot = onSnapshot(swipedRightSubColRef, (snapshot) => {
+                const readableSwipedRightData = snapshot.docs.map((doc) => (
+                    {...doc.data(), id: doc.id}
+                ))
+                setSwipedRightByUsers(readableSwipedRightData)
+            })
 
-        // referring to each sub cols depending on the direction
-        const swipedRightSubColRef = collection(db, "swipes", currentUser, "swipedRight")
-        const swipedLeftSubColRef = collection(db, "swipes", currentUser, "swipedLeft")
-        const swipedUpSubColRef = collection(db, "swipes", currentUser, "swipedUp")
+            const swipedLeftSnapshot = onSnapshot(swipedLeftSubColRef, (snapshot) => {
+                const readableSwipedLeftData = snapshot.docs.map((doc) => (
+                    {...doc.data(), id: doc.id}
+                ))
+                setSwipedLeftByUsers(readableSwipedLeftData)
+            })
+
+            const swipedUpSnapshot = onSnapshot(swipedUpSubColRef, (snapshot) => {
+                const readableSwipedUpData = snapshot.docs.map((doc) => (
+                    {...doc.data(), id: doc.id}
+                ))
+                setSwipedUpByUsers(readableSwipedUpData)
+            })
+
+
+            
+        } catch(error) {
+            console.log(error)
+            setError(true)
+        } finally {
+            setLoading(false)
+        }
         
-        const swipedRightSnapshot = onSnapshot(swipedRightSubColRef, (snapshot) => {
-            const readableSwipedRightData = snapshot.docs.map((doc) => (
-                {...doc.data(), id: doc.id}
-            ))
-            setSwipedRightByUsers(readableSwipedRightData)
-        })
-
-        const swipedLeftSnapshot = onSnapshot(swipedLeftSubColRef, (snapshot) => {
-            const readableSwipedLeftData = snapshot.docs.map((doc) => (
-                {...doc.data(), id: doc.id}
-            ))
-            setSwipedLeftByUsers(readableSwipedLeftData)
-        })
-
-        const swipedUpSnapshot = onSnapshot(swipedUpSubColRef, (snapshot) => {
-            const readableSwipedUpData = snapshot.docs.map((doc) => (
-                {...doc.data(), id: doc.id}
-            ))
-            setSwipedUpByUsers(readableSwipedUpData)
-        })
-
-
         return () => {
             swipedRightSnapshot()
             swipedLeftSnapshot()
@@ -113,15 +134,23 @@ export const HomePage = () => {
 
     return (
         <>
-            <div className="">
+            <div className="max-w-[500px] h-[100vh] mx-auto  ">
 
-              
-                <TinderCards data={ users && users} setData={setUsers} profile={profile}/>
-     
-            
+                {loading ? (
+                    <LoadingComponent />
+                ) : showSettings ? (
+                    <SettingsComponent />
+                ) : (
+                    <>
+                    <NavbarTopComponent />
+                    <TinderCards data={users && users} setData={setUsers} profile={profile} />
+                    <NavbarComponent />
+                    </>
+                )}
             </div>
+
             
-            <NavbarComponent />
+            
         </>
     )
 }

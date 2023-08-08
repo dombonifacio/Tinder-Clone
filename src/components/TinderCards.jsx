@@ -9,8 +9,16 @@ import { useEffect, useState, useRef, useMemo } from "react"
 import { auth, db } from "../config/firebase"
 import { collection, addDoc, doc, setDoc, getDoc, getDocs } from "firebase/firestore"; 
 
+// icons
+import { AiTwotoneHeart } from 'react-icons/ai'
+import { AiTwotoneStar } from 'react-icons/ai'
+import { ImCross } from 'react-icons/im'
+import { AiFillInfoCircle } from 'react-icons/ai'
+
+
 import '../App.css'
 import { Link } from "react-router-dom";
+import { LoadingComponent } from "./LoadingComponent";
 
 export const TinderCards = ({data, setData, profile}) => {
 
@@ -24,6 +32,8 @@ export const TinderCards = ({data, setData, profile}) => {
     const [swipedLeftCards, setSwipedLeftCards ] = useState([])
     const [ swipedUpCards, setSwipedUpCards ] = useState([])
     const [ lastDirection, setLastDirection ] = useState()
+    const [ lastUser, setLastUser ] = useState(null)
+    
     const [childRefs, setChildRefs] = useState([]);
     const currentUser = auth.currentUser
     const userId = currentUser?.uid;
@@ -44,7 +54,7 @@ export const TinderCards = ({data, setData, profile}) => {
           // Set the currentIndexRef.current to the current index
           currentIndexRef.current = currentIndex;
         }
-      }, [data, currentIndex]);
+    }, [data, currentIndex]);
 
     useEffect(() => {
         if (data && (currentIndex === null || currentIndex === -1)) {
@@ -113,6 +123,7 @@ export const TinderCards = ({data, setData, profile}) => {
 
         getToSwipeUser(user)
         setLastDirection(direction)
+        setLastUser(user.name.charAt(0).toUpperCase() + user.name.slice(1))
         updateCurrentIndex(index - 1)
         console.log(user.name, 'has been swiped to the', direction, ' direction')
         
@@ -176,37 +187,89 @@ export const TinderCards = ({data, setData, profile}) => {
     // if any of the users are in the swipedRIght, swipedLeft, swipedUp, do not render them
     return (
         <>
-        <div className="h-[80vh] flex justify-center items-center">
-            {data.map((user, index) => {
+        {data.length === 0 ? 
+            <div className="flex flex-col h-[100vh] justify-center items-center text-center text-2xl font-bold text-slate-700 my-auto">
+             <p>No users to swipe on.</p>
+             <div className='w-full flex gap-x-6 justify-center mt-2'>
+                {lastDirection && lastUser ? (
+
+                    <h2 className="text-xl font-bold text-slate-700" key={lastUser}>
+                        You swiped {lastDirection} on <span className="bg-gradient-to-t from-electric-pink to-fiery-rose text-transparent bg-clip-text">{lastUser}</span>
+                    </h2>
+                ) : <h2 className="text-xl font-bold text-slate-700">Swipe a user or press a button to swipe</h2>}
+              
+            </div> 
+            </div> : (
+            <div className="h-[65vh] flex flex-col items-center ">
+            {data?.map((user, index) => {
                 if (!(user.isSwipedRight || user.isSwipedLeft || user.isSwipedUp)) {
                 return (
                     <TinderCard
                         ref={childRefs[index]}
                         key={index}
-                        className={`swipe`}
+                        className={`swipe mx-auto`}
                         onSwipe={(dir) => swipedCard(dir, index, user)}
                         preventSwipe={"down"}
                         onCardLeftScreen={() => cardLeavesScreen(user.name, index)}
                     >
                         <div
                         style={{ backgroundImage: "url(" + user.images[0] + ")" }}
-                        className="card relative w-[600px] max-w-[80vw] h-[50vh] p-20 rounded-2xl bg-cover bg-right "
+                        className="card relative w-[500px] max-w-[90vw] h-[65vh] mx-auto rounded-2xl bg-cover bg-center "
                         >
-                        <h3 className="absolute left-0 p-4 bottom-0 text-white">{user.name}</h3>
-                        <Link to={`/${user.id}`} className="absolute text-white bottom-0 right-0">Link to profile</Link>
+                        <div className="absolute bg-gradient-to-t from-black h-[70px] rounded-2xl w-full bottom-0">
+
                         </div>
-                    </TinderCard>
+                        <div className="absolute left-0 p-4 bottom-0 w-full flex justify-between items-end">
+                            <div className="flex flex-col">
+
+                                <div className="flex items-center gap-x-2">
+
+                                    <h3 className=" text-white text-2xl font-bold bg-gradient-to-t from-electric-pink to-fiery-rose text-transparent bg-clip-text">{user.name.charAt(0).toUpperCase() + user.name.slice(1)}</h3>
+                                    <h1 className="text-white text-xl font-extralight">{user.age}</h1>
+                                </div>
+                                <div className="font-light text-white">{user.gender}</div>
+                            </div>
+                            <Link to={`/${user.id}`}><AiFillInfoCircle color="white" className="" size={"1.6rem"}/></Link>
+                        </div>
+                        </div>
+                       
+                </TinderCard>
             );
             }
             })}
-   
+            
         </div>
-        <div className='w-full flex justify-evenly mt-[-40px]'>
-            <button onClick={() => swipe('left')}>Swipe left!</button>
-            <button onClick={() => swipe('up')}> Super like!</button>
-            <button onClick={() => swipe('right')}>Swipe right!</button>
-        </div>  
+        )}
+            {data.length === 0 ? <></> : (
+                <>
+             
+                <div className=" flex justify-center gap-x-6 mt-6 w-full">      
+                <button className="bg-slate-200 p-4 rounded-full hover:bg-slate-300 ease-in-out duration-300" onClick={() => swipe('left')}>
+                    <ImCross size={"1.5rem"} color="#f43f5e"/>
+                </button>
+                <button className="bg-slate-200 p-3 rounded-full hover:bg-slate-300 ease-in-out duration-300" onClick={() => swipe('up')}>
+                    <AiTwotoneStar size={"2rem"} color=" #38bdf8"/>
+                </button>
+                <button className="bg-slate-200 p-3 rounded-full hover:bg-slate-300 ease-in-out duration-300" onClick={() => swipe('right')}>
+                    <AiTwotoneHeart size={"2rem"} color=" #4ade80"/>
+                </button>
+                </div>
+                <div className='w-full flex gap-x-6 justify-center mt-2'>
+                {lastDirection && lastUser ? (
+
+                    <h2 className="text-xl font-bold text-slate-700" key={lastUser}>
+                        You swiped {lastDirection} on {lastUser}
+                    </h2>
+                ) : <h2 className="text-xl font-bold text-slate-700">Swipe a user or press a button to swipe</h2>}
+              
+                </div>  
+            
+                </>
+            )}
+            
+
         </>
+        
     )
 }
 

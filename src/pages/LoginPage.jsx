@@ -96,14 +96,19 @@ export const LoginPage = () => {
         
         }
     }, [value])
+
+   
     useEffect(() => {
+      
         const checkIfUserExists = onAuthStateChanged(auth, (person) => {
+            
             if (value){
+               
                 const userDocRef = doc(usersCollectionRef, person?.uid)
                 getDoc(userDocRef).then((doc) => {
                     if (doc.exists()){
                         setUserSignedUp(false)
-                        setUserExists(true)
+                    setUserExists(true)
                         console.log('from the login page. doc exists. user true')
                         setTimeout(() => {
                             navigate('/')
@@ -111,6 +116,7 @@ export const LoginPage = () => {
                         console.log(value,' user is on login page local storage')
                     } else {
                         setUserExists(false)
+            
                         console.log('doc doesn\'t exists')
                         setUserSignedUp(true)
                         setTimeout(() => {
@@ -119,6 +125,8 @@ export const LoginPage = () => {
                     }
                 }).catch((error) => {
                     console.log('error', error)
+                }).finally(() => {
+                    setLoading(false)
                 })
             }
             else {
@@ -135,25 +143,30 @@ export const LoginPage = () => {
 
     return (
         <>
-            <div className="max-w-[500px] mx-auto relative px-4 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-electric-pink via-pastel-red to-fiery-rose">
-               {showEmailLogin && <button className="absolute top-2 text-white flex" onClick={() => setEmailLogin((prevState) => !prevState)}><IoIosArrowBack size={"1.5em"} color="white" />Back to Login</button> }
-                
-                <div className=" px-4 flex flex-col items-center justify-evenly min-h-[100vh] ">
-                    { showEmailLogin ? <LoginComponent loginFunc={handleSignInWithEmailAndPass} userInfoFunc={handleUserInfo} /> : (
-                        <>
-                            <WhiteLogoComponent /><div className="flex flex-col px-4 mt-20 gap-y-3">
-                                <p className="text-slate-100 text-center">By clicking Log in, you agree with our Terms. Learn how we process your data in our Privacy Policy and Cookies Policy.</p>
-                                <LoginButtonComponent message="LOG IN WITH GOOGLE" icon={<FcGoogle size={"1.5em"} />} onClick={signInWithGoogle} />
-                                <LoginButtonComponent message="LOG IN WITH FACEBOOK" icon={<AiFillFacebook size={"1.5em"} color="black" />} onClick={signInWithFacebook} />
-                                <LoginButtonComponent message="LOG IN WITH EMAIL" icon={<HiMail size={"1.5em"} color="black" />} onClick={() => setEmailLogin((prevState) => !prevState)} />
+            { loading ? ( <LoadingComponent />) : (
+                <>
+                     <div className="max-w-[500px] mx-auto relative px-4 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-electric-pink via-pastel-red to-fiery-rose">
+                        {showEmailLogin && <button className="absolute top-2 text-white flex" onClick={() => setEmailLogin((prevState) => !prevState)}><IoIosArrowBack size={"1.5em"} color="white" />Back to Login</button> }
+                            
+                            <div className=" px-4 flex flex-col items-center justify-evenly min-h-[100vh] ">
+                                { showEmailLogin ? <LoginComponent loginFunc={handleSignInWithEmailAndPass} userInfoFunc={handleUserInfo} /> : (
+                                    <>
+                                        <WhiteLogoComponent /><div className="flex flex-col px-4 mt-20 gap-y-3">
+                                            <p className="text-slate-100 text-center">By clicking Log in, you agree with our Terms. Learn how we process your data in our Privacy Policy and Cookies Policy.</p>
+                                            <LoginButtonComponent message="LOG IN WITH GOOGLE" icon={<FcGoogle size={"1.5em"} />} onClick={signInWithGoogle} />
+                                            <LoginButtonComponent message="LOG IN WITH FACEBOOK" icon={<AiFillFacebook size={"1.5em"} color="black" />} onClick={signInWithFacebook} />
+                                            <LoginButtonComponent message="LOG IN WITH EMAIL" icon={<HiMail size={"1.5em"} color="black" />} onClick={() => setEmailLogin((prevState) => !prevState)} />
 
-                                <p className="text-slate-300 text-center" onClick={handleSignup}>Don't have an account? <button className="text-white hover:text-xl">Sign Up Now</button></p>
+                                            <p className="text-slate-300 text-center" onClick={handleSignup}>Don't have an account? <button className="text-white hover:text-xl">Sign Up Now</button></p>
 
+                                        </div>
+                                    </>
+                                )}
                             </div>
-                        </>
-                    )}
-                </div>
-            </div>
+                    </div>
+                </>
+            )}
+           
       
             
         </>

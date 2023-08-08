@@ -16,7 +16,7 @@ import { db } from "../config/firebase"
 import { collection, addDoc, doc, setDoc } from "firebase/firestore"
 import { auth } from "../config/firebase"
 
-import { NavbarComponent } from "../components/NavbarComponent"
+import { NavbarComponent } from "../components/NavbarBotComponent"
 import { useLocalStorage } from "../hooks/useLocalStorage"
 import { UserExistContext } from "../context/UserExistContext"
 import { UserSignedUpContext } from "../context/UserSignedUpContext"

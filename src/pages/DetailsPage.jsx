@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom"
-import { NavbarComponent } from "../components/NavbarComponent"
+import { NavbarComponent } from "../components/NavbarBotComponent"
 
 // firebase
 import { auth, db } from "../config/firebase"
