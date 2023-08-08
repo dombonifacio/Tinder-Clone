@@ -19,6 +19,9 @@ import { AiFillInfoCircle } from 'react-icons/ai'
 import '../App.css'
 import { Link } from "react-router-dom";
 import { LoadingComponent } from "./LoadingComponent";
+import { NavbarComponent } from "./NavbarBotComponent";
+import { useContext } from "react";
+import { MatchedUserContext } from "../context/MatchedUserContext";
 
 export const TinderCards = ({data, setData, profile}) => {
 
@@ -33,6 +36,8 @@ export const TinderCards = ({data, setData, profile}) => {
     const [ swipedUpCards, setSwipedUpCards ] = useState([])
     const [ lastDirection, setLastDirection ] = useState()
     const [ lastUser, setLastUser ] = useState(null)
+    const { matchedUser, setMatchedUser } = useContext(MatchedUserContext)
+
     
     const [childRefs, setChildRefs] = useState([]);
     const currentUser = auth.currentUser
@@ -96,12 +101,14 @@ export const TinderCards = ({data, setData, profile}) => {
                 const swipedRightCurrentUser = await getDoc(swipedRightSubColRef)
                 const swipedUpCurrentUser = await getDoc(swipedUpSubColRef)
                 if (swipedRightCurrentUser.exists()){
-                    const readableSwipedRightUser =  swipedRightCurrentUser.data()
-                    console.log('current user', readableSwipedRightUser.name, 'exists in', user.name, 'swiped right')
+                    const readableSwipedRightUser = swipedRightCurrentUser.data()
+                    setMatchedUser({user: {...readableSwipedRightUser}, isMatched: true})
+                   
                 } 
                 else if (swipedUpCurrentUser.exists()){
                     const readableSwipedUpUser =  swipedUpCurrentUser.data()
-                    console.log('current user', readableSwipedUpUser.name, 'exists in', user.name, 'swiped right')
+                    setMatchedUser({user: {...readableSwipedUpUser}, isMatched: true})
+ 
                 }
 
                 else {
@@ -183,6 +190,14 @@ export const TinderCards = ({data, setData, profile}) => {
         }
     };
 
+    useEffect(() => {
+        if (matchedUser.isMatched === true){
+            setTimeout(() => {
+                setMatchedUser({})
+            }, 3000)
+        }
+    }, [matchedUser])
+    
 
     // if any of the users are in the swipedRIght, swipedLeft, swipedUp, do not render them
     return (
@@ -243,7 +258,8 @@ export const TinderCards = ({data, setData, profile}) => {
         )}
             {data.length === 0 ? <></> : (
                 <>
-             
+                <div className="flex-grow  flex flex-col justify-center items-center">
+                <div className=" flex-grow flex flex-col justify-center">
                 <div className=" flex justify-center gap-x-6 mt-6 w-full">      
                 <button className="bg-slate-200 p-4 rounded-full hover:bg-slate-300 ease-in-out duration-300" onClick={() => swipe('left')}>
                     <ImCross size={"1.5rem"} color="#f43f5e"/>
@@ -264,7 +280,12 @@ export const TinderCards = ({data, setData, profile}) => {
                 ) : <h2 className="text-xl font-bold text-slate-700">Swipe a user or press a button to swipe</h2>}
               
                 </div>  
-            
+                
+                </div>
+                <div className=" ">
+                <NavbarComponent />
+                </div>
+                </div>
                 </>
             )}
             

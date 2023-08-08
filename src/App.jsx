@@ -30,6 +30,7 @@ import { DetailsPage } from './pages/DetailsPage'
 import { SettingsPage } from './pages/SettingsPage'
 import { LoadingContext } from './context/LoadingContext'
 import { ShowSettingsContext } from './context/ShowSettingsContext'
+import { MatchedUserContext } from './context/MatchedUserContext'
 
 
 
@@ -49,6 +50,9 @@ function App() {
   const [ userSignedUp, setUserSignedUp ] = useState(false)
   const [ userIsLoggedIn, setUserIsLoggedIn ] = useState(false)
   const [ showSettings, setShowSettings ] = useState(false)
+  const [ matchedUser, setMatchedUser ] = useState({
+    isMatched: false
+  })
  
   let element = useRoutes([
     {
@@ -113,8 +117,11 @@ function App() {
         <UserInfoContext.Provider value={{userInfo, setUserInfo}}>
           <UserSignedUpContext.Provider value={{userSignedUp, setUserSignedUp}}>
             <ShowSettingsContext.Provider value={{showSettings, setShowSettings}}>
+              <MatchedUserContext.Provider value={{matchedUser, setMatchedUser}}>
+                
 
-              {element}
+                {element}
+              </MatchedUserContext.Provider>
             </ShowSettingsContext.Provider>
           </UserSignedUpContext.Provider>
         </UserInfoContext.Provider>

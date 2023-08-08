@@ -17,6 +17,8 @@ import { LoadingComponent } from "../components/LoadingComponent"
 import { NavbarTopComponent } from "../components/NavbarTopComponent"
 import { ShowSettingsContext } from "../context/ShowSettingsContext"
 import { SettingsComponent } from "../components/SettingsComponent"
+import { MatchComponent } from "../components/MatchComponent"
+import { MatchedUserContext } from "../context/MatchedUserContext"
 
 
 
@@ -30,6 +32,7 @@ export const HomePage = () => {
     const [ loading, setLoading ] = useState(false)
     const [ error, setError ] = useState(false)
     const currentUser = auth.currentUser?.uid
+    const { matchedUser, setMatchedUser } = useContext(MatchedUserContext)
     // contexts
     const { showSettings, setShowSettings } = useContext(ShowSettingsContext)
 
@@ -135,7 +138,7 @@ export const HomePage = () => {
     return (
         <>
             
-            <div className="max-w-[500px] h-[100vh] mx-auto flex flex-col justify-between">
+            <div className="max-w-[500px] h-screen  mx-auto flex flex-col justify-between">
 
                 {loading ? (
                     <LoadingComponent />
@@ -145,10 +148,14 @@ export const HomePage = () => {
                     <>
                     <NavbarTopComponent />
                     <TinderCards data={users && users} setData={setUsers} profile={profile} />
-                    <NavbarComponent />
+                    
                     </>
                 )}
             </div>
+            {matchedUser.isMatched && (
+
+                <MatchComponent />
+            )}
 
             
             
