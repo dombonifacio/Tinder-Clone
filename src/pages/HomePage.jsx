@@ -134,7 +134,8 @@ export const HomePage = () => {
 
     return (
         <>
-            <div className="max-w-[500px] h-[100vh] mx-auto ">
+            
+            <div className="max-w-[500px] h-[100vh] mx-auto flex flex-col justify-between">
 
                 {loading ? (
                     <LoadingComponent />

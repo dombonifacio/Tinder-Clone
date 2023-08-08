@@ -188,6 +188,7 @@ export const TinderCards = ({data, setData, profile}) => {
     return (
         <>
         {data.length === 0 ? 
+            
             <div className="flex flex-col h-[100vh] justify-center items-center text-center text-2xl font-bold text-slate-700 my-auto">
              <p>No users to swipe on.</p>
              <div className='w-full flex gap-x-6 justify-center mt-2'>

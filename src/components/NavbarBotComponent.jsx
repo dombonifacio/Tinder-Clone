@@ -42,7 +42,7 @@ export const NavbarComponent = () =>{
     }
     return (
       
-        <div className='flex  items-center justify-center gap-x-5 fixed bottom-0  left-0 w-full px-4  py-2 sm:px-0'>
+        <div className='flex  items-center justify-center gap-x-5  left-0 w-full px-4  py-2 sm:px-0'>
             <button onClick={handleSignOut}>Sign out</button>
             <button className='flex'>
 
