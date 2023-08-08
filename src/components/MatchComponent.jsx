@@ -1,12 +1,17 @@
 import { Fragment, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 
+// contexts
+import { useContext } from 'react'
+import { MatchedUserContext } from '../context/MatchedUserContext'
 
 export const MatchComponent = () => {
   const [open, setOpen] = useState(true)
 
   const cancelButtonRef = useRef(null)
 
+  const { matchedUser, setMatchedUser } = useContext(MatchedUserContext)
+  console.log('matched user', matchedUser)
   return (
 
     <div>
@@ -47,8 +52,12 @@ export const MatchComponent = () => {
                             </Dialog.Title>
                                 <div className="mt-4">
                                     <p className="text-md text-slate-200">
-                                        You and this user have both liked each other
+                                        You and {matchedUser.name.charAt(0).toUpperCase() + matchedUser.name.slice(1)} have both liked each other
                                     </p>
+                                    <div>
+                                        <img src={matchedUser.images[0]} />
+                                        
+                                    </div>
                                 
                                 </div>
                             </div>

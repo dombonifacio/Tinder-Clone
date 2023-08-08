@@ -102,7 +102,7 @@ export const TinderCards = ({data, setData, profile}) => {
                 const swipedUpCurrentUser = await getDoc(swipedUpSubColRef)
                 if (swipedRightCurrentUser.exists()){
                     const readableSwipedRightUser = swipedRightCurrentUser.data()
-                    setMatchedUser({user: {...readableSwipedRightUser}, isMatched: true})
+                    setMatchedUser({...readableSwipedRightUser, isMatched: true})
                    
                 } 
                 else if (swipedUpCurrentUser.exists()){
@@ -192,9 +192,9 @@ export const TinderCards = ({data, setData, profile}) => {
 
     useEffect(() => {
         if (matchedUser.isMatched === true){
-            setTimeout(() => {
-                setMatchedUser({})
-            }, 3000)
+            // setTimeout(() => {
+            //     setMatchedUser({})
+            // }, 3000)
         }
     }, [matchedUser])
     
