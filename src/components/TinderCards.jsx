@@ -213,11 +213,13 @@ export const TinderCards = ({data, setData, profile}) => {
              <p>No users to swipe on.</p>
              <div className='w-full flex gap-x-6 justify-center mt-2'>
                 {lastDirection && lastUser ? (
-
-                    <h2 className="text-xl font-bold text-slate-700" key={lastUser}>
-                        You swiped {lastDirection} on <span className="bg-gradient-to-t from-electric-pink to-fiery-rose text-transparent bg-clip-text">{lastUser}</span>
-                    </h2>
-                ) : <h2 className="text-xl font-bold text-slate-700">Swipe a user or press a button to swipe</h2>}
+                    <>
+                        <h2 className="text-xl font-bold text-slate-700" key={lastUser}>
+                            You swiped {lastDirection} on <span className="bg-gradient-to-t from-electric-pink to-fiery-rose text-transparent bg-clip-text">{lastUser}</span>
+                        </h2>
+                        <h2 className="text-xl font-bold text-slate-700">Swipe a user or press a button to swipe</h2>
+                    </>
+                ) : <></>}
               
             </div> 
             </div> : (
@@ -277,6 +279,7 @@ export const TinderCards = ({data, setData, profile}) => {
                 </button>
                 </div>
                 <div className='w-full flex gap-x-6 justify-center mt-2'>
+                    
                 {lastDirection && lastUser ? (
 
                     <h2 className="text-xl font-bold text-slate-700" key={lastUser}>

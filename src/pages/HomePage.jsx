@@ -149,7 +149,10 @@ export const HomePage = () => {
                     <>
                     <NavbarTopComponent />
                     <TinderCards data={users && users} setData={setUsers} profile={profile} />
-                    
+                    { users.length === 0 && (
+
+                        <NavbarComponent />
+                    )}
                     </>
                 )}
             </div>
