@@ -11,6 +11,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { signOut } from "firebase/auth"
 import { auth, db } from "../config/firebase"
 import { getDoc, doc, collection, onSnapshot, query, where, getDocs } from "firebase/firestore"
+import { NavbarTopComponent } from "../components/NavbarTopComponent"
 
 
 
@@ -81,60 +82,55 @@ export const ProfilePage = () => {
     return (
         <>
           {!settingsShown ? (
-                 <div className="p-4 flex flex-col gap-y-16">
+              <div className=" flex flex-col max-w-[500px] mx-auto h-screen justify-between">
+                
+                <div>
+
+                  <NavbarTopComponent />
+                  {/* The top bar for my likes and people who liked you */}
+                  <div className="px-4 flex justify-evenly">
+                    <h1>
+                      My Likes
+                    </h1>
+                    <div className="w-[2px] bg-slate-200"></div>
+                    <h1>My Admirers</h1>
+                  </div>
+                  <div className="h-[2px] mt-2 bg-slate-200"></div>
+
+                  <div className="px-4">
+                    Users I Swiped
+                    {swipedUsers?.map((user, index) => {
+                      return (
+                        <div className="flex gap-x-10" key={user.id}>
+                          <p>{user.name}</p>
+                          
+                          <Link to={`/review/${user.id}`} >
+                            Add review
+                          </Link>
+                      
+                        </div>
+                      )
+                    })}
+                  </div>
+                  <div className="px-4">
+                    Swiped By
+                  {swipedByUsers?.map((user) => {
+                      return (
+                        <div>
+                          {user.name}
+                        
+                        </div>
+                      )
+                    })}
+                  </div>
+              
+                 
+                </div>
                
-                 <div className="flex items-center justify-between">
-                     {/* tinder logo */}
-                     <div className="flex">
- 
-                         <img src={logo} className='w-[2rem] h-[2rem]'/>
-                         <h1 className="text-2xl font-bold bg-gradient-to-t from-electric-pink to-fiery-rose text-transparent bg-clip-text">tinder</h1>
-                     </div>
-                     {/* settings button */}
-                     <button onClick={() => setSettingsShown(prevState => !prevState)}>
- 
-                         <IoIosSettings size={"2rem"}/>
-                     </button>
-                 </div>
-                 {profile?.name}, {profile?.age}
                  
  
-                 {/* profile section */}
-                 <div className="flex justify-center">
-                     <p>
-                         Name, 
-                     </p>
-                     <p> Age</p>
-                    
-                 </div>
-      
-                <div>
-                  Swiped By
-                 {swipedByUsers?.map((user) => {
-                    return (
-                      <div>
-                        {user.name}
-                       
-                      </div>
-                    )
-                  })}
-                </div>
-                {/* Users that you swiped */}
-                <div>
-                  Users I Swiped
-                  {swipedUsers?.map((user, index) => {
-                    return (
-                      <div className="flex gap-x-10" key={user.id}>
-                        <p>{user.name}</p>
-                        
-                        <Link to={`/review/${user.id}`} >
-                          Add review
-                        </Link>
-                    
-                      </div>
-                    )
-                  })}
-                </div>
+               
+               
                 <div className="flex justify-center">
 
                     <NavbarComponent />
