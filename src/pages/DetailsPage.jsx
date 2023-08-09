@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom"
+import { Link, useParams, useNavigate } from "react-router-dom"
 import { NavbarComponent } from "../components/NavbarBotComponent"
 
 // firebase
@@ -87,11 +87,17 @@ export const DetailsPage = () => {
 
                             {viewedUser && (
                                 <>
-                                    
-                                    {viewedUser.images?.length > 0 && (
-                                        <img src={viewedUser?.images[0]} className="w-[500px] max-w-[90vw] h-[65vh] mx-auto rounded-2xl object-cover object-center" />
-                                    )}
-                                    <div className="flex flex-col px-8 sm:px-4 mt-4 gap-y-1">
+                                    <div className="relative">
+                                        <div className="absolute bg-gradient-to-t from-black rounded-b-2xl top-0 bottom-0 left-0 w-full h-full flex items-end justify-end">
+                                            <Link to={'/'} className="text-white bg-opacity-50 left-0 p-4 ">
+                                                Go Back 
+                                            </Link>
+                                        </div>
+                                        {viewedUser.images?.length > 0 && (
+                                            <img src={viewedUser?.images[0]} className="w-[500px] max-w-[90vw] h-[65vh] mx-auto rounded-2xl object-cover object-center" />
+                                        )}
+                                    </div>
+                                    <div className="flex flex-col px-4 mt-4 gap-y-1">
                                         <div className="flex items-end  gap-x-2">
         
                                             <h1 className="text-4xl font-bold text-slate-900 ">{viewedUser.name?.charAt(0).toUpperCase() + viewedUser.name?.slice(1)}</h1>
@@ -138,9 +144,11 @@ export const DetailsPage = () => {
                     </div>
                    
                     {viewedUser ? (
+                        <div className="mt-4">
 
-                        <NavbarComponent />
-                    ) : <NavbarComponent className="flex justify-end"/>}
+                            <NavbarComponent />
+                        </div>
+                    ) : <NavbarComponent />}
                     
                     </>
                 )}
