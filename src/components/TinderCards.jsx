@@ -22,6 +22,7 @@ import { LoadingComponent } from "./LoadingComponent";
 import { NavbarComponent } from "./NavbarBotComponent";
 import { useContext } from "react";
 import { MatchedUserContext } from "../context/MatchedUserContext";
+import { LastUserContext } from "../context/LastUserContext";
 
 export const TinderCards = ({data, setData, profile}) => {
 
@@ -36,6 +37,7 @@ export const TinderCards = ({data, setData, profile}) => {
     const [ swipedUpCards, setSwipedUpCards ] = useState([])
     const [ lastDirection, setLastDirection ] = useState()
     const [ lastUser, setLastUser ] = useState(null)
+    const { lastUserInfo, setLastUserInfo } = useContext(LastUserContext)
     const { matchedUser, setMatchedUser } = useContext(MatchedUserContext)
 
     
@@ -131,6 +133,7 @@ export const TinderCards = ({data, setData, profile}) => {
         getToSwipeUser(user)
         setLastDirection(direction)
         setLastUser(user.name.charAt(0).toUpperCase() + user.name.slice(1))
+        setLastUserInfo(user)
         updateCurrentIndex(index - 1)
         console.log(user.name, 'has been swiped to the', direction, ' direction')
         
@@ -165,6 +168,8 @@ export const TinderCards = ({data, setData, profile}) => {
         }
     };
 
+
+    
     const addSwipedDoc = async (user, direction) => {
         try {
           
@@ -192,9 +197,9 @@ export const TinderCards = ({data, setData, profile}) => {
 
     useEffect(() => {
         if (matchedUser.isMatched === true){
-            // setTimeout(() => {
-            //     setMatchedUser({})
-            // }, 3000)
+            setTimeout(() => {
+                setMatchedUser({})
+            }, 4000)
         }
     }, [matchedUser])
     

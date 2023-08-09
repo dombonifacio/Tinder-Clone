@@ -31,6 +31,7 @@ import { SettingsPage } from './pages/SettingsPage'
 import { LoadingContext } from './context/LoadingContext'
 import { ShowSettingsContext } from './context/ShowSettingsContext'
 import { MatchedUserContext } from './context/MatchedUserContext'
+import { LastUserContext } from './context/LastUserContext'
 
 
 
@@ -50,6 +51,7 @@ function App() {
   const [ userSignedUp, setUserSignedUp ] = useState(false)
   const [ userIsLoggedIn, setUserIsLoggedIn ] = useState(false)
   const [ showSettings, setShowSettings ] = useState(false)
+  const [ lastUserInfo, setLastUserInfo ] = useState({})
   const [ matchedUser, setMatchedUser ] = useState({
     isMatched: false
   })
@@ -117,11 +119,13 @@ function App() {
         <UserInfoContext.Provider value={{userInfo, setUserInfo}}>
           <UserSignedUpContext.Provider value={{userSignedUp, setUserSignedUp}}>
             <ShowSettingsContext.Provider value={{showSettings, setShowSettings}}>
-              <MatchedUserContext.Provider value={{matchedUser, setMatchedUser}}>
-                
+              <LastUserContext.Provider value={{lastUserInfo, setLastUserInfo}}>
+                <MatchedUserContext.Provider value={{matchedUser, setMatchedUser}}>
+                  
 
-                {element}
-              </MatchedUserContext.Provider>
+                  {element}
+                </MatchedUserContext.Provider>
+              </LastUserContext.Provider>
             </ShowSettingsContext.Provider>
           </UserSignedUpContext.Provider>
         </UserInfoContext.Provider>

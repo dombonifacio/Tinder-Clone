@@ -123,6 +123,7 @@ export const HomePage = () => {
             getProfile()
         }
     }, [])
+    console.log('curren tprofiel', profile)
 
 
     useEffect(() => {
@@ -154,7 +155,7 @@ export const HomePage = () => {
             </div>
             {matchedUser.isMatched && (
 
-                <MatchComponent />
+                <MatchComponent currentProfile={profile}/>
             )}
 
             
