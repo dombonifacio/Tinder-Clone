@@ -24,6 +24,8 @@ export const ProfilePage = () => {
     const [ swipedByUsers, setSwipedByUsers ] = useState([])
     const [ swipedUsers, setSwipedUsers ] = useState(null)
     const [ addReviewShown, setAddReviewShown ] = useState(false)
+    const [ myLikesShown, setMyLikesShown ] = useState(false)
+    const [ myAdmirersShown, setMyAdmirersShown ] = useState(false)
     const currentUserId = auth.currentUser?.uid
     
     
@@ -82,77 +84,101 @@ export const ProfilePage = () => {
 
     return (
         <>
-          {!settingsShown ? (
-              <div className=" flex flex-col max-w-[500px] mx-auto h-screen justify-between">
-                
-                <div>
+          {!myAdmirersShown ? (
+              <div className=" flex flex-col max-w-[500px] mx-auto h-screen">
+                <div className="flex-grow overflow-auto">
 
-                  <NavbarTopComponent />
-                  {/* The top bar for my likes and people who liked you */}
-                  <div className="px-4 flex justify-evenly">
-                    <h1>
-                      My Likes
-                    </h1>
-                    <div className="w-[2px] bg-slate-200"></div>
-                    <h1>My Admirers</h1>
-                  </div>
-                  <div className="h-[2px] mt-2 bg-slate-200"></div>
+                  <div className="flex flex-col">
 
-                  <div className="px-4">
-                    Users I Swiped
-                    <div className="grid grid-cols-2 gap-2">
-
-                      {swipedUsers?.map((user, index) => {
-                        return (
-                          <div className="" key={user.id}>
-                            
-                            <LikesCardComponent user={user}/>
-                            {/* <Link to={`/review/${user.id}`} >
-                              Add review
-                            </Link> */}
-                    
-                          </div>
-                        )
-                      })}
+                    <NavbarTopComponent />
+                    {/* The top bar for my likes and people who liked you */}
+                    <div className="px-4 flex justify-evenly">
+                      <button onClick={() => setMyAdmirersShown((prevState) => !prevState)} className={!myAdmirersShown ? 'font-bold text-slate-900 text-xl' : ''}>My Likes</button>
+                      <div className="w-[2px] bg-slate-200"></div>
+                      <button onClick={() => setMyAdmirersShown((prevState) => !prevState)} className={myAdmirersShown ? 'font-bold text-slate-900 text-xl' : ''}>My Admirers</button>
                     </div>
-                  </div>
-                  <div className="px-4">
-                    Swiped By
-                  {swipedByUsers?.map((user) => {
-                      return (
-                        <div>
-                          {user.name}
-                        
-                        </div>
-                      )
-                    })}
-                  </div>
-              
-                 
-                </div>
-               
-                 
- 
-               
-               
-                <div className="flex justify-center">
+                    <div className="h-[2px] mt-2 bg-slate-200"></div>
 
-                    <NavbarComponent />
+                    <div className="px-4">
+                      <h1 className="text-xl text-center font-semibold text-slate-900 mt-4">Users I Swiped</h1>
+                      <p className="text-md text-center text-slate-500 mb-4">Your swipes includes both swiped rights or swiped ups</p>
+                      <div className="grid grid-cols-2 gap-2">
+
+                        {swipedUsers?.map((user, index) => {
+                          return (
+                            <div className="" key={user.id}>
+                              
+                              <LikesCardComponent user={user}/>
+                              {/* <Link to={`/review/${user.id}`} >
+                                Add review
+                              </Link> */}
+                      
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+            
+                  
+                  </div>
+                
                 </div>
                  
-             </div>
+                <NavbarComponent />
+              </div>
            ) 
         :
-            (
-                <>
-                
-                  <button onClick={() => setAddReviewShown(prevState => !prevState)}>
+        (
+          <div className=" flex flex-col max-w-[500px] mx-auto h-screen">
+          <div className="flex-grow overflow-auto">
 
-                        <IoIosSettings size={"2rem"}/>
-                  </button>
+            <div className="flex flex-col">
+
+              <NavbarTopComponent />
+              {/* The top bar for my likes and people who liked you */}
+              <div className="px-4 flex justify-evenly">
+                <button onClick={() => setMyAdmirersShown((prevState) => !prevState)} className={!myAdmirersShown ? 'font-bold text-slate-900 text-xl' : ''}>My Likes</button>
+                <div className="w-[2px] bg-slate-200"></div>
+                <button onClick={() => setMyAdmirersShown((prevState) => !prevState)} className={myAdmirersShown ? 'font-bold text-slate-900 text-xl' : ''}>My Admirers</button>
+              </div>
+              <div className="h-[2px] mt-2 bg-slate-200"></div>
+
+              <div className="px-4">
+                <h1 className="text-xl text-center font-semibold text-slate-900 mt-4">Users that like me</h1>
+                <p className="text-md text-center text-slate-500 mb-4">Their swipes include both swiped rights or swiped ups</p>
+               
+              </div>
+              <div className="px-4 grid grid-cols-2 gap-2">
+               
+              {swipedByUsers?.map((user) => {
+                  return (
+                    <div className="" key={user.id}>
+                              
+                     <LikesCardComponent user={user} />
+              
+                    </div>
+                  )
+                })}
+              </div>
+          
+            
+            </div>
+          
+          </div>
+           
+          <NavbarComponent />
+        </div>
+        )
+            // (
+            //     <>
+                
+            //       <button onClick={() => setAddReviewShown(prevState => !prevState)}>
+
+            //             <IoIosSettings size={"2rem"}/>
+            //       </button>
                     
-                </>
-            )
+            //     </>
+            // )
         }
         </>
     )

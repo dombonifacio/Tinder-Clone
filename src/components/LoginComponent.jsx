@@ -1,6 +1,6 @@
 import logo from '../assets/icons/logo.svg'
 
-export const LoginComponent = ({loginFunc, userInfoFunc}) => {
+export const LoginComponent = ({loginFunc, userInfoFunc, message, messageButton}) => {
     return (
         <div className="flex flex-col bg-white rounded-xl w-full">
            
@@ -12,7 +12,7 @@ export const LoginComponent = ({loginFunc, userInfoFunc}) => {
             <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 w-full">
                 <div class="sm:mx-auto sm:w-full sm:max-w-sm">
                     <img src={logo} alt="logo tinder" className='mx-auto'/>
-                    <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign in to your account</h2>
+                    <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">{message}</h2>
                 </div>
 
                 <div class="mt-6 sm:mx-auto sm:w-full sm:max-w-sm">
@@ -35,13 +35,11 @@ export const LoginComponent = ({loginFunc, userInfoFunc}) => {
                     </div>
 
                     <div class="mt-4">
-                        <button onClick={loginFunc} class="ease-in-out duration-300 flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 bg-gradient-to-t from-electric-pink  to-fiery-rose hover:from-pink-700 hover:to-rose-500">Sign in</button>
+                        <button onClick={loginFunc} class="ease-in-out duration-300 flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 bg-gradient-to-t from-electric-pink  to-fiery-rose hover:from-pink-700 hover:to-rose-500">{messageButton}</button>
                     </div>
                 
 
-                    <div class="text-sm text-center mt-3">
-                            <a href="#" class="font-semibold text-fiery-rose hover:text-rose-700">Forgot password?</a>
-                    </div>
+                  
                 </div>
             </div>
 

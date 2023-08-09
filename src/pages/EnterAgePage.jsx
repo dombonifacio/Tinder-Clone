@@ -17,7 +17,7 @@ export const EnterAgePage = () => {
     }
     const navigate = useNavigate()
     const nextPage = () => {
-        navigate('/enterGender')
+        navigate('/enterLocation')
     }
     return (
         <>

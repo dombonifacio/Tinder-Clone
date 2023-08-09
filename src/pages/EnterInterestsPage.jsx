@@ -112,7 +112,7 @@ export const EnterInterestsPage = () => {
       })
       setTimeout(() => {
 
-        navigate('/enterPhotos')
+        navigate('/enterBio')
       }, 2000)
     }
     

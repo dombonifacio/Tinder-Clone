@@ -146,10 +146,10 @@ export const LoginPage = () => {
             { loading ? ( <LoadingComponent />) : (
                 <>
                      <div className="max-w-[500px] mx-auto relative px-4 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-electric-pink via-pastel-red to-fiery-rose">
-                        {showEmailLogin && <button className="absolute top-2 text-white flex" onClick={() => setEmailLogin((prevState) => !prevState)}><IoIosArrowBack size={"1.5em"} color="white" />Back to Login</button> }
+                        {showEmailLogin && <button className="absolute top-2 text-white flex" onClick={() => setEmailLogin((prevState) => !prevState)}><IoIosArrowBack size={"1.5em"} color="white" />Back to home</button> }
                             
                             <div className=" px-4 flex flex-col items-center justify-evenly min-h-[100vh] ">
-                                { showEmailLogin ? <LoginComponent loginFunc={handleSignInWithEmailAndPass} userInfoFunc={handleUserInfo} /> : (
+                                { showEmailLogin ? <LoginComponent loginFunc={handleSignInWithEmailAndPass} userInfoFunc={handleUserInfo} message={"Sign in with email and password"} messageButton={"Sign In"}/> : (
                                     <>
                                         <WhiteLogoComponent /><div className="flex flex-col px-4 mt-20 gap-y-3">
                                             <p className="text-slate-50 text-center">By clicking Log in, you agree with our Terms. Learn how we process your data in our Privacy Policy and Cookies Policy.</p>

@@ -32,6 +32,8 @@ import { LoadingContext } from './context/LoadingContext'
 import { ShowSettingsContext } from './context/ShowSettingsContext'
 import { MatchedUserContext } from './context/MatchedUserContext'
 import { LastUserContext } from './context/LastUserContext'
+import { EnterBioPage } from './pages/EnterBioPage'
+import { EnterLocationPage } from './pages/EnterLocationPage'
 
 
 
@@ -89,6 +91,14 @@ function App() {
     {
       path: '/enterPhotos',
       element: userSignedUp ? <EnterPhotosPage /> : <LoginPage />
+    },
+    {
+      path: '/enterBio',
+      element: userSignedUp ? <EnterBioPage /> : <LoginPage />
+    },
+    {
+      path: '/enterLocation',
+      element: userSignedUp ? <EnterLocationPage /> : <LoginPage />
     },
     {
       path: '/profile',

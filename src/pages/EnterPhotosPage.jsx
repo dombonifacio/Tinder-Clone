@@ -16,6 +16,7 @@ import { collection, addDoc, doc, setDoc } from "firebase/firestore"
 // third party libraries
 import axios from 'axios'
 import { UserSignedUpContext } from '../context/UserSignedUpContext'
+import { BsCamera } from 'react-icons/bs'
 
 export const EnterPhotosPage = () => {
 
@@ -146,9 +147,7 @@ export const EnterPhotosPage = () => {
           });
       };
 
-    const nextPage = () => {
-        navigate('/enterAge')
-    }
+    
     const handleDeleteImage = (event) => {
         // only get the ones that doesn't match with the  event target id
         if (images){
@@ -204,33 +203,38 @@ export const EnterPhotosPage = () => {
             {/* container */}
             <div className="flex h-screen justify-center items-center px-4">
                 <div className='min-h-[50%] flex flex-col justify-between w-full'>
+                    <div>
+                        <h1 className="text-4xl font-bold">Add your recent pics</h1>
+                        <p className="mt-3 text-slate-500">Having a photo makes your profile stand out.</p>
+                      
+                      <div className="flex">
+
+                        <input type='file' accept='image/*' name='photoOne' required onChange={handleUserInfoChange}></input>
+                        <input type='file' accept='image/*' name='photoTwo' required onChange={handleUserInfoChange}/>
+                        <input type='file' accept='image/*' name='photoThree' required onChange={handleUserInfoChange}/>
+                      </div>
+                    </div>
                     {/* preview images */}
-                <div className='flex'>
-                    <div className='border border-red-500 w-24 h-24'>
-                        <h1>no image</h1>
-                        {preview?.photoOne ? <img src={preview.photoOne.url} alt="Preview" /> : <h1>no image</h1>}
+                <div className='flex gap-x-2'>
+                    <div className='border border-gray-500 w-32 h-44'>
+              
+                        {preview?.photoOne ? <img src={preview.photoOne.url} alt="Preview" /> : ""}
                         {preview?.photoOne && <button className='bg-blue-500' onClick={handleDeleteImage} id={preview.photoOne?.id}>Delete photo One</button>}
                     </div>
-                    <div className='border border-red-500 w-24 h-24'>
-                        {preview?.photoTwo ? <img src={preview.photoTwo?.url} alt="Preview" /> : <h1>no image</h1>}
+                    <div className='border border-gray-500 w-32 h-44'>
+                        {preview?.photoTwo ? <img src={preview.photoTwo?.url} alt="Preview" /> : ""}
                         {preview?.photoTwo && <button className='bg-purple-500' onClick={handleDeleteImage} id={preview.photoTwo?.id}>Delete photo Two</button>}
                     </div>
-                    <div className='border border-red-500 w-24 h-24'>
-                        {preview?.photoThree ? <img src={preview.photoThree?.url} alt="Preview" /> : <h1>no image</h1>}
+                    <div className='border border-gray-500 w-32 h-44'>
+                        {preview?.photoThree ? <img src={preview.photoThree?.url} alt="Preview" /> :""}
                         {preview?.photoThree && <button className='bg-green-500' onClick={handleDeleteImage} id={preview.photoThree?.id}>Delete photo Three</button>}
                     </div>
                 </div>
                 {/* end of preview images */}
-                    <div>
-                        <h1 className="text-4xl font-bold">Enter Photos?</h1>
-                        <input type='file' accept='image/*' name='photoOne' required onChange={handleUserInfoChange}/>
-                        <input type='file' accept='image/*' name='photoTwo' required onChange={handleUserInfoChange}/>
-                        <input type='file' accept='image/*' name='photoThree' required onChange={handleUserInfoChange}/>
-                    </div>
 
                     {/* Next Button */}
                     <button
-                        className="bg-gradient-to-t from-electric-pink to-fiery-rose rounded-full hover:from-pink-700 hover:to-rose-500 text-white text-center font-bold py-3 px-4 w-full"
+                        className="bg-gradient-to-t mt-12 from-electric-pink to-fiery-rose rounded-full hover:from-pink-700 hover:to-rose-500 text-white text-center font-bold py-3 px-4 w-full"
                         onClick={handleCreateUser}
                         >
                         Create User

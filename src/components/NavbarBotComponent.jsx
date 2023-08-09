@@ -40,11 +40,14 @@ export const NavbarComponent = () =>{
     const handleNavigateProfilePage = () => {
         navigate('/profile')
     }
+    const handleNavigateHomePage = () => {
+        navigate('/')
+    }
     return (
       
         <div className='flex  items-center justify-center gap-x-5  left-0 w-full px-4  py-2 sm:px-0'>
             <button onClick={handleSignOut}>Sign out</button>
-            <button className='flex'>
+            <button className='flex' onClick={handleNavigateHomePage}>
 
                 <img src={logo} className='w-[2rem] h-[2rem]'/>
                

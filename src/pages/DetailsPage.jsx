@@ -95,9 +95,9 @@ export const DetailsPage = () => {
                             {viewedUser && (
                                 <>
                                     <div className="relative">
-                                        <div className="absolute bg-gradient-to-t from-black rounded-b-2xl top-0 bottom-0 left-0 w-full h-full flex items-end justify-end">
+                                        <div className="absolute bg-gradient-to-t from-black rounded-b-2xl bottom-0 left-0 w-full h-44 flex items-end justify-end">
                                             <Link to={'/'} className="text-white bg-opacity-50 left-0 p-4 ">
-                                                Back 
+                                                Home 
                                             </Link>
                                         </div>
                                         {viewedUser.images?.length > 0 && (
@@ -117,7 +117,7 @@ export const DetailsPage = () => {
                                         <div className="flex items-center gap-x-2">
         
                                             <VscHome size={"1rem"} color="##334155"/>
-                                            <h1 className="text-slate-800">Lives in </h1>
+                                            <h1 className="text-slate-800">Lives in {viewedUser?.location}</h1>
         
                                         </div>
                                         <div className="flex flex-wrap items-center gap-x-2 mt-1">
@@ -130,7 +130,7 @@ export const DetailsPage = () => {
                                         {/* About Me */}
                                         <div className="mt-3">
                                             <h1 className="text-4xl font-bold text-slate-900 ">Bio</h1>
-                                            laskdmflksmff
+                                            {viewedUser?.bio}
                                         </div>
                                         <hr />
                                     </div>
