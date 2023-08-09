@@ -63,6 +63,7 @@ export const TinderCards = ({data, setData, profile}) => {
         }
     }, [data, currentIndex]);
 
+    console.log('data', data)
     useEffect(() => {
         if (data && (currentIndex === null || currentIndex === -1)) {
             setCurrentIndex(data.length - 1);
@@ -204,6 +205,8 @@ export const TinderCards = ({data, setData, profile}) => {
     }, [matchedUser])
     
 
+
+    console.log('data', data[0]?.images[0])
     // if any of the users are in the swipedRIght, swipedLeft, swipedUp, do not render them
     return (
         <>
@@ -224,6 +227,7 @@ export const TinderCards = ({data, setData, profile}) => {
             </div> 
             </div> : (
             <div className="h-[65vh] flex flex-col items-center ">
+            
             {data?.map((user, index) => {
                 if (!(user.isSwipedRight || user.isSwipedLeft || user.isSwipedUp)) {
                 return (
@@ -233,7 +237,7 @@ export const TinderCards = ({data, setData, profile}) => {
                         className={`swipe mx-auto`}
                         onSwipe={(dir) => swipedCard(dir, index, user)}
                         preventSwipe={"down"}
-                        onCardLeftScreen={() => cardLeavesScreen(user.name, index)}
+                        onCardLeftScreen={() => cardLeavesScreen(user?.name, index)}
                     >
                         <div
                         style={{ backgroundImage: "url(" + user.images[0] + ")" }}
@@ -247,7 +251,7 @@ export const TinderCards = ({data, setData, profile}) => {
 
                                 <div className="flex items-center gap-x-2">
 
-                                    <h3 className=" text-white text-2xl font-bold bg-gradient-to-t from-electric-pink to-fiery-rose text-transparent bg-clip-text">{user.name.charAt(0).toUpperCase() + user.name.slice(1)}</h3>
+                                    <h3 className=" text-white text-2xl font-bold bg-gradient-to-t from-electric-pink to-fiery-rose text-transparent bg-clip-text">{user.name?.charAt(0).toUpperCase() + user.name?.slice(1)}</h3>
                                     <h1 className="text-white text-xl font-extralight">{user.age}</h1>
                                 </div>
                                 <div className="font-light text-white">{user.gender}</div>

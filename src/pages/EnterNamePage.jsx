@@ -23,9 +23,6 @@ export const EnterNamePage = () => {
         setUserInfo({
             ...userInfo,
             id: auth.currentUser?.uid,
-            bio: "",
-            location: "",
-            traits: [],
             [event.target.name]: event.target.value,
         })
     }

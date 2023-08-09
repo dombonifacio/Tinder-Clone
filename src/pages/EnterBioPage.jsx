@@ -39,7 +39,7 @@ export const EnterBioPage = () => {
 
                         <div>
                             <h1 className="text-4xl font-bold">Enter your bio</h1>
-                            <input type="text" placeholder="Enter bio here" className="border-b-2 mt-2 text-black bg-white border-slate-600 p-1 w-full outline-none" required name='name' onChange={handleUserInfoChange}/>
+                            <input type="text" placeholder="Enter bio here" className="border-b-2 mt-2 text-black bg-white border-slate-600 p-1 w-full outline-none" required name='bio' onChange={handleUserInfoChange}/>
                             <p className="mt-3 text-slate-500">A short sentence helps other users to get to know you.</p>
                       
                         </div>

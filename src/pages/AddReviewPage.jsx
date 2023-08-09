@@ -1,6 +1,6 @@
 // from react
 import { useState } from "react"
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 
 // firebase backend
 import { auth, db } from "../config/firebase"
@@ -17,7 +17,7 @@ export const AddReviewPage = () => {
     const currentUser = auth.currentUser
 
     // get the user who's being reviewed
-
+    const navigate = useNavigate()
     const addReview = async () => {
         // TODO: Adding a doc
         // * 1. Get reviews collection reference
@@ -39,6 +39,10 @@ export const AddReviewPage = () => {
                 rating: rating
             }
             await addDoc(reviewsColRef, {...reviewFields})
+
+            setTimeout(() => {
+                navigate('/')
+            }, 2000)
         } catch(error){
             console.log('error adding', error)
         }
