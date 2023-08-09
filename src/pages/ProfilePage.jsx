@@ -12,6 +12,7 @@ import { signOut } from "firebase/auth"
 import { auth, db } from "../config/firebase"
 import { getDoc, doc, collection, onSnapshot, query, where, getDocs } from "firebase/firestore"
 import { NavbarTopComponent } from "../components/NavbarTopComponent"
+import { LikesCardComponent } from "../components/LikesCardComponent"
 
 
 
@@ -99,18 +100,21 @@ export const ProfilePage = () => {
 
                   <div className="px-4">
                     Users I Swiped
-                    {swipedUsers?.map((user, index) => {
-                      return (
-                        <div className="flex gap-x-10" key={user.id}>
-                          <p>{user.name}</p>
-                          
-                          <Link to={`/review/${user.id}`} >
-                            Add review
-                          </Link>
-                      
-                        </div>
-                      )
-                    })}
+                    <div className="grid grid-cols-2 gap-2">
+
+                      {swipedUsers?.map((user, index) => {
+                        return (
+                          <div className="" key={user.id}>
+                            
+                            <LikesCardComponent user={user}/>
+                            {/* <Link to={`/review/${user.id}`} >
+                              Add review
+                            </Link> */}
+                    
+                          </div>
+                        )
+                      })}
+                    </div>
                   </div>
                   <div className="px-4">
                     Swiped By
