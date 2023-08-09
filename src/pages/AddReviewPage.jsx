@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom"
 import { auth, db } from "../config/firebase"
 import { addDoc, collection, getDoc, doc } from "firebase/firestore"
 import { NavbarComponent } from "../components/NavbarBotComponent"
+import { NavbarTopComponent } from "../components/NavbarTopComponent"
 
 
 export const AddReviewPage = () => {
@@ -52,31 +53,44 @@ export const AddReviewPage = () => {
     console.log('rating', rating)
 
     return (
-        <div>
-            <textarea className="w-full border border-red-500" 
-            maxLength={200}
-            rows={5}
-            onChange={handleContentChange}
-            value={content}
-            placeholder="Enter Review . . . Max 200 characters">
+        <div className="max-w-[500px] mx-auto h-screen flex flex-col ">
+           
 
-            </textarea>
-            <p>Rate this person:</p>
-            <div className="flex gap-x-4">
+            <NavbarTopComponent />
+            <div className="flex flex-col justify-center flex-grow px-4 gap-y-4">
+                <div className="mb-1">
 
-                <input type="radio" id="rating1" name="rating" value="1.0" onChange={(event) => setRating(event.target.value)}/>
-                <label for="rating1">1</label>
-                <input type="radio" id="rating2" name="rating" value="2.0" onChange={(event) => setRating(event.target.value)}/>
-                <label for="rating2">2</label>
-                <input type="radio" id="rating3" name="rating" value="3.0" onChange={(event) => setRating(event.target.value)}/>
-                <label for="rating3">3</label>
-                <input type="radio" id="rating4" name="rating" value="4.0" onChange={(event) => setRating(event.target.value)}/>
-                <label for="rating4">4</label>
-                <input type="radio" id="rating5" name="rating" value="5.0" onChange={(event) => setRating(event.target.value)}/>
-                <label for="rating5">5</label>
+                    <h1 className="text-4xl font-bold mb-1 text-slate-900 text-center">Leave a rate</h1>
+                    <p className="text-slate-600 text-sm text-center">Leaving a rating helps other users gain insights into other people's experiences with this user.</p>
+                </div>
+                <textarea className="w-full border border-slate-900 rounded-lg p-2" 
+                    maxLength={200}
+                    rows={5}
+                    onChange={handleContentChange}
+                    value={content}
+                    placeholder="Enter Review . . . Max 200 characters">
+
+                    </textarea>
+                   
+                    <div className="flex justify-center gap-x-3">
+
+                        <input type="radio" id="rating1" name="rating" value="1.0" onChange={(event) => setRating(event.target.value)}/>
+                        <label for="rating1">1</label>
+                        <input type="radio" id="rating2" name="rating" value="2.0" onChange={(event) => setRating(event.target.value)}/>
+                        <label for="rating2">2</label>
+                        <input type="radio" id="rating3" name="rating" value="3.0" onChange={(event) => setRating(event.target.value)}/>
+                        <label for="rating3">3</label>
+                        <input type="radio" id="rating4" name="rating" value="4.0" onChange={(event) => setRating(event.target.value)}/>
+                        <label for="rating4">4</label>
+                        <input type="radio" id="rating5" name="rating" value="5.0" onChange={(event) => setRating(event.target.value)}/>
+                        <label for="rating5">5</label>
+                       
+                    </div>
+                    <button onClick={addReview} className="bg-gradient-to-t from-electric-pink  to-fiery-rose rounded-full hover:from-pink-700 hover:to-rose-500  text-white font-bold py-3 px-4">Add Review</button>
+        
             </div>
-            <button onClick={addReview}> adding a review</button>
             <NavbarComponent />
+            
         </div>
     )
 }
