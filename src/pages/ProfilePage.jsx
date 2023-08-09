@@ -101,7 +101,7 @@ export const ProfilePage = () => {
 
                     <div className="px-4">
                       <h1 className="text-xl text-center font-semibold text-slate-900 mt-4">Users I Swiped</h1>
-                      <p className="text-md text-center text-slate-500 mb-4">Your swipes includes both swiped rights or swiped ups</p>
+                      <p className="text-md text-center text-slate-500 mb-4">Showing your swiped rights</p>
                       <div className="grid grid-cols-2 gap-2">
 
                         {swipedUsers?.map((user, index) => {

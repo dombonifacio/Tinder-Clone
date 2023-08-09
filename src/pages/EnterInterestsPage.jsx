@@ -180,7 +180,7 @@ export const EnterInterestsPage = () => {
             
           
           </div>
-          <NavbarComponent />
+     
 
 
          

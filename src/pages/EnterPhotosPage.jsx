@@ -218,16 +218,16 @@ export const EnterPhotosPage = () => {
                 <div className='flex gap-x-2'>
                     <div className='border border-gray-500 w-32 h-44'>
               
-                        {preview?.photoOne ? <img src={preview.photoOne.url} alt="Preview" /> : ""}
-                        {preview?.photoOne && <button className='bg-blue-500' onClick={handleDeleteImage} id={preview.photoOne?.id}>Delete photo One</button>}
+                        {preview?.photoOne ? <img src={preview.photoOne.url} className='h-full object-cover' alt="Preview" /> : ""}
+                        {preview?.photoOne && <button className='border border-blue-500' onClick={handleDeleteImage} id={preview.photoOne?.id}>Delete photo One</button>}
                     </div>
                     <div className='border border-gray-500 w-32 h-44'>
                         {preview?.photoTwo ? <img src={preview.photoTwo?.url} alt="Preview" /> : ""}
-                        {preview?.photoTwo && <button className='bg-purple-500' onClick={handleDeleteImage} id={preview.photoTwo?.id}>Delete photo Two</button>}
+                        {preview?.photoTwo && <button className='border border-purple-500' onClick={handleDeleteImage} id={preview.photoTwo?.id}>Delete photo Two</button>}
                     </div>
                     <div className='border border-gray-500 w-32 h-44'>
                         {preview?.photoThree ? <img src={preview.photoThree?.url} alt="Preview" /> :""}
-                        {preview?.photoThree && <button className='bg-green-500' onClick={handleDeleteImage} id={preview.photoThree?.id}>Delete photo Three</button>}
+                        {preview?.photoThree && <button className='border border-green-500' onClick={handleDeleteImage} id={preview.photoThree?.id}>Delete photo Three</button>}
                     </div>
                 </div>
                 {/* end of preview images */}

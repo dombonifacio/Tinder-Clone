@@ -64,8 +64,8 @@ export const AddReviewPage = () => {
             <div className="flex flex-col justify-center flex-grow px-4 gap-y-4">
                 <div className="mb-1">
 
-                    <h1 className="text-4xl font-bold mb-1 text-slate-900 text-center">Leave a rate</h1>
-                    <p className="text-slate-600 text-sm text-center">Leaving a rating helps other users gain insights into other people's experiences with this user.</p>
+                    <h1 className="text-4xl font-bold mb-1 text-slate-900 text-center">Leave a rating</h1>
+                    <p className="text-slate-500 text-sm text-center">Leaving a rating helps other users gain insights into other people's experiences with this user.</p>
                 </div>
                 <textarea className="w-full border border-slate-900 rounded-lg p-2" 
                     maxLength={200}

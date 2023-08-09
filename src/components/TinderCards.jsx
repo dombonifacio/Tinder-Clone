@@ -110,7 +110,7 @@ export const TinderCards = ({data, setData, profile}) => {
                 } 
                 else if (swipedUpCurrentUser.exists()){
                     const readableSwipedUpUser =  swipedUpCurrentUser.data()
-                    setMatchedUser({user: {...readableSwipedUpUser}, isMatched: true})
+                    setMatchedUser({...readableSwipedUpUser, isMatched: true})
  
                 }
 
@@ -220,7 +220,7 @@ export const TinderCards = ({data, setData, profile}) => {
                         <h2 className="text-xl font-bold text-slate-700" key={lastUser}>
                             You swiped {lastDirection} on <span className="bg-gradient-to-t from-electric-pink to-fiery-rose text-transparent bg-clip-text">{lastUser}</span>
                         </h2>
-                        <h2 className="text-xl font-bold text-slate-700">Swipe a user or press a button to swipe</h2>
+                        
                     </>
                 ) : <></>}
               
@@ -243,13 +243,13 @@ export const TinderCards = ({data, setData, profile}) => {
                         style={{ backgroundImage: "url(" + user.images[0] + ")" }}
                         className="card relative w-[500px] max-w-[90vw] h-[65vh] mx-auto rounded-2xl bg-cover bg-center "
                         >
-                        <div className="absolute bg-gradient-to-t from-black h-[70px] rounded-2xl w-full bottom-0">
+                        <div className="absolute bg-gradient-to-t from-black h-[150px] rounded-2xl w-full bottom-0">
 
                         </div>
                         <div className="absolute left-0 p-4 bottom-0 w-full flex justify-between items-end">
                             <div className="flex flex-col">
 
-                                <div className="flex items-center gap-x-2">
+                                <div className="flex items-end gap-x-2">
 
                                     <h3 className=" text-white text-2xl font-bold bg-gradient-to-t from-electric-pink to-fiery-rose text-transparent bg-clip-text">{user.name?.charAt(0).toUpperCase() + user.name?.slice(1)}</h3>
                                     <h1 className="text-white text-xl font-extralight">{user.age}</h1>
