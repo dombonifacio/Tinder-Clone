@@ -15,6 +15,7 @@ import { LoadingComponent } from "../components/LoadingComponent"
 import { BsGenderMale } from 'react-icons/bs'
 import { BsGenderFemale } from 'react-icons/bs'
 import { VscHome } from 'react-icons/vsc'
+import { ReviewsComponent } from "../components/ReviewsComponent"
 
 export const DetailsPage = () => {
     // the user being viewed
@@ -23,6 +24,7 @@ export const DetailsPage = () => {
     const [ viewedUser, setViewedUser ] = useState(null)
     const [ loading, setLoading ] = useState(false)
     const [ showSettings, setShowSettings ] = useState(false)
+    const [ totalReviews, setTotalReviews ] = useState(0)
 
 
         
@@ -33,13 +35,16 @@ export const DetailsPage = () => {
                 const reviewsColRef = collection(db, "reviews")
                 const query = onSnapshot(reviewsColRef, (doc) => {
                     const tempReceivedReviews = []
+                    let tempTotalReviews = 0
                     doc.docs.forEach((reviewDoc) => {
                         const readableDocData = reviewDoc.data()
                         if (readableDocData.reviewedFor === id){
                             tempReceivedReviews.push(readableDocData)
+                            tempTotalReviews += 1
                         }
                     })
                     setReceivedReviews(tempReceivedReviews)
+                    setTotalReviews(tempTotalReviews)
                 })
             } catch (error) {
                 console.log('error', error)
@@ -47,6 +52,7 @@ export const DetailsPage = () => {
                 setLoading(false)
             }
         }
+        console.log('reviews', receivedReviews)
 
         const getUser = async () => {
             try {
@@ -61,6 +67,7 @@ export const DetailsPage = () => {
                 setLoading(false)
             }
         }
+        
         
     
     useEffect(() => {
@@ -83,14 +90,14 @@ export const DetailsPage = () => {
                     <div>
 
                         <NavbarTopComponent />
-                        <div className="flex flex-col">
+                        <div className="flex flex-col ">
 
                             {viewedUser && (
                                 <>
                                     <div className="relative">
                                         <div className="absolute bg-gradient-to-t from-black rounded-b-2xl top-0 bottom-0 left-0 w-full h-full flex items-end justify-end">
                                             <Link to={'/'} className="text-white bg-opacity-50 left-0 p-4 ">
-                                                Go Back 
+                                                Back 
                                             </Link>
                                         </div>
                                         {viewedUser.images?.length > 0 && (
@@ -125,20 +132,13 @@ export const DetailsPage = () => {
                                             <h1 className="text-4xl font-bold text-slate-900 ">Bio</h1>
                                             laskdmflksmff
                                         </div>
-        
-                                     
+                                        <hr />
                                     </div>
                                 </>
                             )}
-                            {receivedReviews?.map((review) => {
-                                return (
-                                    <div>
-                                        <p>{review.description}</p>
-                                        <p>{review.rating}</p>
-                                        <p>{review.reviewedBy}</p>
-                                    </div>
-                                )
-                            })}
+                         
+                            <ReviewsComponent data={receivedReviews} totalReviews={totalReviews}/>
+                           
                         
                         </div>
                     </div>

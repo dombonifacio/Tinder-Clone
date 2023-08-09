@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom"
 
 // firebase backend
 import { auth, db } from "../config/firebase"
-import { addDoc, collection } from "firebase/firestore"
+import { addDoc, collection, getDoc, doc } from "firebase/firestore"
 import { NavbarComponent } from "../components/NavbarBotComponent"
 
 
@@ -28,8 +28,11 @@ export const AddReviewPage = () => {
         try {
 
             const reviewsColRef = collection(db, "reviews")
+            const reviewedByRef = collection(db, "users")
+            const getReviewedByUser = await getDoc(doc(reviewedByRef, currentUser.uid))
+            
             const reviewFields = {
-                reviewedBy: currentUser.uid,
+                reviewedBy: getReviewedByUser.data(),
                 reviewedFor: id,
                 description: content,
                 rating: rating
@@ -58,7 +61,7 @@ export const AddReviewPage = () => {
             placeholder="Enter Review . . . Max 200 characters">
 
             </textarea>
-            <p>Please select your age:</p>
+            <p>Rate this person:</p>
             <div className="flex gap-x-4">
 
                 <input type="radio" id="rating1" name="rating" value="1.0" onChange={(event) => setRating(event.target.value)}/>

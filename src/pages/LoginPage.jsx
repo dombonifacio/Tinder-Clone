@@ -152,12 +152,12 @@ export const LoginPage = () => {
                                 { showEmailLogin ? <LoginComponent loginFunc={handleSignInWithEmailAndPass} userInfoFunc={handleUserInfo} /> : (
                                     <>
                                         <WhiteLogoComponent /><div className="flex flex-col px-4 mt-20 gap-y-3">
-                                            <p className="text-slate-100 text-center">By clicking Log in, you agree with our Terms. Learn how we process your data in our Privacy Policy and Cookies Policy.</p>
+                                            <p className="text-slate-50 text-center">By clicking Log in, you agree with our Terms. Learn how we process your data in our Privacy Policy and Cookies Policy.</p>
                                             <LoginButtonComponent message="LOG IN WITH GOOGLE" icon={<FcGoogle size={"1.5em"} />} onClick={signInWithGoogle} />
                                             <LoginButtonComponent message="LOG IN WITH FACEBOOK" icon={<AiFillFacebook size={"1.5em"} color="black" />} onClick={signInWithFacebook} />
                                             <LoginButtonComponent message="LOG IN WITH EMAIL" icon={<HiMail size={"1.5em"} color="black" />} onClick={() => setEmailLogin((prevState) => !prevState)} />
 
-                                            <p className="text-slate-300 text-center" onClick={handleSignup}>Don't have an account? <button className="text-white hover:text-xl">Sign Up Now</button></p>
+                                            <p className="text-slate-200 text-center" onClick={handleSignup}>Don't have an account? <button className="text-white hover:text-xl">Sign Up Now</button></p>
 
                                         </div>
                                     </>

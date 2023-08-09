@@ -123,7 +123,6 @@ export const HomePage = () => {
             getProfile()
         }
     }, [])
-    console.log('curren tprofiel', profile)
 
 
     useEffect(() => {

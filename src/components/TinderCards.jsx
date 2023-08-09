@@ -199,7 +199,7 @@ export const TinderCards = ({data, setData, profile}) => {
         if (matchedUser.isMatched === true){
             setTimeout(() => {
                 setMatchedUser({})
-            }, 4000)
+            }, 3000)
         }
     }, [matchedUser])
     
