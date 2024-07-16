@@ -57,15 +57,15 @@ export const EnterPhotosPage = () => {
         })
     }
 
-    const handleAddSubcollection = () => {
-        const swipesSubcollectionRef = collection(db, "users", uid, "swipes")
-
-    }
+    useEffect(() => {
+        console.log(selectedImageObj, 'selectedi mage obj')
+    }, [selectedImageObj])
 
     useEffect(() => {
         if (selectedImageObj && images.length === 0 && eventName){
             uploadToCloudinary(selectedImageObj, (imageUrl, updatedImageObj) => {
                 setImagesUrl(imageUrl);
+           
                 setSelectedImageObj(updatedImageObj);
                 setImages([...images, updatedImageObj]);
             })
@@ -115,7 +115,9 @@ export const EnterPhotosPage = () => {
             setPreview(null)
             setSelectedImageObj(null)
         }
-    }, [selectedImageObj, eventName, selectedImage])
+    },
+    
+    [selectedImageObj, eventName, selectedImage])
     useEffect(() => {
         if (images){
             console.log('images inside the photos image', images)
@@ -130,8 +132,9 @@ export const EnterPhotosPage = () => {
     
     const uploadToCloudinary = (imageSelected, updateStates) => {
         const formData = new FormData();
-        formData.append("upload_preset", "lgeq7wmm");
+        formData.append("upload_preset", "mystorage");
         formData.append("file", imageSelected.file);
+     
         axios
           .post("https://api.cloudinary.com/v1_1/dpj2su9ea/upload", formData)
           .then((response) => {
@@ -153,7 +156,7 @@ export const EnterPhotosPage = () => {
         if (images){
 
             const deleteTargetImage = images.filter((image) => image.id !== event.target.id)
-            const deleteEventName = event.target.name
+          
             const isMatchingImage = images.some((image) => image.id === event.target.id)
             if (isMatchingImage){
                 console.log('it matches')
@@ -172,7 +175,7 @@ export const EnterPhotosPage = () => {
    
     }
    
-    console.log('preview images', preview)
+    
     const handleCreateUser = async () => {
         try {
             if (images.length > 0){
@@ -208,7 +211,7 @@ export const EnterPhotosPage = () => {
                         <p className="mt-3 text-slate-500">Having a photo makes your profile stand out.</p>
                       
                       <div className="flex">
-
+                        
                         <input type='file' accept='image/*' name='photoOne' required onChange={handleUserInfoChange}></input>
                         <input type='file' accept='image/*' name='photoTwo' required onChange={handleUserInfoChange}/>
                         <input type='file' accept='image/*' name='photoThree' required onChange={handleUserInfoChange}/>
